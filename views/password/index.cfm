@@ -42,7 +42,7 @@
 				<div class="col-sm-1">
 					<button type="submit" class="btn btn-success btn-sm">Search</button>
 				</div>
-				<div class="col-sm-6 checkbox">
+				<div class="col-sm-3 checkbox">
 					<label>
 						Download from Box.com
 					</label>
@@ -56,7 +56,7 @@
 						<button type="button" class="btn btn-primary btn-sm" onclick="javascript: showSyncModal(this, '#rc.boxFileID#', 'upload');">Upload to Box.com</button>
 					</div>
 				</cfif>
-				<div class="col-sm-1 <cfif rc.downloadFromBox AND !len(rc.boxFileID)>col-sm-offset-6</cfif>">
+				<div class="col-sm-1 col-sm-offset-3">
 					<button type="button" class="btn btn-success btn-sm" onclick="javascript: showEditModal(this, '0');">Add</button>
 				</div>
 			</div>
@@ -75,8 +75,14 @@
 					<tr>
 						<td>#rc.passwordDetails.site#</td>
 						<td>#rc.passwordDetails.Username#</td>
-						<td>#(len(rc.passwordDetails.password) ? decrypt(rc.passwordDetails.password, rc.passwordDetails.salt) : '')#</td>
+						<td>
+							<cfset currPwd = (len(rc.passwordDetails.password) ? decrypt(rc.passwordDetails.password, rc.passwordDetails.salt) : '')>
+							<span class="hiddenPwd orig">#currPwd#</span>
+							<span class="hiddenPwd encrypted">**********</span>
+
+						</td>
 						<td align="center">
+							<i class="glyphicon glyphicon-eye-open cursor" onclick="javascript: showPassword(this);"></i>
 							<i class="glyphicon glyphicon-edit cursor" onclick="javascript: showEditModal(this, '#rc.passwordDetails.id#');"></i> &nbsp;
 							<i class="glyphicon glyphicon-trash cursor text-danger" onclick="javascript: showDeleteConfirmModal(this, '#rc.passwordDetails.id#');"></a></td>
 					</tr>

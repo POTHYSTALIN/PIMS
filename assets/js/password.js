@@ -47,8 +47,19 @@ function changeBoxFlag( isEnabled, isForced ) {
 	if(typeof(isForced) == "undefined"){
 		isForced = false;
 	}
-	alert(isEnabled);
 	if( !isForced ){
 		// add a ajax call to update the flag in new table.
 	}
+	if(isEnabled) {
+		window.location.href = "/list/password/downloadFromBox/true";
+	} else {
+		window.location.href = "/list/password";
+	}
+}
+
+function showPassword(elem) {
+	console.log(jQuery(elem).parent().prev("td").find("span.hiddenPwd.orig"));
+	console.log(jQuery(elem).parent().prev("td").find("span.hiddenPwd.encrypted"));
+	jQuery(elem).parent().prev("td").find("span.hiddenPwd.orig").toggle();
+	jQuery(elem).parent().prev("td").find("span.hiddenPwd.encrypted").toggle();
 }
