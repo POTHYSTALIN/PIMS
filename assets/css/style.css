@@ -127,3 +127,9 @@ a {
     -o-transform: rotate(360deg);
   }
 }
+
+/* To increase modal window width & height */
+.modal-dialog {
+  width: 80%;
+  height: 80%;
+}

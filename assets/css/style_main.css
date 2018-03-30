@@ -1,17 +1,4 @@
-﻿/*=============================================================
-    Authour URI: www.binarytheme.com
-    License: Commons Attribution 3.0
-
-    http://creativecommons.org/licenses/by/3.0/
-
-    100% Free To use For Personal And Commercial Use.
-    IN EXCHANGE JUST GIVE US CREDITS AND TELL YOUR FRIENDS ABOUT US
-
-    ========================================================  */
-
-
-
-/* =============================================================
+﻿/* =============================================================
    GENERAL STYLES
  ============================================================ */
 body {
@@ -337,6 +324,15 @@ div.main-wrap div.container{
 
 .m-t-20{
     margin-top: 20px;
+}
+.align-left {
+    text-align: left;
+}
+.align-right {
+    text-align: right;
+}
+.align-center {
+    text-align: center;
 }
 .table{
     margin: 20px 0 0 0;
