@@ -7,13 +7,19 @@ component extends="base"{
 		if(structKeyExists(rc, "username") AND structKeyExists(rc, "password") AND rc.username EQ "admin" AND rc.password EQ "admin"){
 			session.UserID = -1;
 			Session.UserName = "POTHYS";
-			setNextEvent('home');
+			rc.msgAction = "Success";
+			rc.msg = "Welcome back, POTHYS !!!";
+			setNextEvent(event = 'home', persist = "msg,msgAction");
 		}
-		setNextEvent('login');
+		rc.msgAction = "Error";
+		rc.msg = "Invalid credentials!!!";
+		setNextEvent(event = 'login', persist = "msg,msgAction");
 	}
 
 	public function logout( event, rc, prc ){
 		structClear(session);
-		setNextEvent('login');
+		rc.msgAction = "Success";
+		rc.msg = "Logged out successfully!!!";
+		setNextEvent(event = 'login', persist = "msg,msgAction");
 	}
 }

@@ -547,7 +547,8 @@ p.lead,
   margin-bottom: 0.357em;
   padding: 0; }
 
-.alert {
+/* Commented out alert as home page needs alert similar to all other pages */
+/*.alert {
   border-radius: 0;
   border: 0;
   font-family: 'Montserrat', sans-serif;
@@ -582,7 +583,7 @@ p.lead,
 
 .alert-danger {
   background-color: #f28281;
-  color: #fff; }
+  color: #fff; }*/
 
 /**
  * TYPOGRAPHY
