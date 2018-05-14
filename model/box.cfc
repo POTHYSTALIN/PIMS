@@ -1,17 +1,17 @@
-<cfcomponent>
-	<!--- <cfproperty name="boxKey" inject="coldbox:setting:boxAPI"> --->
+<cfcomponent output="false">
 	<cfset variables.apiURLs = {}>
 	<cfset variables.apiURLs["getFolder"] = "https://api.box.com/2.0/folders/">
 	<cfset variables.apiURLs["downloadFile"] = "https://api.box.com/2.0/files">
 	<cfset variables.apiURLs["uploadFile"] = "https://upload.box.com/api/2.0/files/content">
 	<cfset variables.apiURLs["deleteFile"] = "https://api.box.com/2.0/files/">
+	<cfset variables.redirectURI = "http://localhost:8501/boxAPI/getToken.cfm">
 	<cffunction name="init" access="public" returntype="box">
-		<!--- <cfargument name="devToken" type="string" required="true"> --->
-<!--- <cfdump var="#boxKey#" /><cfabort /> --->
-		<cfset variables.devToken = "">
-		<cfset variables.clientID = "">
-		<cfset variables.clientSecret = "">
-		<cfset variables.redirectURI = "http://localhost:8501/boxAPI/getToken.cfm">
+		<cfset variables.utilsService = application.wirebox.getInstance("utilsService")>
+		<cfset var tempConfig = utilsService.getGlobalConfigs().boxAPI>
+
+		<cfset variables.devToken = tempConfig.devToken>
+		<cfset variables.clientID = tempConfig.clientID>
+		<cfset variables.clientSecret = tempConfig.clientSecret>
 		<cfreturn this>
 	</cffunction>
 

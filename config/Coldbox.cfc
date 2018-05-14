@@ -62,9 +62,7 @@ component {
 		];
 
 		settings = {
-			"boxAPI" = {
-				"key" = "ih7YoSys8TvaJ0bXS09KbF1ISnQsM0yn"
-			}
+			"globalConfigPath" = "/config/myconfig.xml"
 		};
 
 	};

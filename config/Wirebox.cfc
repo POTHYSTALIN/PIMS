@@ -34,9 +34,10 @@ component extends="coldbox.system.ioc.config.Binder"{
             // Register all event listeners here, they are created in the specified order
             listeners = [
                 // { class="", name="", properties={} }
-            ]            
+            ]
         };
 
         // Map Bindings below
-    }    
+        map("utilsService").to("model.utils").initArg(name="globalConfigPath",ref="coldbox:setting:globalConfigPath");
+    }
 }

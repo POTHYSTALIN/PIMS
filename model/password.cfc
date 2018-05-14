@@ -1,4 +1,3 @@
-
 component output="false" extends="utils" {
 
 	property name="dsn" inject="coldbox:datasource:inoutcomes";

@@ -31,18 +31,18 @@
 		<!--- search pane --->
 		<form action="#event.buildLink('list.password')#" class="form-inline" method="post">
 			<div class="row">
-				<div class="form-group col-sm-3">
+				<div class="form-group col-sm-3 col-xl-3 col-lg-3">
 					<label for="searchStr">Search:</label>
 					<input type="text" class="form-control input-sm" name="searchStr" value="#rc.searchStr#" style="width: 75%">
 				</div>
-				<div class="checkbox col-sm-1">
+				<div class="checkbox col-sm-1 col-xl-1 col-lg-1">
 					<input type="checkbox" name="deleted" value="1"<cfif structKeyExists(rc, "deleted")>checked</cfif>>
 					<label>Deleted</label>
 				</div>
-				<div class="col-sm-1">
+				<div class="col-sm-1 col-xl-1 col-lg-1">
 					<button type="submit" class="btn btn-success btn-sm">Search</button>
 				</div>
-				<div class="col-sm-3 checkbox">
+				<div class="col-sm-3 col-xl-3 col-lg-3 checkbox">
 					<label>
 						Download from Box.com
 					</label>
@@ -52,16 +52,16 @@
 					<button type="button" class="btn btn-success btn-sm" onclick="javascript: showEditModal(this, '0');">Add</button>
 				</div>
 			</div>
-			<cfif rc.downloadFromBox AND len(rc.boxFileID)>
-				<div class="row">
-					<div class="col-sm-2">
-						<button type="button" class="btn btn-primary btn-sm" onclick="javascript: showSyncModal(this, '#rc.boxFileID#', 'download');">Download from Box.com</button>
+			<div class="row">
+				<cfif rc.downloadFromBox AND len(rc.boxFileID)>
+					<div class="col-sm-2 col-xl-2 col-lg-2 pull-right p-r-10">
+						<button type="button" class="btn btn-primary btn-sm pull-right" onclick="javascript: showSyncModal(this, '#rc.boxFileID#', 'download');">Download from Box.com</button>
 					</div>
-					<div class="col-sm-2">
+					<div class="col-sm-1 col-xl-1 col-lg-1 pull-right">
 						<button type="button" class="btn btn-primary btn-sm" onclick="javascript: showSyncModal(this, '#rc.boxFileID#', 'upload');">Upload to Box.com</button>
 					</div>
-				</div>
-			</cfif>
+				</cfif>
+			</div>
 		</form>
 		<table class="table table-bordered table-striped table-hover">
 			<thead>
@@ -84,7 +84,7 @@
 
 						</td>
 						<td align="center">
-							<i class="glyphicon glyphicon-eye-open cursor" onclick="javascript: showPassword(this);"></i> &nbsp;
+							<i class="glyphicon glyphicon-eye-open cursor" onclick="javascript: showPassword(this);"></i>
 							<i class="glyphicon glyphicon-edit cursor" onclick="javascript: showEditModal(this, '#rc.passwordDetails.id#');"></i> &nbsp;
 							<i class="glyphicon glyphicon-trash cursor text-danger" onclick="javascript: showDeleteConfirmModal(this, '#rc.passwordDetails.id#');"></a>
 						</td>

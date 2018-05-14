@@ -13,7 +13,7 @@ component extends="base" {
 			local.tmpDetails = instance.boxService.getFolder(id = "35046518192");
 			//writeDump(local.tmpDetails);abort;
 			if(!local.tmpDetails.hasError){
-				rc.boxFileID = structFindValue(local.tmpDetails, "pwd.json", "one")[1].owner.id;
+				rc.boxFileID = structFindValue(local.tmpDetails, instance.passwordManagerService.getGlobalConfigs().boxAPI.pwdFile, "one")[1].owner.id;
 				if(len(rc.searchStr)){
 					var tmpWClause = " AND ( ";
 					tmpWClause &= "SITE LIKE '%#rc.searchStr#%' OR USERNAME LIKE '%#rc.searchStr#%'";
