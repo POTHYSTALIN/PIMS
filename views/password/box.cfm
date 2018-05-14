@@ -37,7 +37,11 @@
 <form action="#event.buildLink('password.syncbox')#" method="post">
 	<input type="hidden" name="fileid" value="#rc.fileid#">
 	<input type="hidden" name="option" value="#rc.option#">
-	<input type="hidden" name="data" value='#serializeJSON(rc.boxData)#'>
+	<input type="hidden" name="data" id="data" value="">
+	<span id="dataSpan" class="hidden">#serializeJSON(rc.boxData)#</span>
 	<input type="submit" class="btn btn-success" name="Submit" value="#rc.submitValue#">
 </form>
+<script type="text/javascript">
+	jQuery("input##data").val(jQuery("span##dataSpan").html());
+</script>
 </cfoutput>

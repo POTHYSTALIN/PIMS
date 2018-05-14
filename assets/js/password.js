@@ -58,8 +58,8 @@ function changeBoxFlag( isEnabled, isForced ) {
 }
 
 function showPassword(elem) {
-	console.log(jQuery(elem).parent().prev("td").find("span.hiddenPwd.orig"));
-	console.log(jQuery(elem).parent().prev("td").find("span.hiddenPwd.encrypted"));
-	jQuery(elem).parent().prev("td").find("span.hiddenPwd.orig").toggle();
-	jQuery(elem).parent().prev("td").find("span.hiddenPwd.encrypted").toggle();
+	if( confirm("Are you sure to show/hide password?") ){
+		jQuery(elem).parent().prev("td").find("span.hiddenPwd.orig").toggle();
+		jQuery(elem).parent().prev("td").find("span.hiddenPwd.encrypted").toggle();
+	}
 }

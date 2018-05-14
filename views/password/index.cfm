@@ -48,18 +48,20 @@
 					</label>
 					<input data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-onstyle="success" type="checkbox" name="downloadFromBox" <cfif rc.downloadFromBox>checked</cfif> onchange="javascript: changeBoxFlag(this.checked);">
 				</div>
-				<cfif rc.downloadFromBox AND len(rc.boxFileID)>
-					<div class="col-sm-offset-1 col-sm-2">
+				<div class="col-sm-1 col-sm-offset-3">
+					<button type="button" class="btn btn-success btn-sm" onclick="javascript: showEditModal(this, '0');">Add</button>
+				</div>
+			</div>
+			<cfif rc.downloadFromBox AND len(rc.boxFileID)>
+				<div class="row">
+					<div class="col-sm-2">
 						<button type="button" class="btn btn-primary btn-sm" onclick="javascript: showSyncModal(this, '#rc.boxFileID#', 'download');">Download from Box.com</button>
 					</div>
 					<div class="col-sm-2">
 						<button type="button" class="btn btn-primary btn-sm" onclick="javascript: showSyncModal(this, '#rc.boxFileID#', 'upload');">Upload to Box.com</button>
 					</div>
-				</cfif>
-				<div class="col-sm-1 col-sm-offset-3">
-					<button type="button" class="btn btn-success btn-sm" onclick="javascript: showEditModal(this, '0');">Add</button>
 				</div>
-			</div>
+			</cfif>
 		</form>
 		<table class="table table-bordered table-striped table-hover">
 			<thead>
@@ -82,9 +84,10 @@
 
 						</td>
 						<td align="center">
-							<i class="glyphicon glyphicon-eye-open cursor" onclick="javascript: showPassword(this);"></i>
+							<i class="glyphicon glyphicon-eye-open cursor" onclick="javascript: showPassword(this);"></i> &nbsp;
 							<i class="glyphicon glyphicon-edit cursor" onclick="javascript: showEditModal(this, '#rc.passwordDetails.id#');"></i> &nbsp;
-							<i class="glyphicon glyphicon-trash cursor text-danger" onclick="javascript: showDeleteConfirmModal(this, '#rc.passwordDetails.id#');"></a></td>
+							<i class="glyphicon glyphicon-trash cursor text-danger" onclick="javascript: showDeleteConfirmModal(this, '#rc.passwordDetails.id#');"></a>
+						</td>
 					</tr>
 				</cfloop>
 			</tbody>
