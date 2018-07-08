@@ -37,7 +37,24 @@
 	<!-- Wrapper for slides -->
 	<div class="row">
 		<div class="col-xs-offset-2 col-xs-8" style="margin-left: 10.668%; width: 79%;">
-			<cfdirectory action="list" directory="#expandPath('./assets/kural/')#" name="thirukural">
+			<cfset kuralList = "">
+			<cfloop condition="true EQ true">
+				<cfset currNo = randRange(1,1330)>
+				<cfif listFindNoCase(kuralList, currNo & ".txt")>
+					<!--- To avoid repeated numbers --->
+					<cfcontinue>
+				</cfif>
+				<cfset kuralList = listAppend(kuralList, numberFormat(currNo, "0000") & ".txt")>
+				<cfif listLen(kuralList) EQ 10>
+					<!--- Load only 10 kural in dynamic way --->
+					<cfbreak>
+				</cfif>
+			</cfloop>
+			<cfdirectory action="list" directory="#expandPath('./assets/kural/')#" name="thirukural" filter="*.txt">
+			<cfquery name="thirukural" dbtype="query">
+				select * from thirukural
+				where name in ( #listQualify(kuralList, "'")# )
+			</cfquery>
 			<div class="carousel-inner">
 				<cfloop query="#thirukural#">
 					<cffile action="read" file="#expandPath('./assets/kural/' & thirukural.name)#" variable="local.content">
@@ -48,7 +65,8 @@
 									<cftry>
 									<h1><strong><img src="/assets/img/valluvar.png" width="50" height="50"><!--- ###listFirst(thirukural.name, ".")# ---> #listGetAt(content, 1, '|')#</strong></h1>
 									<h3><strong>#listGetAt(content, 2, '|')#</strong></h3>
-									<h5>#listGetAt(content, 3, '|')#</h5>
+									<h5>மு.வ : #listGetAt(content, 3, '|')#</h5>
+									<!--- <h5>சாலமன் பாப்பையா : #listGetAt(content, 4, '|')#</h5> --->
 									<cfcatch type="any">
 										<h1><strong>Please add correct content for kural #thirukural.name#</strong>#content#</h1>
 									</cfcatch>
