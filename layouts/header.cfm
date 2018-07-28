@@ -4,7 +4,8 @@
 	</style>
 	<div class="navbar navbar-inverse navbar-fixed-top scrollclass">
 		<div class="container">
-			<div class="navbar-header">
+			#renderView("main/navbar")#
+			<!--- <div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -39,8 +40,7 @@
 					<li><a href="##gallery-sec">Gallery</a></li>
 					<li><a href="##location-sec">Location</a></li> --->
 				</ul>
-			</div>
-
+			</div> --->
 		</div>
 	</div>
 </cfoutput>

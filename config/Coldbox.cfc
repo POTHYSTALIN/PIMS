@@ -4,8 +4,7 @@ component {
 		coldbox = {
 			// Application Setup
 			appName = "MyApp_v0001",
-			BaseURL = "http://test.myapp.com/",
-			// BaseURL = "https://test.myapp.com/",
+			BaseURL = "http://final.myapp.com/",
 
 			// Conventions
 			eventName = "action",
@@ -69,8 +68,7 @@ component {
 
 	public function development() {
 
-		coldbox.BaseURL = "http://test.myapp.dev/";
-		// coldbox.BaseURL = "https://test.myapp.dev/";
+		coldbox.BaseURL = "http://final.myapp.dev/";
 		coldbox.reinitpassword = "";
 		coldbox.eventCaching = false;
 		coldbox.handlerCaching = false;

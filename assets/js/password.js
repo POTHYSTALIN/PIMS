@@ -52,7 +52,14 @@ function changeSecType(id, type) {
 	jQuery("#addSec" + id + "Type").val(type);
 }
 
-function changeBoxFlag( isEnabled, isForced ) {
+function changeBoxFlag( elem, isEnabled, isForced ) {
+	var sib = jQuery(elem).siblings(".btn")[0];
+	jQuery(elem).toggleClass('active');
+	jQuery(elem).toggleClass("btn-default");
+	jQuery(elem).toggleClass("btn-primary");
+	jQuery(sib).toggleClass('active');
+	jQuery(sib).toggleClass("btn-default");
+	jQuery(sib).toggleClass("btn-primary");
 	if(typeof(isForced) == "undefined"){
 		isForced = false;
 	}

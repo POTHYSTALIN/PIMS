@@ -46,7 +46,11 @@
 					<label>
 						Download from Box.com
 					</label>
-					<input data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-onstyle="success" type="checkbox" name="downloadFromBox" <cfif rc.downloadFromBox>checked</cfif> onchange="javascript: changeBoxFlag(this.checked);">
+					<!--- <input data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-onstyle="success" type="checkbox" name="downloadFromBox" <cfif rc.downloadFromBox>checked</cfif> onchange="javascript: changeBoxFlag(this.checked);"> --->
+					<div class="btn-group btn-toggle">
+						<button type="button" data-checked="false" class="btn btn-xs <cfif !rc.downloadFromBox>btn-primary active<cfelse>btn-default</cfif>" onclick="javascript: changeBoxFlag(this, false);">OFF</button>
+						<button type="button" data-checked="true" class="btn btn-xs <cfif rc.downloadFromBox>btn-primary active<cfelse>btn-default</cfif>" onclick="javascript: changeBoxFlag(this, true);">ON</button>
+					</div>
 				</div>
 				<div class="col-sm-1 col-sm-offset-3">
 					<button type="button" class="btn btn-success btn-sm" onclick="javascript: showEditModal(this, '0');">Add</button>

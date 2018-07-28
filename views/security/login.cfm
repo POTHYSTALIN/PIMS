@@ -1,12 +1,6 @@
 <cfparam name="rc.msg" default="">
 <cfparam name="rc.msgAction" default="">
-<script type="text/javascript">
-	jQuery(function(){
-		setTimeout(function(){
-			jQuery("div.alert").slideUp(1000);
-		},10000);
-	});
-</script>
+
 <div class="container">
 	<cfoutput>
 		<div style="min-height: 10px;">&nbsp;</div>

@@ -8,15 +8,15 @@
 		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1" />
 		<title>myapp.com - Events.</title>
 
-		<link href="/assets/css/bootstrap_3.2.0.css" rel="stylesheet" />
+		<!--- <link href="/assets/css/bootstrap_3.2.0.css" rel="stylesheet" /> --->
 
 		<link href="/assets/js/fullcalendar-3.4.0/fullcalendar.css" rel="stylesheet" />
 
 		<link href='/assets/js/fullcalendar-3.4.0/fullcalendar.print.css' rel='stylesheet' media='print' />
 
-		<script type="text/javascript" src="/assets/js/jquery-1.11.3.min.js"></script>
+		<!--- <script type="text/javascript" src="/assets/js/jquery-1.11.3.min.js"></script> --->
 
-		<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+		<!--- <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script> --->
 
 		<script type="text/javascript" src="/assets/js/fullcalendar-3.4.0/lib/moment.min.js"></script>
 		<script type="text/javascript" src="/assets/js/fullcalendar-3.4.0/fullcalendar.js"></script>

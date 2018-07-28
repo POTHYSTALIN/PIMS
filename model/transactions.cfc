@@ -55,4 +55,28 @@
 			WHERE ID = #arguments.ID#
 		</cfquery>
 	</cffunction>
+
+	<cffunction name="deleteTransaction" access="public" returntype="void" output="false">
+		<cfargument name="ID" type="numeric" required="true">
+
+		<cfquery name="local.qry" datasource="#dsn.name#">
+			IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[transactions_deleted]') AND type in (N'U'))
+			BEGIN
+				CREATE TABLE transactions_deleted(
+					id int primary key identity(1,1),
+					categoryID int,
+					bankAccountID int,
+					personID int not null,
+					description text,
+					amount money,
+					created datetime default(getDate()),
+					updated datetime default(getDate()),
+					deleted bit default(0)
+				)
+			END
+			INSERT INTO transactions_deleted( categoryID, bankAccountID, personID, description, amount, created, updated, deleted )
+			SELECT categoryID, bankAccountID, personID, description, amount, created, updated, deleted FROM transactions WHERE ID = #arguments.ID#;
+			DELETE FROM transactions WHERE ID = #arguments.ID#;
+		</cfquery>
+	</cffunction>
 </cfcomponent>
