@@ -7,45 +7,11 @@
 			<div class="row">
 				<div class="col-sm-6 form-group">
 					<label for="type" class="col-form-label">Type</label>
-					<div class="btn-group w-100">
-						<button class="btn btn-secondary btn-sm dropdown-toggle-split w-100" type="button" data-toggle="dropdown" id="secTypeDropdown">
-							<span class="pull-left">
-								<cfif len(rc.transactionDetails.type)>
-									#rc.transactionDetails.type#
-								<cfelse>
-									Select a type
-								</cfif>
-							</span>
-							<span class="caret pull-right" style="position: relative; margin-top: 8px;"></span>
-						</button>
-						<ul class="dropdown-menu w-100">
-							<cfloop query="#rc.allCategoryTypes#">
-								<li><a href="##" onclick="javascript: changeType('1', 'SMS');">#rc.allCategoryTypes.name#</a></li>
-							</cfloop>
-						</ul>
-						<input type="hidden" id="type" name="type" value="#rc.transactionDetails.type#">
-					</div>
+					<cf_dropdown dropdownName="type" selectedValue="#rc.transactionDetails.type#" baseQuery="#rc.allCategoryTypes#" onclick="javascript: changeType(@@currValue);" />
 				</div>
 				<div class="col-sm-6 form-group">
 					<label for="category" class="col-form-label">Category</label>
-					<div class="btn-group w-100">
-						<button class="btn btn-secondary btn-sm dropdown-toggle-split w-100" type="button" data-toggle="dropdown" id="secTypeDropdown">
-							<span class="pull-left">
-								<cfif len(rc.transactionDetails.category)>
-									#rc.transactionDetails.category#
-								<cfelse>
-									Select a category
-								</cfif>
-							</span>
-							<span class="caret pull-right" style="position: relative; margin-top: 8px;"></span>
-						</button>
-						<ul class="dropdown-menu w-100">
-							<cfloop query="#rc.allCategories#">
-								<li><a href="##" onclick="javascript: changeType('1', 'SMS');">#rc.allCategories.name#</a></li>
-							</cfloop>
-						</ul>
-						<input type="hidden" id="category" name="category" value="#rc.transactionDetails.category#">
-					</div>
+					<cf_dropdown dropdownName="category" selectedValue="#rc.transactionDetails.category#" baseQuery="#rc.allCategories#" onclick="javascript: changeCategory(@@currValue);" />
 				</div>
 				<div class="col-sm-6 form-group">
 					<label for="category" class="col-form-label">Category</label>

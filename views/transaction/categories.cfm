@@ -49,9 +49,9 @@
 							<cfif prc.allCategories.deleted><i class="glyphicon glyphicon-remove text-danger"><cfelse><i class="glyphicon glyphicon-ok text-success"></i></cfif>
 						</td>
 						<td>
-							<a href="#event.BuildLink( LinkTo='Edit.Category.#prc.allCategories.ID#')#" title="Edit"><i class="glyphicon glyphicon-edit text-primary"></i></a>
+							<a href="#event.BuildLink( LinkTo='edit.category.#prc.allCategories.ID#')#" title="Edit"><i class="glyphicon glyphicon-edit text-primary"></i></a>
 							<cfif NOT prc.allCategories.deleted>
-								<a href="#event.BuildLink( LinkTo='Delete.Category.#prc.allCategories.ID#')#" title="Delete"><i class="glyphicon glyphicon-remove text-danger"></i></a>
+								<a href="#event.BuildLink( LinkTo='delete.category.#prc.allCategories.ID#')#" title="Delete"><i class="glyphicon glyphicon-remove text-danger"></i></a>
 							</cfif>
 						</td>
 					</tr>

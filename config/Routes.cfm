@@ -29,7 +29,7 @@
 
 	addRoute(pattern="/list/categories", handler="transaction", action="categories");
 	addRoute(pattern="/new/category", handler="transaction", action="addeditcategory");
-	addRoute(pattern="/edit/category/:ID", handler="transaction", action="addeditcategory");
+	addRoute(pattern="/edit/category/:ID", handler="transaction", action="categories");
 	addRoute(pattern="/delete/category/:ID", handler="transaction", action="deleteCategory");
 
 	addRoute(pattern="/list/transactions", handler="transaction", action="index");

@@ -29,11 +29,11 @@
 		},10000);
 
 		i = 0;
-		checkEvents();
+		// checkEvents();
 		setInterval(function(){
 			// This will call every one hour to check for a new event
 			// This show notifiaction should be called whenever an event available
-			checkEvents();
+			// checkEvents();
 		},10000);
 	});
 
