@@ -48,4 +48,31 @@
 
 		<cfreturn res>
 	</cffunction>
+
+	<cffunction name="queryToJSON" access="public" returntype="string" returnformat="JSON" output="false" hint="I'll create a JSON ( array of objects ) from a query">
+		<cfargument name="iQuery" type="query" required="true">
+		<cfargument name="colList" type="string" required="false" default="" hint="if no columns are mentioned, all columns will be included">
+
+		<cfset local.res = "">
+		<cfif NOT len(trim(arguments.colList))>
+			<cfset arguments.colList = arguments.iQuery.ColumnList>
+		</cfif>
+		<cfset local.tmpArray = []>
+		<cfloop query="arguments.iQuery">
+			<cfset local.tmpStruct = {}>
+			<cfloop list="#arguments.colList#" index="currCol">
+				<cfset structInsert(local.tmpStruct, currCol, arguments.iQuery[currCol][currentRow])>
+			</cfloop>
+			<cfset arrayAppend(local.tmpArray, local.tmpStruct)>
+		</cfloop>
+
+		<cfreturn serializeJSON(local.tmpArray)>
+	</cffunction>
+	<!---
+		truncate table transactions
+		truncate table bankAccounts
+		truncate table transactionCategories
+		truncate table banks
+		truncate table transactionTypes
+	--->
 </cfcomponent>

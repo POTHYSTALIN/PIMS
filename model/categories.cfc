@@ -7,7 +7,7 @@
 
 	<cffunction name="getCategories" access="public" returntype="Query" output="false">
 		<cfargument name="ID" type="string" required="false">
-		<cfargument name="includeDeleted" type="string" required="false">
+		<cfargument name="includeDeleted" type="string" required="false" default="false">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
 			SELECT
@@ -19,7 +19,7 @@
 				<cfif structKeyExists(arguments, "ID")>
 					AND TC.ID = <cfqueryparam value="#arguments.ID#" cfsqltype="cf_sql_integer">
 				</cfif>
-				<cfif NOT structKeyExists(arguments, "includeDeleted")>
+				<cfif NOT arguments.includeDeleted>
 					AND TC.deleted = 0
 				</cfif>
 			ORDER BY TC.deleted ASC

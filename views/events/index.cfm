@@ -10,16 +10,12 @@
 
 		<!--- <link href="/assets/css/bootstrap_3.2.0.css" rel="stylesheet" /> --->
 
-		<link href="/assets/js/fullcalendar-3.4.0/fullcalendar.css" rel="stylesheet" />
+		<link href="/assets/js/fullcalendar-3.9.0/fullcalendar.css" rel="stylesheet" />
 
-		<link href='/assets/js/fullcalendar-3.4.0/fullcalendar.print.css' rel='stylesheet' media='print' />
+		<link href='/assets/js/fullcalendar-3.9.0/fullcalendar.print.css' rel='stylesheet' media='print' />
 
-		<!--- <script type="text/javascript" src="/assets/js/jquery-1.11.3.min.js"></script> --->
-
-		<!--- <script type="text/javascript" src="/assets/js/bootstrap.min.js"></script> --->
-
-		<script type="text/javascript" src="/assets/js/fullcalendar-3.4.0/lib/moment.min.js"></script>
-		<script type="text/javascript" src="/assets/js/fullcalendar-3.4.0/fullcalendar.js"></script>
+		<script type="text/javascript" src="/assets/js/fullcalendar-3.9.0/lib/moment.min.js"></script>
+		<script type="text/javascript" src="/assets/js/fullcalendar-3.9.0/fullcalendar.js"></script>
 
 		<link href="/assets/js/jquery-ui-1.12.1.custom/jquery-ui.css" rel="stylesheet" />
 		<!--- bootstrap date time picker --->
@@ -40,19 +36,23 @@
 	</head>
 	<cfoutput>
 		<body>
-		
 			<cfset eventsArr = []>
-			<cfloop query="#rc.getEvents#">
+			<cfloop query="#prc.getEvents#">
 				<cfset currEvnt = {}>
-				<cfset currEvnt.title = EVENT_NAME>
-				<cfset currEvnt.event_id = EVENT_ID>
-				<cfset currEvnt.start = dateFormat(START_DATE, "yyyy-mm-dd")>
-				<cfset currEvnt.end = dateFormat(END_DATE, "yyyy-mm-dd")>
-				<cfset currEvnt.event_desc = EVENT_DESC>
+				<cfset currEvnt.title = name>
+				<cfset currEvnt.id = id>
+				<cfset currEvnt.start = dateTimeFormat(sDate, "mm/dd/yyyy h:nn TT")>
+				<cfset currEvnt.end = dateTimeFormat(eDate, "mm/dd/yyyy h:nn TT")>
+				<cfset currEvnt.desc = desc>
+				<cfif type EQ "events">
+					<cfset currEvnt.color = "purple">
+				<cfelseif type EQ "tasks">
+					<cfset currEvnt.color = "green">
+				</cfif>
 				<cfset arrayAppend(eventsArr, currEvnt)>
 			</cfloop>
 
-			<cfset allEvents = replaceNoCase(replaceNoCase(replaceNoCase(serializeJSON(eventsArr), '"start"', "start", "ALL"), '"end"', "end", "ALL"), '"title"', "title", "ALL")>
+			<cfset allEvents = replaceNoCase(replaceNoCase(replaceNoCase(replaceNoCase(serializeJSON(eventsArr), '"start"', "start", "ALL"), '"end"', "end", "ALL"), '"title"', "title", "ALL"), '"color"', "color", "ALL")>
 
 			<div style="min-height: 10px;">&nbsp;</div>
 			<div id="calendar"></div>
@@ -65,34 +65,38 @@
 						</div>
 						<div class="modal-body">
 							<form class="form-horizontal" role="form" action="#event.buildLink(lCase(rc.formaction))#" method="post">
+								<input type="hidden" name="id" id="id" value="0">
 								<div class="form-group">
-									<label  class="col-sm-2 control-label" for="eventName">EventName</label>
+									<label  class="col-sm-2 control-label" for="name">Event Name</label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control" id="eventName" name="eventName" /> 
+										<input type="text" class="form-control" id="name" name="name" /> 
 									</div>
 								 </div>
 								 <div class="form-group">
-									<label  class="col-sm-2 control-label" for="description">Description</label>
+									<label  class="col-sm-2 control-label" for="desc">Description</label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control" id="description" name="description" />
+										<input type="text" class="form-control" id="desc" name="desc" />
 									</div>
 								 </div>
 								 <div class="form-group">
-									<label  class="col-sm-2 control-label" for="date">StartDate</label>
+									<label  class="col-sm-2 control-label" for="sdate">Start Date</label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control" id="eventStartDate" name="eventStartDate" /> 
+										<input type="text" class="form-control" id="sdate" name="sdate" /> 
 									</div>
 								 </div>
 								 <div class="form-group">
-									<label  class="col-sm-2 control-label" for="date">EndDate</label>
+									<label  class="col-sm-2 control-label" for="edate">End Date</label>
 									<div class="col-sm-6">
-										<input type="text" class="form-control" id="eventEndDate" name="eventEndDate" /> 
+										<input type="text" class="form-control" id="edate" name="edate" /> 
 									</div>
 								 </div>
 								 <div class="form-group">
 									<label  class="col-sm-2 control-label"></label>
 									<div class="col-sm-2">
 										<input type="submit" class="form-control btn btn-primary" name="submit" value="submit" / > 
+									</div>
+									<div class="col-sm-2">
+										<button type="submit" class="form-control btn btn-danger" name="submit" value="delete">Delete</button>
 									</div>
 									<div class="col-sm-2">
 										<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -126,71 +130,43 @@
 				editable: true,
 				eventLimit: true,
 				events : <cfoutput>#allEvents#</cfoutput>,
+				eventRender: function(eventObj, $el) {
+					$el.popover({
+						title: eventObj.title,
+						content: eventObj.description,
+						trigger: 'hover',
+						placement: 'top',
+						container: 'body'
+					});
+				},
 				dayClick: function(date, jsEvent, view) {
 					var day 	= date._d.getDate();
 					var Month 	= date._d.getMonth()+1;
-					var year 	= date._d.getFullYear()+" "+"00:00";
+					var year 	= date._d.getFullYear()+" "+"12:00 AM";
 					var getDate = Month+"/"+day+"/"+year;
 
+					$("#sdate").val(getDate);
 					$("#events").modal("show");
-					$("#eventStartDate").val(getDate);
-					// $("#eventStartDate").val("07/19/2017 2:03 PM");
-					// $("#eventStartDate").datetimepicker("setDate", new Date(2017,5,10));
-					$('#eventStartDate').data("DateTimePicker").date(new Date());
 
 				},
 				eventClick: function(calEvent, jsEvent, view){
 					console.clear();
 					console.log(calEvent);
+					$("#name").val(calEvent.title);
+					$("#id").val(calEvent.ID);
+					$("#desc").val(calEvent.DESC);
+					$("#sdate").val(calEvent.start._i);
+					if( calEvent._end != null)
+						$("#edate").val(calEvent._end._i);
 					$("#events").modal("show");
-                    $("#eventName").val(calEvent.title);
-                    $("#description").val(calEvent.EVENT_DESC);
-                    $("#eventStartDate").val(calEvent._start._i);
-                    $("#eventEndDate").val(calEvent._end._i);
-                    $('#events form').append('<input type="hidden" name="event_id" value='+calEvent.EVENT_ID+'>');
-					// alert('Event: ' + calEvent.title);
-					// alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-					// alert('View: ' + view.name);
-
-					// change the border color just for fun
-					// $(this).css('border-color', 'red');
-					// var day 	= date._d.getDate();
-					// var Month 	= date._d.getMonth()+1;
-					// var year 	= date._d.getFullYear()+" "+"00:00";
-					// var getDate = Month+"/"+day+"/"+year;
-
-				 //    $("#events").modal("show");
-				 //    $("#eventStartDate").val(getDate);
 				}
 			});
-			// date time picker
-			// $('#eventStartDate').datetimepicker();
-			// $('#eventEndDate').datetimepicker({
-			// 	useCurrent: false
-			// });
 
-			$('#eventStartDate,#eventEndDate').datetimepicker();
-			// $('#eventStartDate').data("DateTimePicker").date(new Date());
-			// $("#eventEndDate").on("dp.change", function (e) {
-			//     $('#eventStartDate').data("DateTimePicker").maxDate(e.date);
-			// });
-			$("#eventStartDate").on("dp.change", function (e) {
-				$('#eventEndDate').data("DateTimePicker").minDate(e.date);
+			$('#sdate,#edate').datetimepicker();
+			$("#sdate").on("dp.change", function (e) {
+				if($('#edate').val() != '')
+					$('#edate').data("DateTimePicker").minDate(e.date);
 			});
-			// $('#eventStartDate').on('dp.change', function (e) {
-			// 	var incrementDay = moment(new Date(e.date));
-			// 	incrementDay.add(0, 'days');
-			// 	$('#eventEndDate').data('DateTimePicker').minDate(incrementDay);
-			// 	// $(this).data("DateTimePicker").hide();
-			// });
-
-			// $('#eventEndDate').datetimepicker().on('dp.change', function (e) {
-			// 	var decrementDay = moment(new Date(e.date));
-			// 	decrementDay.subtract(1, 'days');
-			// 	$('#eventStartDate').data('DateTimePicker').maxDate(decrementDay);
-			// 	 // $(this).data("DateTimePicker").hide();
-			// });
 		});
-
 	</script>
 </html>

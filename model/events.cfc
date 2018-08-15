@@ -6,67 +6,80 @@ component output="false" {
 	}
 
 	public void function addEvents(
-		required string eventName,
-		required string description,
-		required string eventStartDate,
-		required string eventEndDate
+		required string name,
+		required string desc,
+		required string sdate,
+		required string edate
 	){
-		local.qry = new query(
-			datasource = dsn.name,
-			sql = "
-				INSERT INTO events(
-					event_name,
-					event_desc,
-					start_date,
-					end_date
-				)
-				VALUES(
-					:eventName,
-					:description,
-					:eventStartDate,
-					:eventEndDate
-				)
-			"
-		);
-		local.qry.addParam(name="eventName", value="#arguments.eventName#", cfsqltype="cf_sql_varchar");
-		local.qry.addParam(name="description", value="#arguments.description#", cfsqltype="cf_sql_varchar");
-		local.qry.addParam(name="eventStartDate", value="#arguments.eventStartDate#", cfsqltype="cf_sql_timestamp");
-		local.qry.addParam(name="eventEndDate", value="#arguments.eventEndDate#", cfsqltype="cf_sql_timestamp", null="#yesnoformat(!len(arguments.eventEndDate))#");
-// writeDump(arguments);abort;
+		local.sqlString = "INSERT INTO events( name, [desc], sdate, edate ) VALUES( :name, :desc, :sdate, :edate )";
+		local.qry = new query( datasource = dsn.name, sql = local.sqlString );
+		local.qry.addParam(name="name", value="#arguments.name#", cfsqltype="cf_sql_varchar");
+		local.qry.addParam(name="desc", value="#arguments.desc#", cfsqltype="cf_sql_varchar");
+		local.qry.addParam(name="sdate", value="#arguments.sdate#", cfsqltype="cf_sql_timestamp");
+		local.qry.addParam(name="edate", value="#arguments.edate#", cfsqltype="cf_sql_timestamp", null="#yesnoformat(!len(arguments.edate))#");
 		local.qry.execute();
 	}
 
-	public query function getEvents(EVENTID){
+	public query function getEvents( numeric id ){
 		local.sqlString = "SELECT * FROM events WHERE 1 = 1 ";
 
-		if(structKeyExists(arguments, "EVENTID")){
-			local.sqlString = "SELECT * FROM events WHERE event_id = #arguments.EVENTID# ";
+		if(structKeyExists(arguments, "id")){
+			local.sqlString &= "AND id = #arguments.id# ";
 		}
 
-		local.qry = new query(
-			datasource = dsn.name,
-			sql = local.sqlString
-		);
-		// var eventsRes= serializeJSON(local.qry.execute().getResult());
+		local.qry = new query( datasource = dsn.name, sql = local.sqlString );
 		return local.qry.execute().getResult();
 	}
 
 
-	public any function updateEvents(required string eventName,required string description,required string eventStartDate,
-		required string eventEndDate,required event_id) {
+	public void function updateEvents(
+		required string name,
+		required string desc,
+		required string sdate,
+		required string edate,
+		required numeric id
+	) {
 
 		local.qry = new query(
 			datasource = dsn.name,
 
-			sql = "UPDATE events SET event_name = :eventName, event_desc = :description,start_date=:eventStartDate,end_date=:eventEndDate WHERE event_id = :event_id"
+			sql = "UPDATE events SET name = :name, [desc] = :desc,sdate=:sdate,edate=:edate WHERE id = :id"
 		);
-		local.qry.addParam(name="event_id", value="#arguments.event_id#", cfsqltype="cf_sql_integer");
-		local.qry.addParam(name="eventName", value="#arguments.eventName#", cfsqltype="cf_sql_varchar");
-		local.qry.addParam(name="description", value="#arguments.description#", cfsqltype="cf_sql_varchar");
-		local.qry.addParam(name="eventStartDate", value="#arguments.eventStartDate#", cfsqltype="cf_sql_timestamp");
-		local.qry.addParam(name="eventEndDate", value="#arguments.eventEndDate#", cfsqltype="cf_sql_timestamp", null="#yesnoformat(!len(arguments.eventEndDate))#");
+		local.qry.addParam(name="id", value="#arguments.id#", cfsqltype="cf_sql_integer");
+		local.qry.addParam(name="name", value="#arguments.name#", cfsqltype="cf_sql_varchar");
+		local.qry.addParam(name="desc", value="#arguments.desc#", cfsqltype="cf_sql_varchar");
+		local.qry.addParam(name="sdate", value="#arguments.sdate#", cfsqltype="cf_sql_timestamp");
+		local.qry.addParam(name="edate", value="#arguments.edate#", cfsqltype="cf_sql_timestamp", null="#yesnoformat(!len(arguments.edate))#");
 
 		local.qry.execute();
 
+	}
+
+	public void function deleteEvent( required numeric id ){
+		local.qry = new query( datasource = dsn.name, sql = "DELETE FROM events WHERE id = :id" );
+		local.qry.addParam(name="id", value="#arguments.id#", cfsqltype="cf_sql_integer");
+		local.qry.execute();
+	}
+
+	public query function getNotifications() {
+		local.sqlString = "
+			with qry as (
+				SELECT
+					id, name, [desc], sdate, edate, 'events' as type
+				FROM events
+				WHERE 1 = 1
+					AND sdate > DATEADD(day, -1, getDate())
+					AND (
+						edate < DATEADD(day, 1, getDate())
+						OR edate IS NULL
+					)
+			)
+
+			SELECT * FROM qry
+			ORDER BY type, sdate, edate
+		";
+		local.qry = new query( datasource = dsn.name, sql = local.sqlString );
+
+		return local.qry.execute().getResult();
 	}
 }

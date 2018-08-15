@@ -47,24 +47,19 @@ component extends="base" {
 					rc.id = instance.passwordManagerService.addPassword(argumentCollection=rc);
 
 				if(structKeyExists(rc, "additionalEnabled")){
-					// && structKeyExists(rc, "addSec1Type")
 					var currSecDetailsIDsList = "";
+					var tmpAdditionalDetails = [];
 					for (currItem in rc) {
 						if(reFindNoCase("^addSec[0-9]+Type$", currItem)){
 							// Only form fields like addSec1Type, addSec2Type, etc.
 							var currSLNo = mid(currItem,7,len(currItem)-10);
-
-							var updatedID = instance.passwordManagerService.addAdditionalSecurtity(
-								addSecID = rc["addSec#currSLNo#ID"],
-								accID = rc["id"],
-								addSecType = rc["addSec#currSLNo#Type"],
-								addSecDetails = rc["addSec#currSLNo#Details"]
-							);
-							currSecDetailsIDsList = listAppend(currSecDetailsIDsList, updatedID);
+							var tmpDetailArr = { "securityType" : rc["addSec#currSLNo#Type"], "details" : rc["addSec#currSLNo#Details"] };
+							arrayAppend(tmpAdditionalDetails, tmpDetailArr);
 						}
 					}
 
-					instance.passwordManagerService.removeAdditionalSecurityDetails( accID = rc.id, IDList = currSecDetailsIDsList );
+					instance.passwordManagerService.removeAdditionalSecurityDetails( accID = rc.id );
+					instance.passwordManagerService.addAdditionalSecurtity( accID = rc.id, data = tmpAdditionalDetails );
 				}
 				rc.msgAction = "Success";
 				rc.msg = "Password details saved successfully.";

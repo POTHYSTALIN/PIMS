@@ -100,14 +100,11 @@ component output="false" extends="utils" {
 		local.qry.execute();
 	}
 
-	public numeric function addAdditionalSecurtity(
-		numeric addSecID=0,
+	public void function addAdditionalSecurtity(
 		required numeric accID,
-		required string addSecType,
-		required string addSecDetails
+		required array data
 	){
-		if(!arguments.addSecID){
-			// writeDump(arguments);
+		for ( curr in arguments.data ){
 			local.qry = new query(
 				datasource = dsn.name,
 				sql = "
@@ -123,34 +120,11 @@ component output="false" extends="utils" {
 					);
 				"
 			);
-		}else{
-			local.qry = new query(
-				datasource = dsn.name,
-				sql = "
-					UPDATE AdditionalSecurity SET
-						accID = :accID,
-						securityType = :securityType,
-						details = :details
-					WHERE ID = :addSecID
-				"
-			);
-			local.qry.addParam(name="addSecID", value="#arguments.addSecID#", cfsqltype="cf_sql_integer");
-		}
-		local.qry.addParam(name="accID", value="#arguments.accID#", cfsqltype="cf_sql_integer");
-		local.qry.addParam(name="securityType", value="#arguments.addSecType#", cfsqltype="cf_sql_varchar");
-		local.qry.addParam(name="details", value="#arguments.addSecDetails#", cfsqltype="cf_sql_varchar");
+			local.qry.addParam(name="accID", value="#arguments.accID#", cfsqltype="cf_sql_integer");
+			local.qry.addParam(name="securityType", value="#curr.securityType#", cfsqltype="cf_sql_varchar");
+			local.qry.addParam(name="details", value="#curr.details#", cfsqltype="cf_sql_varchar");
 
-		local.qry.execute();
-
-		if(!arguments.addSecID){
-			local.qry = new query(
-				datasource = dsn.name,
-				sql = "SELECT IDENT_CURRENT('AdditionalSecurity') AS lastID"
-			);
-			local.res = local.qry.execute().getResult();
-			return local.res.lastID;
-		}else{
-			return arguments.addSecID;
+			local.qry.execute();
 		}
 	}
 
@@ -167,16 +141,14 @@ component output="false" extends="utils" {
 		return local.qry.execute().getResult();
 	}
 
-	public void function removeAdditionalSecurityDetails( required numeric accID, required string IDList ){
-		local.sqlString = "DELETE FROM AdditionalSecurity WHERE 1 = 1 ";
-		local.sqlString &= "AND accID = :accID AND id NOT IN ( :IDList )";
+	public void function removeAdditionalSecurityDetails( required numeric accID ){
+		local.sqlString = "DELETE FROM AdditionalSecurity WHERE 1 = 1 AND accID = :accID";
 
 		local.qry = new query(
 			datasource = dsn.name,
 			sql = local.sqlString
 		);
 		local.qry.addParam(name="accID", value="#arguments.accID#", cfsqltype="cf_sql_integer");
-		local.qry.addParam(name="IDList", value="#arguments.IDList#", cfsqltype="cf_sql_integer", list="true");
 
 		return local.qry.execute().getResult();
 	}

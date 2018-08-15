@@ -11,67 +11,7 @@
 		}
 	}
 </style>
-<script type="text/javascript">
-	jQuery(function(){
-		window.addEventListener('load', function () {
-			// At first, let's check if we have permission for notification
-			// If not, let's ask for it
-			if (window.Notification && Notification.permission !== "granted") {
-				Notification.requestPermission(function (status) {
-					if (Notification.permission !== status) {
-						Notification.permission = status;
-					}
-				});
-			}
-		});
-		setTimeout(function(){
-			jQuery("div.alert").slideUp(1000);
-		},10000);
 
-		i = 0;
-		// checkEvents();
-		setInterval(function(){
-			// This will call every one hour to check for a new event
-			// This show notifiaction should be called whenever an event available
-			// checkEvents();
-		},10000);
-	});
-
-	function checkEvents(){
-		showNotification("Hi Pothys, This is a test notification!");
-	}
-
-	function showNotification(msg){
-		if (window.Notification && Notification.permission === "granted"){
-			window["notifications" + i] = new Notification(msg + i, {tag: 'soManyNotification' + i, body: 'Do you like this notifications?', data: 'I like peas.'});
-			window["notifications" + i].onclick = function(event){
-				event.preventDefault();
-				alert("Test");
-			}
-			i++;
-		}else if (window.Notification && Notification.permission !== "denied"){
-			Notification.requestPermission(function (status) {
-				// If the user said okay
-				if (status === "granted") {
-					var i = 0;
-					// Using an interval cause some browsers (including Firefox) are blocking notifications if there are too much in a certain time.
-					var interval = window.setInterval(function () {
-						// Thanks to the tag, we should only see the "Hi! 9" notification 
-						var n = new Notification("Hi! " + i, {tag: 'soManyNotification' + i, body: 'Do you like my body?'});
-						if (i++ == 9) {
-							window.clearInterval(interval);
-						}
-					}, 200);
-				}
-				// Otherwise, we can fallback to a regular modal alert
-				else {
-					alert("Permission denied");
-				}
-			});
-		}else{
-		}
-	}
-</script>
 <cfoutput>
 	<div class="container">
 		<div style="min-height: 10px;">&nbsp;</div>
@@ -125,7 +65,7 @@
 					<tr>
 						<td>#rc.allTransactions.type#</td>
 						<td>#rc.allTransactions.category#</td>
-						<td>#rc.allTransactions.person#</td>
+						<td>#rc.allTransactions.personName#</td>
 						<td>#rc.allTransactions.amount#</td>
 						<td align="center">
 							<i class="glyphicon glyphicon-edit cursor" onclick="javascript: showEditModal(this, '#rc.allTransactions.id#');"></i> &nbsp;
@@ -179,8 +119,5 @@
 			}
 		</script>
 	</div>
-
 <!--- End --->
 </cfoutput>
-<!--- for modal window with ajax --->
-<!--- https://jsfiddle.net/ednon5d1/ --->

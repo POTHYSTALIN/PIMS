@@ -1,4 +1,4 @@
-component extends="base"{
+component extends="base" {
 	public function index( event, rc, prc ){
 	}
 

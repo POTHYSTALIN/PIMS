@@ -32,6 +32,16 @@
 	addRoute(pattern="/edit/category/:ID", handler="transaction", action="categories");
 	addRoute(pattern="/delete/category/:ID", handler="transaction", action="deleteCategory");
 
+	addRoute(pattern="/list/banks", handler="transaction", action="banks");
+	addRoute(pattern="/new/bank", handler="transaction", action="addeditbank");
+	addRoute(pattern="/delete/bank/:ID", handler="transaction", action="deletebank");
+	addRoute(pattern="/edit/bank/:ID", handler="transaction", action="banks");
+
+	addRoute(pattern="/list/bankaccounts", handler="transaction", action="bankaccounts");
+	addRoute(pattern="/new/bankaccount", handler="transaction", action="addeditbankaccount");
+	addRoute(pattern="/delete/bankaccount/:ID", handler="transaction", action="deletebankaccount");
+	addRoute(pattern="/edit/bankaccount/:ID", handler="transaction", action="bankaccounts");
+
 	addRoute(pattern="/list/transactions", handler="transaction", action="index");
 	addRoute(pattern="/edit/transaction/:id-numeric", handler="transaction", action="addEdit");
 	addRoute(pattern="/add/transaction", handler="transaction", action="addEdit");
@@ -39,6 +49,21 @@
 
 	// Events manager routes
 	addRoute(pattern="/list/events", handler="events", action="index");
+	addRoute(pattern="/list/notifications", handler="events", action="notifications");
+
+	addRoute(pattern="/list/tasks", handler="commons", action="tasks");
+
+	addRoute(pattern="/list/taskTypes", handler="commons", action="tasktypes");
+	addRoute(pattern="/new/taskType", handler="commons", action="addedittasktype");
+	addRoute(pattern="/edit/taskType/:ID", handler="commons", action="tasktypes");
+	addRoute(pattern="/delete/taskType/:ID", handler="commons", action="deleteTaskType");
+
+	addRoute(pattern="/list/taskCategories", handler="commons", action="taskCategories");
+	addRoute(pattern="/new/taskCategory", handler="commons", action="addedittaskCategory");
+	addRoute(pattern="/edit/taskCategory/:ID", handler="commons", action="taskCategories");
+	addRoute(pattern="/delete/taskCategory/:ID", handler="commons", action="deleteTaskCategory");
+
+	addRoute(pattern="/list/tips", handler="commons", action="tips");
 
 	// Common unnamed routes
 	addRoute(":handler/:action/:id");

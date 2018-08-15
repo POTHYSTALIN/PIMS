@@ -1,7 +1,4 @@
 <cfoutput>
-	<style type="text/css">
-		
-	</style>
 	<div class="navbar navbar-inverse navbar-fixed-top scrollclass">
 		<div class="container">
 			#renderView("main/navbar")#

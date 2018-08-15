@@ -1,10 +1,10 @@
-Need to complete the Transaction menu related functionalities.
-	- 
-Need to complete the Events menu related functionalities.
-	- Show notifications based on the events of current time.
+Need to move show bootstrap alerts from a common place.
+Need to add the functionality to make a ajax to get & notify the tasks from table.
 Add one more menu for Tips & Tricks
+	- Create DB schema for this module
 	- Types ( Mitrahsoft, PC, commandbox, technical etc )
 	- Tags for quick search for that
 	- Should have a rich text editor like ckeditor for adding content.
 	- Add some process to add placeholders for special rendering
 Add one more menu for Task manager
+	- a special kind of events, as we don't need to do that within a specific date.

@@ -1,27 +1,41 @@
 component extends="base" {
 	property name="eventService" inject="model.events" scope="instance";
+	property name="utilsService" inject="utilsService" scope="instance";
 
-	public function index( event, rc, prc ){
+	public function index( event, rc, prc ) {
 		// writeDump(CGI);abort;
 		param name="rc.msgAction" default="";
 		param name="rc.msg" default="";
+		param name="rc.id" default="0";
 
 		rc.formAction = "list.events";
-		if(structKeyExists(rc, "event_id")){
-			instance.eventService.updateEvents(argumentCollection=rc);
-		}else if(structKeyExists(rc,"submit")){
-			try{
-				rc.id = instance.eventService.addEvents(argumentCollection=rc);
-				rc.msgAction = "Success";
-				rc.msg = "Events saved successfully.";
+		if( structKeyExists(rc, "submit") && rc.submit == "submit" ){
+			if(val(rc.id)){
+				instance.eventService.updateEvents(argumentCollection=rc);
+			} else {
+				try{
+					rc.id = instance.eventService.addEvents(argumentCollection=rc);
+					rc.msgAction = "Success";
+					rc.msg = "Event saved successfully.";
+				} catch( any e ) {
+					writeDump(e);abort;
+					rc.msgAction = "Error";
+					rc.msg = (len(e.message)?e.message:e.detail);
+				}
 			}
-			catch( any e ){
-				writeDump(e);abort;
-				rc.msgAction = "Error";
-				rc.msg = (len(e.message)?e.message:e.detail);
-			}
-			// setNextEvent(event = 'list.events', persist = "msg,msgAction");
+			setNextEvent(event = 'list.events', persist = "msg,msgAction");
+		} else if( structKeyExists(rc, "submit") && rc.submit == "delete" ){
+			instance.eventService.deleteEvent( id = rc.id );
+			rc.msgAction = "Success";
+			rc.msg = "Event deleted successfully.";
+			setNextEvent(event = 'list.events', persist = "msg,msgAction");
 		}
-		rc.getevents = instance.eventService.getEvents();
+
+		prc.getEvents = instance.eventService.getNotifications();
+	}
+
+	public string function notifications( event, rc, prc ) returnformat="JSON" {
+		var tmpNotifications = instance.eventService.getNotifications();
+		return instance.utilsService.queryToJSON(tmpNotifications);
 	}
 }

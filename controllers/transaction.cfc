@@ -1,6 +1,8 @@
 component extends="base" {
 	property name="categoriesService" inject="model.categories" scope="instance";
 	property name="transactionsService" inject="model.transactions" scope="instance";
+	property name="bankService" inject="model.banks" scope="instance";
+	property name="userService" inject="model.users" scope="instance";
 
 	public function index( event, rc, prc ){
 		// writeDump(CGI);abort;
@@ -13,8 +15,8 @@ component extends="base" {
 		param name="rc.msg" default="";
 		param name="rc.msgAction" default="";
 
-		rc.formAction = val(rc.id)?"update.transaction.#rc.id#":"add.transaction";
-		rc.formSubmit = val(rc.id)?"Update":"Add";
+		prc.formAction = val(rc.id)?"edit.transaction.#rc.id#":"add.transaction";
+		prc.formSubmit = val(rc.id)?"Update":"Add";
 		if(structKeyExists(rc, "submit")){
 			try{
 				if( val(rc.id) )
@@ -31,11 +33,10 @@ component extends="base" {
 			setNextEvent(event = 'list.transactions', persist = "msg,msgAction");
 		}
 		event.setView( view="transaction/addEdit", noLayout=true );
-		rc.transactionDetails = instance.transactionsService.getTransactions( id = rc.id );
-		rc.allCategoryTypes = instance.categoriesService.getCategoryTypes();
-		rc.allCategories = instance.categoriesService.getCategories();
-		// writeDump(rc.allCategoryTypes);abort;
-		// rc.additionalSecDetails = instance.transactionsService.getAdditionalSecurityDetails( id = rc.id );
+		prc.currTransactionDetails = instance.transactionsService.getTransactions( id = rc.id );
+		prc.allCategories = instance.categoriesService.getCategories();
+		prc.allBankAccounts = instance.bankService.getBankAccounts();
+		prc.allPersons = instance.userService.getPersons();
 	}
 
 	public function delete( event, rc, prc ){
@@ -92,7 +93,6 @@ component extends="base" {
 	}
 
 	public function addEditCategoryType( event, rc, prc ) {
-		// writeDump(rc);abort;
 		if(val(rc.ID)){
 			instance.categoriesService.updateCategoryType( argumentCollection = rc );
 			rc.msgAction = "Success";
@@ -116,5 +116,75 @@ component extends="base" {
 			rc.msg = "No such Transaction category type found.";
 		}
 		setNextEvent(event = 'list.categoryTypes', persist = "msg,msgAction");
+	}
+
+	public function banks( event, rc, prc ){
+		param name="rc.ID" default="0";
+		prc.allBanks = instance.bankService.getBanks( includeDeleted = 1 );
+		if( structKeyExists(rc, "ID") ){
+			prc.currBankDetails = instance.bankService.getBanks( ID = rc.ID, includeDeleted = 1 );
+		}
+	}
+
+	public function addEditBank( event, rc, prc ) {
+		if(val(rc.ID)){
+			instance.bankService.updateBank( argumentCollection = rc );
+			rc.msgAction = "Success";
+			rc.msg = "Bank details saved successfully.";
+		}else{
+			instance.bankService.newBank( argumentCollection = rc );
+			rc.msgAction = "Success";
+			rc.msg = "Bank details added successfully.";
+		}
+		setNextEvent(event = 'list.banks', persist = "msg,msgAction");
+	}
+
+	public function deleteBank( event, rc, prc ) {
+		param name="rc.ID" default="0";
+		if(val(rc.ID)){
+			instance.bankService.deleteBank( ID = rc.ID );
+			rc.msgAction = "Success";
+			rc.msg = "Bank deleted successfully.";
+		}else{
+			rc.msgAction = "Error";
+			rc.msg = "No such bank found.";
+		}
+		setNextEvent(event = 'list.banks', persist = "msg,msgAction");
+	}
+
+	public function bankAccounts( event, rc, prc ){
+		param name="rc.ID" default="0";
+		prc.allBankAccounts = instance.bankService.getBankAccounts( includeDeleted = 1 );
+		prc.allBanks = instance.bankService.getBanks();
+		prc.allPersons = instance.userService.getPersons();
+		if( structKeyExists(rc, "ID") ){
+			prc.currBankAccountDetails = instance.bankService.getBankAccounts( ID = rc.ID, includeDeleted = 1 );
+		}
+	}
+
+	public function addEditBankAccount( event, rc, prc ) {
+		if(val(rc.ID)){
+			instance.bankService.updateBankAccount( argumentCollection = rc );
+			rc.msgAction = "Success";
+			rc.msg = "Bank details saved successfully.";
+		}else{
+			instance.bankService.newBankAccount( argumentCollection = rc );
+			rc.msgAction = "Success";
+			rc.msg = "Bank details added successfully.";
+		}
+		setNextEvent(event = 'list.bankAccounts', persist = "msg,msgAction");
+	}
+
+	public function deleteBankAccount( event, rc, prc ) {
+		param name="rc.ID" default="0";
+		if(val(rc.ID)){
+			instance.bankService.deleteBankAccount( ID = rc.ID );
+			rc.msgAction = "Success";
+			rc.msg = "Bank deleted successfully.";
+		}else{
+			rc.msgAction = "Error";
+			rc.msg = "No such bank found.";
+		}
+		setNextEvent(event = 'list.bankAccounts', persist = "msg,msgAction");
 	}
 }

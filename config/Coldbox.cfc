@@ -40,7 +40,7 @@ component {
 
 			// Application Aspects
 			handlersIndexAutoReload = false,
-			handlerCaching 			= true,
+			handlerCaching 			= false,
 			eventCaching			= true
 		};
 
