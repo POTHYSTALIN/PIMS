@@ -22,18 +22,35 @@ IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'latestMyApp')
 
 use latestMyApp;
 
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[persons]') AND type in (N'U'))
+BEGIN
+	CREATE TABLE persons(
+		id int primary key identity(1,1),
+		fname nvarchar(50),
+		lname nvarchar(50),
+		email nvarchar(50) null,
+		phone nvarchar(50) null,
+		created datetime default(getDate()),
+		updated datetime default(getDate()),
+		deleted bit default(0)
+	)
+	INSERT INTO persons( fname, lname, email, phone )
+	VALUES( N'Pothys', N'Ravichandran', N'test@test.com', N'+91 xxxxxxxxxx' )
+END
+
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[logins]') AND type in (N'U'))
 BEGIN
 	CREATE TABLE logins(
 		id int primary key identity(1,1),
-		name nvarchar(30) not null,
-		password nvarchar(100) not null,
+		username nvarchar(50) not null,
+		password nvarchar(50) not null,
+		personID int NOT NULL,
 		created datetime default(getDate()),
 		updated datetime default(getDate()),
 		verified bit default(0)
 	)
-	INSERT INTO logins( name, password, verified )
-	VALUES( N'pothys', N'pothys', 1 )
+	INSERT INTO logins( username, password, personID, verified )
+	VALUES( N'pothys', N'pothys', 1, 1 )
 END
 
 -- for password manager module
@@ -151,21 +168,6 @@ BEGIN
 	)
 END
 
-IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[persons]') AND type in (N'U'))
-BEGIN
-	CREATE TABLE persons(
-		id int primary key identity(1,1),
-		fname nvarchar(50),
-		lname nvarchar(50),
-		username nvarchar(50) null,
-		password nvarchar(50) null,
-		email nvarchar(50) null,
-		phone nvarchar(50) null,
-		created datetime default(getDate()),
-		updated datetime default(getDate()),
-		deleted bit default(0)
-	)
-END
 
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[events]') AND type in (N'U'))
 BEGIN
@@ -203,6 +205,7 @@ BEGIN
 	)
 
 	INSERT INTO taskTypes ( name, [desc] ) VALUES
+	( N'Occasional', N'This is a type for an occasional task' ),
 	( N'No range', N'This is a type for a task, which may have no date of completion' ),
 	( N'Repeative', N'This is a type for a task, which may happen again & again' )
 END
@@ -229,11 +232,11 @@ BEGIN
 	)
 
 	INSERT INTO taskCategories ( name, taskTypeID, repeatType, repeatDelay ) VALUES
-	( N'One time task', 1, NULL, NULL ),
-	( N'Daily task', 2, 1, 1 ),
-	( N'Weekly task', 2, 2, 1 ),
-	( N'Monthly task', 2, 3, 1 ),
-	( N'Yearly task', 2, 4, 1 )
+	( N'One time task', 2, NULL, NULL ),
+	( N'Daily task', 3, 1, 1 ),
+	( N'Weekly task', 3, 2, 1 ),
+	( N'Monthly task', 3, 3, 1 ),
+	( N'Yearly task', 3, 4, 1 )
 END
 
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[taskRepeatTypes]') AND type in (N'U'))

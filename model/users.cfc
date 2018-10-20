@@ -1,7 +1,7 @@
 <cfcomponent singleton="true">
 	<cfproperty name="dsn" inject="coldbox:datasource:latestMyApp">
 
-	<cffunction name="init" returntype="Any">
+	<cffunction name="init" access="public" returntype="users">
 		<cfreturn this>
 	</cffunction>
 
@@ -10,11 +10,12 @@
 		<cfargument name="password" type="string" required="true">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
-			SELECT * FROM Persons P
+			SELECT p.* FROM logins l
+				INNER JOIN persons p on l.personID = p.id
 			WHERE 1 = 1
-				AND deleted = 0
-				AND username = <cfqueryparam value="#arguments.username#" cfsqltype="cf_sql_varchar">
-				AND password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">
+				AND l.verified = 1
+				AND l.username = <cfqueryparam value="#arguments.username#" cfsqltype="cf_sql_varchar">
+				AND l.password = <cfqueryparam value="#arguments.password#" cfsqltype="cf_sql_varchar">
 		</cfquery>
 
 		<cfreturn local.qry />
