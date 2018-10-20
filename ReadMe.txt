@@ -1,4 +1,3 @@
-Need to move show bootstrap alerts from a common place.
 Need to add the functionality to make a ajax to get & notify the tasks from table.
 Add one more menu for Tips & Tricks
 	- Create DB schema for this module

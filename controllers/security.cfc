@@ -21,6 +21,7 @@ component extends="base" {
 				Session.userName = "POTHYS";
 				rc.msgAction = "Success";
 				rc.msg = "Welcome back, #Session.UserName# !!!";
+				setNextEvent(event = 'home', persist = "msg,msgAction");
 			}
 		}
 		rc.msgAction = "Error";

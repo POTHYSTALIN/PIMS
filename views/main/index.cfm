@@ -5,21 +5,7 @@
 <div class="container">
 	<cfoutput>
 		<div style="min-height: 10px;">&nbsp;</div>
-		<cfif len(rc.msg) AND rc.msgAction EQ "Error">
-			<div class="alert alert-dismissible alert-danger" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<strong>Error!</strong> #rc.msg#
-			</div>
-		<cfelseif len(rc.msg) AND rc.msgAction EQ "Success">
-			<div class="alert alert-dismissible alert-success" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<strong>Success!</strong> #rc.msg#
-			</div>
-		</cfif>
+		<cf_alerts msg="#rc.msg#" msgAction="#rc.msgAction#">
 	</cfoutput>
 <div id="carousel-example" class="mbr-slider mbr-section mbr-section__container carousel slide mbr-section-nopadding mbr-after-navbar" data-ride="carousel" style="background-color: #6E6E6F; color: white; margin: 175px 0 0 220px; width: 70%; min-height: 300px; opacity: 0.60;">
 	<!-- Indicators -->

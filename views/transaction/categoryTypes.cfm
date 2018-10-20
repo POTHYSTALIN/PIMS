@@ -12,21 +12,7 @@
 <cfoutput>
 <div class="container">
 	<div style="min-height: 10px;">&nbsp;</div>
-	<cfif len(rc.msg) AND rc.msgAction EQ "Error">
-		<div class="alert alert-dismissible alert-danger" role="alert">
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-			<strong>Error!</strong> #rc.msg#
-		</div>
-	<cfelseif len(rc.msg) AND rc.msgAction EQ "Success">
-		<div class="alert alert-dismissible alert-success" role="alert">
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-			<strong>Success!</strong> #rc.msg#
-		</div>
-	</cfif>
+	<cf_alerts msg="#rc.msg#" msgAction="#rc.msgAction#">
 
 	<div class="row">
 		<!--- <div class="col-xs-12">
