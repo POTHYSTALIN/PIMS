@@ -1,5 +1,5 @@
 <cfcomponent singleton="true">
-	<cfproperty name="dsn" inject="coldbox:datasource:inoutcomes">
+	<cfproperty name="dsn" inject="coldbox:datasource:latestMyApp">
 
 	<cffunction name="init" returntype="Any">
 		<cfreturn this>

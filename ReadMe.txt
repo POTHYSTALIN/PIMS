@@ -8,3 +8,8 @@ Add one more menu for Tips & Tricks
 	- Add some process to add placeholders for special rendering
 Add one more menu for Task manager
 	- a special kind of events, as we don't need to do that within a specific date.
+
+-- Need to change the login process to have DB check
+	-- Need to add one more column in logins table ( foreign key from Persons ).
+-- Need to change the events click to show the currently clicked day, instead of showing current day.
+-- Need to add signup page & add the ability for admin to make a newly registered user with more roles.

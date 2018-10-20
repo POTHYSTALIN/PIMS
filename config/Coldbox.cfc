@@ -46,7 +46,7 @@ component {
 
 		// Datasources
 		datasources = {
-			inoutcomes = { name="inoutcomes", dbType="", username="", password=""}
+			latestMyApp = { name="latestMyApp", dbType="", username="", password=""}
 		};
 
 		// Environments, check CGI.HTTP_HOST for string, $ matches end, ^ matches start
@@ -74,6 +74,9 @@ component {
 		coldbox.handlerCaching = false;
 		coldbox.customErrorTemplate = "/coldbox/system/includes/BugReport.cfm";
 		coldbox.handlersIndexAutoReload = true;
+		datasources = {
+			latestMyApp = { name="latestMyApp_dev", dbType="", username="", password=""}
+		};
 
 		wirebox.singletonReload = true;
 	}

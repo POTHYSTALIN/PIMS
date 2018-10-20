@@ -1,6 +1,6 @@
 component output="false" extends="utils" {
 
-	property name="dsn" inject="coldbox:datasource:inoutcomes";
+	property name="dsn" inject="coldbox:datasource:latestMyApp";
 
 	public function init(){
 		return this;
