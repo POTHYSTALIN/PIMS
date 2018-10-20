@@ -43,7 +43,7 @@
 				<cfset currEvnt.id = id>
 				<cfset currEvnt.start = dateTimeFormat(sDate, "mm/dd/yyyy h:nn TT")>
 				<cfset currEvnt.end = dateTimeFormat(eDate, "mm/dd/yyyy h:nn TT")>
-				<cfset currEvnt.desc = desc>
+				<cfset currEvnt.description = desc>
 				<cfif type EQ "events">
 					<cfset currEvnt.color = "purple">
 				<cfelseif type EQ "tasks">
@@ -52,7 +52,10 @@
 				<cfset arrayAppend(eventsArr, currEvnt)>
 			</cfloop>
 
-			<cfset allEvents = replaceNoCase(replaceNoCase(replaceNoCase(replaceNoCase(serializeJSON(eventsArr), '"start"', "start", "ALL"), '"end"', "end", "ALL"), '"title"', "title", "ALL"), '"color"', "color", "ALL")>
+			<cfset allEvents = serializeJSON(eventsArr)>
+			<cfloop list="start,end,title,color,description" index="currItem">
+				<cfset allEvents = replaceNoCase(allEvents, '"#currItem#"', currItem, "ALL")>
+			</cfloop>
 
 			<div style="min-height: 10px;">&nbsp;</div>
 			<div id="calendar"></div>

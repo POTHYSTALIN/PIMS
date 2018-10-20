@@ -61,18 +61,24 @@ component output="false" {
 		local.qry.execute();
 	}
 
-	public query function getNotifications() {
+	public query function getNotifications(boolean showAll=true) {
 		local.sqlString = "
 			with qry as (
 				SELECT
 					id, name, [desc], sdate, edate, 'events' as type
 				FROM events
 				WHERE 1 = 1
-					AND sdate > DATEADD(day, -1, getDate())
-					AND (
-						edate < DATEADD(day, 1, getDate())
-						OR edate IS NULL
-					)
+		";
+		if(!arguments.showAll){
+			local.sqlString &="
+				AND sdate > DATEADD(day, -1, getDate())
+				AND (
+					edate < DATEADD(day, 1, getDate())
+					OR edate IS NULL
+				)
+			";
+		}
+		local.sqlString &="
 			)
 
 			SELECT * FROM qry
