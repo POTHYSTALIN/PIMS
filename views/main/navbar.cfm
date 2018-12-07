@@ -9,7 +9,7 @@
 	<a class="navbar-brand" href="/">Apps Manager<cfif structKeyExists(url, "debug")> ( #rc.action# )</cfif></a>
 </div>
 <div class="collapse navbar-collapse" id="navbar-collapse-1">
-	<ul class="nav navbar-nav navbar-left" style="width: 89%">
+	<ul class="nav navbar-nav navbar-left" style="width: 86%">
 		<!--- simple link --->
 		<!--- <li><a href="##">Link</a></li> --->
 		<!--- dropdown link --->
@@ -61,6 +61,7 @@
 				<li><a class="dropdown-item" href="#event.buildLink('list.taskCategories')#">Task Categories</a></li>
 				<hr>
 				<li><a href="#event.buildLink('list.tips')#">Tips & Tricks</a></li>
+				<li><a href="#event.buildLink('list.sysInfo')#">System Information</a></li>
 			</ul>
 		</li>
 		<li class="dropdown pull-right">

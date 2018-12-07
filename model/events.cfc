@@ -61,7 +61,7 @@ component output="false" {
 		local.qry.execute();
 	}
 
-	public query function getNotifications(boolean showAll=true) {
+	public query function getNotifications( boolean showAll = true ) {
 		local.sqlString = "
 			with qry as (
 				SELECT

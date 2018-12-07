@@ -7,6 +7,6 @@ Add one more menu for Tips & Tricks
 	- Add some process to add placeholders for special rendering
 Add one more menu for Task manager
 	- a special kind of events, as we don't need to do that within a specific date.
+	- Tasks ( id, title, description, parentID(0), sDate(NULL), eDate(NULL), created(getDate()), updated(getDate()), isActive(1) )
 
--- Need to change the events click to show the currently clicked day, instead of showing current day.
 -- Need to add signup page & add the ability for admin to make a newly registered user with more roles.

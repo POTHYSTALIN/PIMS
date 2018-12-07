@@ -1,6 +1,7 @@
 component extends="base" {
 	property name="eventService" inject="model.events" scope="instance";
-	property name="utilsService" inject="utilsService" scope="instance";
+	// property name="utilsService" inject="utilsService" scope="instance";
+	property name="utilsService" inject="model.utils" scope="instance";
 
 	public function index( event, rc, prc ) {
 		// writeDump(CGI);abort;

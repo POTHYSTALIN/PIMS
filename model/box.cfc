@@ -6,7 +6,8 @@
 	<cfset variables.apiURLs["deleteFile"] = "https://api.box.com/2.0/files/">
 	<cfset variables.redirectURI = "http://localhost:8501/boxAPI/getToken.cfm">
 	<cffunction name="init" access="public" returntype="box">
-		<cfset variables.utilsService = application.wirebox.getInstance("utilsService")>
+		<!--- <cfset variables.utilsService = application.wirebox.getInstance("utilsService")> --->
+		<cfset variables.utilsService = application.wirebox.getInstance("model.utils")>
 		<cfset var tempConfig = utilsService.getGlobalConfigs().boxAPI>
 
 		<cfset variables.devToken = tempConfig.devToken>

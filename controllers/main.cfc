@@ -1,5 +1,8 @@
 component extends="base" {
 	public function index( event, rc, prc ){
+		// var a = controller.getModuleService();
+		// a.activateAllModules();
+		// writeDump(a.getLoadedModules());abort;
 	}
 
 	public function password( event, rc, prc ){

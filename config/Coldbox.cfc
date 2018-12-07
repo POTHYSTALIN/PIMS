@@ -13,7 +13,9 @@ component {
 			viewsLocation = "views",
 			layoutsLocation = "layouts",
 			modelsLocation = "model",
-			modulesLocation = "modules",
+			modulesLocation = "/modules",
+			modulesExternalLocation = [ "/modules_app" ],
+			modulesAutoReload = true,
 
 			// Implicit Events
 			defaultEvent			= "main.index",
@@ -28,7 +30,7 @@ component {
 			// Extension Points
 			applicationHelper = "",
 			viewsHelper = "",
-			handlersExternalLocation = "controllers",
+			// handlersExternalLocation = "controllers",
 
 			// Error/Exception Handling
 			exceptionHandler		= "main.onException",
@@ -37,11 +39,20 @@ component {
 
 			// Development Settings
 			reinitPassword			= "",
+			caseSensitiveImplicitViews = true,
 
 			// Application Aspects
 			handlersIndexAutoReload = false,
 			handlerCaching 			= false,
 			eventCaching			= true
+		};
+
+		conventions = {
+			handlersLocation = "controllers",
+			pluginsLocation = "plugins",
+			viewsLocation 	 = "views",
+			layoutsLocation  = "layouts",
+			modulesLocation	 = "modules"
 		};
 
 		// Datasources
@@ -61,7 +72,17 @@ component {
 		];
 
 		settings = {
-			"globalConfigPath" = "/config/myconfig.xml"
+			"globalConfigPath" = "/config/myconfig.xml",
+			modulesAutoReload = true
+		};
+
+		modules = {
+			// Will auto reload the modules in each request. Great for development but can cause some loading/re-loading issues
+			autoReload = true,
+			// An array of modules to load ONLY
+			include = [],
+			// An array of modules to EXCLUDE for operation
+			exclude = [ "paidModule1", "paidModule2" ]
 		};
 
 	};

@@ -49,11 +49,12 @@
 				<cfelseif type EQ "tasks">
 					<cfset currEvnt.color = "green">
 				</cfif>
+				<cfset currEvnt.timeFormat = "H(:mm)">
 				<cfset arrayAppend(eventsArr, currEvnt)>
 			</cfloop>
 
 			<cfset allEvents = serializeJSON(eventsArr)>
-			<cfloop list="start,end,title,color,description" index="currItem">
+			<cfloop list="start,end,title,color,description,timeFormat" index="currItem">
 				<cfset allEvents = replaceNoCase(allEvents, '"#currItem#"', currItem, "ALL")>
 			</cfloop>
 

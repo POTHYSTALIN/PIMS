@@ -15,6 +15,7 @@
 	COLDBOX_APP_KEY 		 = "";
 
 	// this.mappings["/validatethis"] = COLDBOX_APP_ROOT_PATH & "lib/validatethis/";
+	this.mappings["/coldbox"] = COLDBOX_APP_ROOT_PATH & "coldbox/";
 	this.customTagPaths = COLDBOX_APP_ROOT_PATH & "/views/customTags";
 
 	public boolean function onApplicationStart() {
