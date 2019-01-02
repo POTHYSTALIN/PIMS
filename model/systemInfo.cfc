@@ -1,5 +1,5 @@
 component {
-	property name="dsn" inject="coldbox:datasource:inoutcomes";
+	property name="dsn" inject="coldbox:datasource:latestMyApp";
 
 	public any function list() {
 		var q = new Query();

@@ -1,6 +1,12 @@
 <cfoutput>
 	<div class="navbar navbar-inverse navbar-fixed-top scrollclass">
 		<div class="container">
+			<cfif request.CBConfigSettings.environment EQ "DEVELOPMENT">
+				<div style="text-align: center; width: 100%; background-color: yellow; color: red; height: 30px; vertical-align: baseline;">
+					You're in development environment.
+				</div>
+			</cfif>
+
 			#renderView("main/navbar")#
 			<!--- <div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">

@@ -2,7 +2,16 @@ component extends="base" {
 	public function index( event, rc, prc ){
 		// var a = controller.getModuleService();
 		// a.activateAllModules();
-		// writeDump(a.getLoadedModules());abort;
+		// writeDump(a.getLoadedModules());
+		// abort;
+
+		// writeDump(controller.getConfigSettings());
+		// writeDump(controller.getColdboxSettings());
+		// abort;
+
+		// writeDump(CBConfigSettings);
+		// writeDump(CBFWSettings);
+		// abort;
 	}
 
 	public function password( event, rc, prc ){

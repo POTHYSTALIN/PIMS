@@ -63,7 +63,7 @@ component {
 		// Environments, check CGI.HTTP_HOST for string, $ matches end, ^ matches start
 		environments = {
 			production = "\.com$",
-			development = "^127,^localhost,\.dev$"
+			development = "^127,^localhost,\.dev$,\.local$"
 		};
 
 		interceptors = [
@@ -88,7 +88,6 @@ component {
 	};
 
 	public function development() {
-
 		coldbox.BaseURL = "http://final.myapp.dev/";
 		coldbox.reinitpassword = "";
 		coldbox.eventCaching = false;

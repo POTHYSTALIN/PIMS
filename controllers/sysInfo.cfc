@@ -1,4 +1,4 @@
-component extends="coldbox.system.EventHandler"{
+component extends="base"{
 	property name="sysInfo" inject="model.systemInfo";
 	function index( event, rc, prc ){
 		// business logics goes here
@@ -69,7 +69,7 @@ component extends="coldbox.system.EventHandler"{
 
 	public void function batch(event,rc,prc){
 		rc.viewEmpbatch = sysInfo.selectData();
-		event.setView("main/batch");
+		event.setView("sysInfo/batch");
 	}
 
 	public function addbatch(){

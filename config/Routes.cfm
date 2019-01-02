@@ -3,11 +3,15 @@
 	setUniqueURLS(false);
 	// setFullRewrites( true );
 
+	protocol = "http";
+	if(lCase(CGI.HTTPS) EQ "on")
+		protocol = "https";
+
 	if ( len( getSetting( 'AppMapping' ) ) LTE 1 ){
-		setBaseURL("http://#cgi.HTTP_HOST#");
+		setBaseURL("#protocol#://#cgi.HTTP_HOST#");
 		// setBaseURL("https://#cgi.HTTP_HOST#");
 	}else {
-		setBaseURL("http://#cgi.HTTP_HOST#/#getSetting('AppMapping')#");
+		setBaseURL("#protocol#://#cgi.HTTP_HOST#/#getSetting('AppMapping')#");
 		// setBaseURL("https://#cgi.HTTP_HOST#/#getSetting('AppMapping')#");
 	};
 
