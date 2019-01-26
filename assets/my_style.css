@@ -1,0 +1,15 @@
+.pull-left {
+	/* This style has been removed from older versions of font-awesome */
+	float: left;
+}
+
+.sf-arrows .sf-with-ul::after{
+	/* For down arrow support */
+	font-family: "Font Awesome 5 Free" !important;
+	font-weight: 900 !important;
+	content: "\f105";
+}
+.sf-arrows .sf-with-ul:hover:after{
+	/* changing the icon on hover */
+	content: "\f107";
+}

@@ -1,0 +1,40 @@
+component extends="coldbox.system.EventHandler"{
+	function index( event, rc, prc ){
+		// business logics goes here
+		event.noLayout();
+		// event.setView(view="main/index", noLayout=true);
+	}
+
+	function demo( event, rc, prc ){
+		// business logics goes here
+		event.noLayout();
+	}
+
+	/* --------------------- PRIVATE EVENTS ----------------------------- */
+	public function onRequestStart( event, rc, prc ) {
+		// List of pages, can be accessed without logged in.
+		local.WhiteList = [
+			"security.login",
+			"security.doLogin",
+			"login",
+			"logout"
+		];
+
+		// if( NOT structKeyExists(session, "userID") AND NOT ArrayFindNoCase( local.WhiteList, rc.Action )){
+		// 	rc.msgAction = "Error";
+		// 	rc.msg = "Please try after login";
+		// 	setNextEvent(event = 'login', persist = "msg,msgAction");
+		// }
+
+		local.BlackList = [
+			"security.login"
+		];
+
+		if (structKeyExists(session, "userID") AND ArrayFindNoCase( local.BlackList, rc.Action )){
+			setNextEvent(event = 'home');
+		}
+	}
+
+	public function onException(event,rc,prc){
+	}
+}
