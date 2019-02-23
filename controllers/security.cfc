@@ -6,7 +6,8 @@ component extends="coldbox.system.EventHandler"{
 
 	function login( event, rc, prc ){
 		// business logics goes here
-		event.setView(view="security/index", noLayout=true);
+		event.setLayout("main");
+		event.setView(view="security/index");
 	}
 
 	function signup( event, rc, prc ){

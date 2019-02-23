@@ -32,8 +32,9 @@ Header
 			<ul class="nav-menu">
 				<li class="menu-active"><a href="##body">Home</a></li>
 				<cfif structKeyExists(session, "UserID")>
-					<li><a href="##team">single</a></li>
-					<li class="menu-has-children"><a href="">Drop Down</a>
+					<li><a href="##team">Password</a></li>
+					<li class="menu-has-children">
+						<a href="">Pothys Ravichandran</a>
 						<ul>
 							<li><a href="##">Drop Down 1</a></li>
 							<li><a href="##">Drop Down 3</a></li>
@@ -41,10 +42,13 @@ Header
 							<li><a href="##">Drop Down 5</a></li>
 						</ul>
 					</li>
-				<cfelseif lcase(cgi.path_info) IS "/login">
-					<li><a href="/signup">Signup</a></li>
-				<cfelseif lcase(cgi.path_info) IS "/signup">
-					<li><a href="/login">Login</a></li>
+				<cfelse>
+					<cfif lcase(cgi.path_info) IS NOT "/login">
+						<li><a href="/login">Login</a></li>
+					</cfif>
+					<cfif lcase(cgi.path_info) IS NOT "/signup">
+						<li><a href="/signup">Signup</a></li>
+					</cfif>
 				</cfif>
 			</ul>
 		</nav><!-- ##nav-menu-container -->

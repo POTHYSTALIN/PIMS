@@ -1,13 +1,14 @@
 component extends="coldbox.system.EventHandler"{
 	function index( event, rc, prc ){
 		// business logics goes here
-		event.noLayout();
+		// event.noLayout();
 		// event.setView(view="main/index", noLayout=true);
+		event.setLayout("main");
 	}
 
 	function demo( event, rc, prc ){
 		// business logics goes here
-		event.noLayout();
+		event.setLayout("main");
 	}
 
 	/* --------------------- PRIVATE EVENTS ----------------------------- */

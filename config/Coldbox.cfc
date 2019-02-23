@@ -54,7 +54,7 @@
 		conventions = {
 			handlersLocation = "controllers",
 			viewsLocation      = "views",
-			layoutsLocation  = "views",
+			layoutsLocation  = "layouts",
 			modelsLocation      = "model",
 			modulesLocation  = "modules",
 			eventAction      = "index"
