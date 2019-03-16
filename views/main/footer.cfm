@@ -13,4 +13,13 @@
 
 <!-- Template Main Javascript File -->
 <script src="#request.assetsPath#/main.js"></script>
+
+<cfset pageSpecificJs = expandPath('/assets/#listFirst(rc.action, ".")#.js')>
+<cfif fileExists(pageSpecificJs)>
+	<script src="/assets/#listFirst(rc.action, ".")#.js"></script>
+</cfif>
+<cfset pageSpecificJs = expandPath('/assets/#cgi.path_info#.js')>
+<cfif fileExists(pageSpecificJs)>
+	<script src="/assets/#cgi.path_info#.js"></script>
+</cfif>
 </cfoutput>

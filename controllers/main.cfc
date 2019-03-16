@@ -17,15 +17,17 @@ component extends="coldbox.system.EventHandler"{
 		local.WhiteList = [
 			"security.login",
 			"security.doLogin",
+			"security.signup",
+			"security.doSignup",
 			"login",
 			"logout"
 		];
 
-		// if( NOT structKeyExists(session, "userID") AND NOT ArrayFindNoCase( local.WhiteList, rc.Action )){
-		// 	rc.msgAction = "Error";
-		// 	rc.msg = "Please try after login";
-		// 	setNextEvent(event = 'login', persist = "msg,msgAction");
-		// }
+		if( NOT structKeyExists(session, "userID") AND NOT ArrayFindNoCase( local.WhiteList, rc.Action )){
+			rc.msgAction = "Error";
+			rc.msg = "Please try after login";
+			setNextEvent(event = 'login', persist = "msg,msgAction");
+		}
 
 		local.BlackList = [
 			"security.login"

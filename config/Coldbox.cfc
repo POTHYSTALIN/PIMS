@@ -59,5 +59,29 @@
 			modulesLocation  = "modules",
 			eventAction      = "index"
 		};
+
+		// Environments, check CGI.HTTP_HOST for string, $ matches end, ^ matches start
+		environments = {
+			production = "\.com$",
+			development = "^127,^localhost,\.dev$,\.local$"
+		};
+
+		settings = {
+			latestMyApp = { name="latestMyApp", dbType="", username="", password=""},
+			globalConfigPath = "/config/myconfig.xml",
+			modulesAutoReload = true
+		};
+	}
+
+	public function development() {
+		coldbox.BaseURL = "http://final.myapp.local/";
+		coldbox.reinitpassword = "";
+		coldbox.eventCaching = false;
+		coldbox.handlerCaching = false;
+		coldbox.customErrorTemplate = "/coldbox/system/includes/BugReport.cfm";
+		coldbox.handlersIndexAutoReload = true;
+		settings.latestMyApp = { name="latestMyApp_dev", dbType="", username="", password=""};
+
+		wirebox.singletonReload = true;
 	}
 }

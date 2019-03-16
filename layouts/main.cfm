@@ -1,3 +1,5 @@
+<cfparam name="rc.msg" default="">
+<cfparam name="rc.msgAction" default="">
 <cfoutput>
 <!--- <cfdump var="#request#" /><cfabort /> --->
 <!DOCTYPE html>
@@ -26,10 +28,22 @@
 		<!-- Main Stylesheet File -->
 		<link href="#request.assetsPath#/style.css" rel="stylesheet">
 		<link href="#request.assetsPath#/my_style.css" rel="stylesheet">
+		
+		<cfset pageSpecificCss = expandPath('/assets/#listFirst(rc.action, '.')#.css')>
+		<cfif fileExists(pageSpecificCss)>
+			<link href="/assets/#listFirst(rc.action, '.')#.css" rel="stylesheet" />
+		</cfif>
+		<cfset pageSpecificCss = expandPath('/assets/#cgi.path_info#.css')>
+		<cfif fileExists(pageSpecificCss)>
+			<link href="/assets/#cgi.path_info#.css" rel="stylesheet" />
+		</cfif>
 	</head>
 	<body>
 		#renderView("main/header")#
 		<div class="container-fluid">
+			<div class="container-center">
+				<cf_alerts msg="#rc.msg#" msgAction="#rc.msgAction#" />
+			</div>
 			#renderView()#
 		</div>
 		#renderView("main/footer")#

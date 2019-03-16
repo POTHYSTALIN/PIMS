@@ -1,4 +1,11 @@
+// Setting Global JS variables
+var currPage = window.location.pathname.substr(1, window.location.pathname.length);
+
 jQuery(document).ready(function ($) {
+  // set active menu
+  currSelectMenu = "menu_" + currPage.replace("/", "_submenu_");
+  jQuery("#" + currSelectMenu).addClass("menu-active");
+
 
   // Back to top button
   $(window).scroll(function () {

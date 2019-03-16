@@ -30,24 +30,24 @@ Header
 
 		<nav id="nav-menu-container">
 			<ul class="nav-menu">
-				<li class="menu-active"><a href="##body">Home</a></li>
+				<li id="menu_home"><a href="/home">Home</a></li>
 				<cfif structKeyExists(session, "UserID")>
-					<li><a href="##team">Password</a></li>
-					<li class="menu-has-children">
+					<li id="menu_password"><a href="/password">Password</a></li>
+					<li id="menu_user" class="menu-has-children">
 						<a href="">Pothys Ravichandran</a>
-						<ul>
-							<li><a href="##">Drop Down 1</a></li>
-							<li><a href="##">Drop Down 3</a></li>
-							<li><a href="##">Drop Down 4</a></li>
-							<li><a href="##">Drop Down 5</a></li>
+						<ul id="menu_user_submenus">
+							<li id="menu_user_submenu_1"><a href="##">Drop Down 1</a></li>
+							<li id="menu_user_submenu_1"><a href="##">Drop Down 3</a></li>
+							<li id="menu_user_submenu_1"><a href="##">Drop Down 4</a></li>
+							<li id="menu_user_submenu_logout"><a href="/logout">Logout</a></li>
 						</ul>
 					</li>
 				<cfelse>
-					<cfif lcase(cgi.path_info) IS NOT "/login">
-						<li><a href="/login">Login</a></li>
+					<cfif lcase(cgi.path_info) IS NOT "/login" AND NOT structKeyExists(session, "UserID")>
+						<li id="menu_login"><a href="/login">Login</a></li>
 					</cfif>
-					<cfif lcase(cgi.path_info) IS NOT "/signup">
-						<li><a href="/signup">Signup</a></li>
+					<cfif lcase(cgi.path_info) IS NOT "/signup" AND NOT structKeyExists(session, "UserID")>
+						<li id="menu_signup"><a href="/signup">Signup</a></li>
 					</cfif>
 				</cfif>
 			</ul>
