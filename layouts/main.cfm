@@ -41,9 +41,7 @@
 	<body>
 		#renderView("main/header")#
 		<div class="container-fluid">
-			<div class="container-center">
-				<cf_alerts msg="#rc.msg#" msgAction="#rc.msgAction#" />
-			</div>
+			<cf_alerts msg="#rc.msg#" msgAction="#rc.msgAction#" />
 			#renderView()#
 		</div>
 		#renderView("main/footer")#
