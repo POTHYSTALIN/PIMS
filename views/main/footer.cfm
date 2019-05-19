@@ -14,12 +14,23 @@
 <!-- Template Main Javascript File -->
 <script src="#request.assetsPath#/main.js"></script>
 
-<cfset pageSpecificJs = expandPath('/assets/#listFirst(rc.action, ".")#.js')>
-<cfif fileExists(pageSpecificJs)>
-	<script src="/assets/#listFirst(rc.action, ".")#.js"></script>
-</cfif>
-<cfset pageSpecificJs = expandPath('/assets/#cgi.path_info#.js')>
-<cfif fileExists(pageSpecificJs)>
+<cfset moduleSpec = listRest(rc.action, ":")>
+<cfset handlerSpec = listRest(moduleSpec, ":")>
+
+<cfif fileExists(expandPath('/assets/#listFirst(rc.action, ":")#.js'))>
+	<!--- module specific js --->
+	<script src="/assets/#listFirst(rc.action, ":")#.js"></script>
+<cfelseif fileExists(expandPath('/assets/#listFirst(moduleSpec, ".")#.js'))>
+	<!--- handler specific js --->
+	<script src="/assets/#listFirst(moduleSpec, ".")#.js"></script>
+<cfelseif fileExists(expandPath('/assets/#cgi.path_info#.js'))>
 	<script src="/assets/#cgi.path_info#.js"></script>
 </cfif>
+<script>
+	jQuery(function(){
+		setTimeout(function(){
+			jQuery("div.alert").slideUp(1000);
+		}, 10000);
+	});
+</script>
 </cfoutput>

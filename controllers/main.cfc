@@ -1,4 +1,4 @@
-component extends="coldbox.system.EventHandler"{
+component extends="coldbox.system.EventHandler" {
 	function index( event, rc, prc ){
 		// business logics goes here
 		// event.noLayout();
