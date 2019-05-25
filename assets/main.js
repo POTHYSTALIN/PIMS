@@ -3,7 +3,9 @@ var currPage = window.location.pathname.substr(1, window.location.pathname.lengt
 
 jQuery(document).ready(function ($) {
   // set active menu
-  currSelectMenu = "menu_" + currPage.replace("/", "_submenu_");
+  // remove second & third replace, if not needed
+  currSelectMenu = "menu_" + currPage.replace("/", "_submenu_").replace("/", "_submenu_").replace("/", "_submenu_");
+  console.log(currSelectMenu);
   jQuery("#" + currSelectMenu).addClass("menu-active");
 
 

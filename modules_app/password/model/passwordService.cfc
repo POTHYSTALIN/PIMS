@@ -7,13 +7,13 @@ component output="false" extends="model.utilsService" {
 	}
 
 	public query function getPassword(
-		numeric id = 0,
+		numeric id,
 		numeric deleted = 0,
 		string searchStr = ""
 	) {
 		local.sqlString = "SELECT * FROM passwords WHERE 1 = 1 ";
 		local.sqlString &= "AND deleted = :deleted ";
-		if( val( arguments.id ) ) {
+		if( structKeyExists( arguments, "id" ) ) {
 			local.sqlString &= "AND id = :id ";
 		}
 		if( len( arguments.searchStr ) ) {
@@ -24,7 +24,7 @@ component output="false" extends="model.utilsService" {
 			sql = local.sqlString
 		);
 		local.qry.addParam(name="deleted", value="#arguments.deleted#", cfsqltype="cf_sql_integer");
-		if( val( arguments.id ) ) {
+		if( structKeyExists( arguments, "id" ) ) {
 			local.qry.addParam(name="id", value="#arguments.id#", cfsqltype="cf_sql_integer");
 		}
 		if( len( arguments.searchStr ) ) {

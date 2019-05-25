@@ -206,6 +206,10 @@ h6 {
   text-decoration: underline;
 }
 
+#intro .intro-content h3, #intro .intro-content h5 {
+  text-align: left;
+}
+
 #intro .intro-content .btn-get-started,
 #intro .intro-content .btn-projects {
   font-family: "Raleway", sans-serif;
@@ -303,7 +307,7 @@ h6 {
 
 .nav-menu ul ul {
   top: 0;
-  left: 100%;
+  left: -120%;
 }
 
 .nav-menu ul li {

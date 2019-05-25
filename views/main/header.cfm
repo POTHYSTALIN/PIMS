@@ -33,12 +33,42 @@ Header
 				<li id="menu_home"><a href="/home">Home</a></li>
 				<cfif structKeyExists(session, "UserID")>
 					<li id="menu_password"><a href="/password">Password</a></li>
+					<li id="menu_mitrahsoft" class="menu-has-children">
+						<a href="##">MitrahSoft</a>
+						<ul id="menu_mitrahsoft_submenus">
+							<!--- <li id="menu_mitrahsoft_sysinfo">
+								<a href="/mitrahsoft/sysinfo">System Information</a>
+							</li> --->
+							<li id="menu_mitrahsoft_sysinfo">
+								<a href="/mitrahsoft/sysinfo">System Information</a>
+								<ul>
+									<li>
+										<a href="/mitrahsoft/sysinfo/items">Inventory Items</a>
+									</li>
+									<li>
+										<a href="/mitrahsoft/sysinfo/item-props">Inventory Item Properties</a>
+									</li>
+									<li>
+										<a href="/mitrahsoft/sysinfo/prop-details">Property Details</a>
+									</li>
+									<li>
+										<a href="/mitrahsoft/sysinfo/item-purchases">Purchases</a>
+									</li>
+									<li>
+										<a href="/mitrahsoft/sysinfo/item-problems">System problems</a>
+									</li>
+								</ul>
+							</li>
+							<li id="menu_mitrahsoft_submenu_1"><a href="##">Drop Down 3</a></li>
+							<li id="menu_mitrahsoft_submenu_1"><a href="##">Drop Down 4</a></li>
+						</ul>
+					</li>
 					<li id="menu_user" class="menu-has-children">
 						<a href="">Pothys Ravichandran</a>
 						<ul id="menu_user_submenus">
 							<li id="menu_user_submenu_1"><a href="##">Drop Down 1</a></li>
 							<li id="menu_user_submenu_1"><a href="##">Drop Down 3</a></li>
-							<li id="menu_user_submenu_1"><a href="##">Drop Down 4</a></li>
+							<li id="menu_user_submenu_1"><a href="?fwreinit=true">reload</a></li>
 							<li id="menu_user_submenu_logout"><a href="/logout">Logout</a></li>
 						</ul>
 					</li>

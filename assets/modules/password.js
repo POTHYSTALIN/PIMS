@@ -76,8 +76,6 @@ function showPassword(elem) {
 	}
 }
 
-// ----------------------
-
 function showEditModal(elem, id) {
 	jQuery.post(
 		"/password/update/" + id,
@@ -106,7 +104,7 @@ function showDeleteConfirmModal(elem, id) {
 
 function deletePassword(id) {
 	$('#myModal').modal('hide');
-	window.location.href = "#event.buildLink('delete.password')#/" + id;
+	window.location.href = "/password/delete/" + id;
 }
 
 // modal for sync details show

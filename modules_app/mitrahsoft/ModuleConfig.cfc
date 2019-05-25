@@ -42,7 +42,7 @@ Optional Methods
 */
 component {
 	// Module Properties
-	this.title 				= "password";
+	this.title 				= "mitrahsoft";
 	this.author 			= "";
 	this.webURL 			= "";
 	this.description 		= "";
@@ -52,13 +52,13 @@ component {
 	// If true, looks for layouts in the parent first, if not found, then in module. Else vice-versa
 	this.layoutParentLookup = true;
 	// Module Entry Point
-	this.entryPoint			= "password";
-	// Inherit entry point from parent, so this will be /api/password
+	this.entryPoint			= "mitrahsoft";
+	// Inherit entry point from parent, so this will be /api/mitrahsoft
 	this.inheritEntryPoint  = true;
 	// Model Namespace
-	this.modelNamespace		= "password";
+	this.modelNamespace		= "mitrahsoft";
 	// CF Mapping
-	this.cfmapping			= "password";
+	this.cfmapping			= "mitrahsoft";
 	// Auto-map models
 	this.autoMapModels		= true;
 	// Module Dependencies
@@ -81,12 +81,10 @@ component {
 
 		// SES Routes
 		router
-			.route( "/", "password.index" )
-			.route( "/list", "password.index" )
-			.route( "/update/:id-numeric", "password.addEdit")
-			.route( "/add", "password.addEdit")
-			.route( "/delete/:id-numeric", "password.delete")
-			.route( "/delete", "password.delete")
+			.route( "/", "main.index" )
+			.route( "/list", "mitrahsoft.index" )
+			.route( "/update/:id-numeric", "mitrahsoft.addEdit")
+			.route( "/add", "mitrahsoft.addEdit")
 			.route( "/:handler/:action" ).end();
 
 		// Custom Declared Points

@@ -1,4 +1,19 @@
 <cfoutput>
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Update password details</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<p>Some text in the modal.</p>
+			</div>
+		</div>
+	</div>
+</div>
 <!-- JavaScript Libraries -->
 <script src="#request.assetsPath#/lib/jquery/jquery.min.js"></script>
 <script src="#request.assetsPath#/lib/jquery/jquery-migrate.min.js"></script>
@@ -14,7 +29,17 @@
 <!-- Template Main Javascript File -->
 <script src="#request.assetsPath#/main.js"></script>
 
-<cfset moduleSpec = listRest(rc.action, ":")>
+<cfset currAssetPaths = listChangeDelims(rc.action, ",", ":.")>
+<cfset currPath = "">
+<cfloop list="#currAssetPaths#" item="currItem">
+	<cfset currPath &= "/" & currItem />
+	<cfset pageSpecificjs = expandPath('/assets/modules#currPath#.js')>
+	<cfif fileExists(pageSpecificjs)>
+		<script src="/assets/modules#currPath#.js"></script>
+	</cfif>
+</cfloop>
+
+<!--- <cfset moduleSpec = listRest(rc.action, ":")>
 <cfset handlerSpec = listRest(moduleSpec, ":")>
 
 <cfif fileExists(expandPath('/assets/#listFirst(rc.action, ":")#.js'))>
@@ -25,7 +50,7 @@
 	<script src="/assets/#listFirst(moduleSpec, ".")#.js"></script>
 <cfelseif fileExists(expandPath('/assets/#cgi.path_info#.js'))>
 	<script src="/assets/#cgi.path_info#.js"></script>
-</cfif>
+</cfif> --->
 <script>
 	jQuery(function(){
 		setTimeout(function(){

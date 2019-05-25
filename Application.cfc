@@ -21,12 +21,12 @@ Description :
 
 		// scope handling
 		// lifespan of a untouched application scope
-		this.applicationTimeout = createTimeSpan( 1, 0, 0, 0 ); 
+		this.applicationTimeout = createTimeSpan( 1, 0, 20, 0 ); 
 		
 		// session handling enabled or not
 		this.sessionManagement = true; 
 		// untouched session lifespan
-		this.sessionTimeout = createTimeSpan( 0, 0, 10, 0 );
+		this.sessionTimeout = createTimeSpan( 1, 0, 10, 0 );
 
 		// request
 		// max lifespan of a running request

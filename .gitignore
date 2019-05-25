@@ -5,3 +5,4 @@
 /config/*.json
 *.zip
 /apache_configs/*
+.vscode

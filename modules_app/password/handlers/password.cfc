@@ -1,11 +1,10 @@
 component extends="coldbox.system.EventHandler" {
 	property name="passwordManagerService" inject="password.model.passwordService" scope="instance";
-	property name="fwsettings" inject="coldbox:fwSettings";
-	property name="cfgSettings" inject="coldbox:configSettings";
-	property name="moduleSettings" inject="coldbox:modulesettings:password";
+	// property name="fwsettings" inject="coldbox:fwSettings";
+	// property name="cfgSettings" inject="coldbox:configSettings";
+	// property name="moduleSettings" inject="coldbox:modulesettings:password";
 
 	function index( event, rc, prc ) {
-		param name="rc.id" default="0";
 		param name="rc.msg" default="";
 		param name="rc.msgAction" default="";
 		param name="rc.searchStr" default="";
@@ -17,7 +16,7 @@ component extends="coldbox.system.EventHandler" {
 		// writeDump(cfgSettings.moduleSettings);abort;
 
 		prc.passwordDetails = instance.passwordManagerService.getPassword( argumentCollection = rc );
-		event.setLayout("main");
+		// event.setLayout("main");
 	}
 
 	public function addEdit( event, rc, prc ) {
@@ -25,10 +24,10 @@ component extends="coldbox.system.EventHandler" {
 		param name="rc.msg" default="";
 		param name="rc.msgAction" default="";
 
-		rc.formAction = val(rc.id)?"password.update.#rc.id#":"password.add";
+		rc.formAction = val(rc.id)?"password.update":"password.add";
 		rc.formSubmit = val(rc.id)?"Update":"Add";
 
-		if(structKeyExists(rc, "submit")) {
+		if( structKeyExists(rc, "submit") ) {
 			try {
 				if( val(rc.id) ) {
 					instance.passwordManagerService.updatePassword(argumentCollection=rc);
@@ -64,5 +63,18 @@ component extends="coldbox.system.EventHandler" {
 		event.setView( view="password/addEdit", noLayout=true );
 		rc.passwordDetails = instance.passwordManagerService.getPassword( id = rc.id );
 		rc.additionalSecDetails = instance.passwordManagerService.getAdditionalSecurityDetails( id = rc.id );
+	}
+
+	public function delete( event, rc, prc ) {
+		param name="rc.id" default="0";
+		param name="rc.msg" default="";
+		param name="rc.msgAction" default="";
+
+		instance.passwordManagerService.deletePassword( id = rc.id );
+		instance.passwordManagerService.removeAdditionalSecurityDetails( accID = rc.id );
+		rc.msgAction = "Success";
+		rc.msg = "Password details deleted successfully.";
+
+		setNextEvent(event = 'password.list', persist = "msg,msgAction");
 	}
 }
