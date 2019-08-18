@@ -33,11 +33,9 @@ BEGIN
 	)
 END
 
--- ====================================================
-
-IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[systemInventory]') AND type in (N'U'))
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[systemDetails]') AND type in (N'U'))
 BEGIN
-	CREATE TABLE systemInventory (
+	CREATE TABLE systemDetails (
 		id int primary key identity(1,1),
 		name varchar(50) NOT NULL,
 		label varchar(50) NOT NULL,
@@ -48,12 +46,13 @@ BEGIN
 		HDD varchar(50) NOT NULL,
 		OS varchar(50) NOT NULL,
 		installationType varchar(50) NOT NULL,
-		empID int NOT NULL default(0),
 		created datetime default(getDate()),
 		updated datetime default(getDate()),
 		deleted bit default(0)
 	)
 END
+
+-- ====================================================
 
 IF NOT EXISTS(SELECT *
 FROM sys.objects
@@ -73,11 +72,6 @@ BEGIN
 	)
 END
 
-
-
-
-
-
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[taskRepeatDelays]') AND type in (N'U'))
 BEGIN
 	CREATE TABLE taskRepeatDelays(
@@ -87,5 +81,3 @@ BEGIN
 
 	INSERT INTO taskRepeatDelays ( name ) VALUES ( 1 ), ( 2 ), ( 3 ), ( 4 ), ( 5 ), ( 6 ), ( 7 ), ( 8 ), ( 9 ), ( 10 )
 END
-
-

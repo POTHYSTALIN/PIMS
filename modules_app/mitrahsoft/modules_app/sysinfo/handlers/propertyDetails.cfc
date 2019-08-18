@@ -23,7 +23,7 @@ component extends="coldbox.system.EventHandler" {
 					rc.id = instance.inventoryItemPropertyDetailService.addPropertyDetails(argumentCollection=rc);
 				}
 				rc.msgAction = "Success";
-				rc.msg = "Inventory item saved successfully.";
+				rc.msg = "Inventory item property deatils saved successfully.";
 			} catch( any e ) {
 				writeDump(e);abort;
 				rc.msgAction = "Error";
@@ -46,7 +46,7 @@ component extends="coldbox.system.EventHandler" {
 
 		instance.inventoryItemPropertyDetailService.deletePropertyDetails( id = rc.id );
 		rc.msgAction = "Success";
-		rc.msg = "Password details deleted successfully.";
+		rc.msg = "Inventory item property deatils deleted successfully.";
 
 		setNextEvent(event = 'mitrahsoft.sysinfo.prop-details', persist = "msg,msgAction");
 	}

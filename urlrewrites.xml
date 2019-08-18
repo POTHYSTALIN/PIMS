@@ -1,0 +1,15 @@
+<urlrewrite>
+	<rule>
+		<condition type="request-uri" operator="notequal">
+			^/(index.cfm|test.cfm|robots.txt|osd.xml|flex2gateway|cfide|cfformgateway|railo-context|admin-context|files|images|jrunscripts|javascripts|miscellaneous|stylesheets|lucee|includes|assets|modules_app/manager/includes)
+		</condition>
+		<from>^/(.*)$</from>
+		<to type="passthrough">/index.cfm/$1</to>
+	</rule>
+	<rule>
+	  	<name>https redirect</name>
+	  	<condition name="scheme" operator="equal">http$</condition>   
+	  	<from>^/(.*)</from>
+	  	<to type="permanent-redirect" last="true">https://final.myapp.local/$1</to>
+	</rule>
+</urlrewrite>

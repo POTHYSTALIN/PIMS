@@ -42,7 +42,7 @@ component extends="coldbox.system.EventHandler" {
 
 		instance.inventoryItemService.deleteItem( id = rc.id );
 		rc.msgAction = "Success";
-		rc.msg = "Password details deleted successfully.";
+		rc.msg = "Inventory item deleted successfully.";
 
 		setNextEvent(event = 'mitrahsoft.sysinfo.items', persist = "msg,msgAction");
 	}

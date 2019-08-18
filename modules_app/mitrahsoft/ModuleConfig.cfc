@@ -81,10 +81,10 @@ component {
 
 		// SES Routes
 		router
-			.route( "/", "main.index" )
-			.route( "/list", "mitrahsoft.index" )
-			.route( "/update/:id-numeric", "mitrahsoft.addEdit")
-			.route( "/add", "mitrahsoft.addEdit")
+			.route( "", "main.index" )
+			.route( "list", "mitrahsoft.index" )
+			.route( "update/:id-numeric", "mitrahsoft.addEdit")
+			.route( "add", "mitrahsoft.addEdit")
 			.route( "/:handler/:action" ).end();
 
 		// Custom Declared Points

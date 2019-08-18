@@ -1,4 +1,5 @@
 component extends="coldbox.system.EventHandler" {
+	// property name="router" inject="router@coldbox";
 	function index( event, rc, prc ){
 		// business logics goes here
 		// event.noLayout();
@@ -22,8 +23,13 @@ component extends="coldbox.system.EventHandler" {
 			"login",
 			"logout"
 		];
+		// writeDump(event.getCurrentModule());abort;
 
-		if( NOT structKeyExists(session, "userID") AND NOT ArrayFindNoCase( local.WhiteList, rc.Action )){
+		// writeDump(event.isSES());
+		// writeDump(getSetting("htmlBaseURL"));
+		// writeDump(event);abort;
+		// writeDump(router);abort;
+		if( NOT structKeyExists(session, "userID") AND NOT ArrayFindNoCase( local.WhiteList, rc.action )){
 			rc.msgAction = "Error";
 			rc.msg = "Please try after login";
 			setNextEvent(event = 'login', persist = "msg,msgAction");
@@ -33,7 +39,7 @@ component extends="coldbox.system.EventHandler" {
 			"security.login"
 		];
 
-		if (structKeyExists(session, "userID") AND ArrayFindNoCase( local.BlackList, rc.Action )){
+		if (structKeyExists(session, "userID") AND ArrayFindNoCase( local.BlackList, rc.action )){
 			setNextEvent(event = 'home');
 		}
 	}

@@ -53,7 +53,7 @@ component {
 	this.layoutParentLookup = true;
 	// Module Entry Point
 	this.entryPoint			= "sysinfo";
-	// Inherit entry point from parent, so this will be /api/sysinfo
+	// Inherit entry point from parent, so this will be /mitrahsoft/sysinfo
 	this.inheritEntryPoint  = true;
 	// Model Namespace
 	this.modelNamespace		= "sysinfo";
@@ -81,33 +81,35 @@ component {
 
 		// SES Routes
 		router
-			.route( "/", "main.index" )
-			.route( "/list", "main.index" )
-			.route( "/update/:id-numeric", "main.addEdit")
-			.route( "/add", "main.addEdit")
-			.route( "/items/delete/:id-numeric", "items.delete" )
-			.route( "/items/delete", "items.delete" )
-			.route( "/items/update/:id-numeric", "items.addEdit" )
-			.route( "/items/update", "items.addEdit" )
-			.route( "/items/edit/:id-numeric", "items.addEdit" )
-			.route( "/items/add", "items.addEdit" )
-			.route( "/items", "items.index" )
-			.route( "/item-props/delete/:id-numeric", "properties.delete" )
-			.route( "/item-props/delete", "properties.delete" )
-			.route( "/item-props/update/:id-numeric", "properties.addEdit" )
-			.route( "/item-props/update", "properties.addEdit" )
-			.route( "/item-props/edit/:id-numeric", "properties.addEdit" )
-			.route( "/item-props/add", "properties.addEdit" )
-			.route( "/item-props", "properties.index" )
-			.route( "/prop-details/delete/:id-numeric", "propertyDetails.delete" )
-			.route( "/prop-details/delete", "propertyDetails.delete" )
-			.route( "/prop-details/update/:id-numeric", "propertyDetails.addEdit" )
-			.route( "/prop-details/update", "propertyDetails.addEdit" )
-			.route( "/prop-details/edit/:id-numeric", "propertyDetails.addEdit" )
-			.route( "/prop-details/add", "propertyDetails.addEdit" )
-			.route( "/prop-details", "propertyDetails.index" )
-			.route( "/item-purchases", "purchases.index" )
-			.route( "/item-problems", "problems.index" )
+			.route( "", "main.index" )
+			.route( "list", "main.index" )
+			.route( "delete", "main.delete" )
+			.route( "edit/:id-numeric", "main.addEdit")
+			.route( "update/:id-numeric", "main.addEdit")
+			.route( "add", "main.addEdit")
+			.route( "items/delete/:id-numeric", "items.delete" )
+			.route( "items/delete", "items.delete" )
+			.route( "items/update/:id-numeric", "items.addEdit" )
+			.route( "items/update", "items.addEdit" )
+			.route( "items/edit/:id-numeric", "items.addEdit" )
+			.route( "items/add", "items.addEdit" )
+			.route( "items", "items.index" )
+			.route( "item-props/delete/:id-numeric", "properties.delete" )
+			.route( "item-props/delete", "properties.delete" )
+			.route( "item-props/update/:id-numeric", "properties.addEdit" )
+			.route( "item-props/update", "properties.addEdit" )
+			.route( "item-props/edit/:id-numeric", "properties.addEdit" )
+			.route( "item-props/add", "properties.addEdit" )
+			.route( "item-props", "properties.index" )
+			.route( "prop-details/delete/:id-numeric", "propertyDetails.delete" )
+			.route( "prop-details/delete", "propertyDetails.delete" )
+			.route( "prop-details/update/:id-numeric", "propertyDetails.addEdit" )
+			.route( "prop-details/update", "propertyDetails.addEdit" )
+			.route( "prop-details/edit/:id-numeric", "propertyDetails.addEdit" )
+			.route( "prop-details/add", "propertyDetails.addEdit" )
+			.route( "prop-details", "propertyDetails.index" )
+			.route( "item-purchases", "purchases.index" )
+			.route( "item-problems", "problems.index" )
 			.route( "/:handler/:action" ).end();
 
 		// Custom Declared Points
@@ -123,6 +125,8 @@ component {
 	* Fired when the module is registered and activated.
 	*/
 	function onLoad() {
+		// writeDump(moduleMapping);
+		// writeDump(expandPath("sysinfo"));abort;
 		// writeDump(this);abort;
 		// moduleAssetsPath = this.entryPoint;
 	}
@@ -131,5 +135,10 @@ component {
 	* Fired when the module is unregistered and unloaded
 	*/
 	function onUnload() {
+	}
+
+	function postModuleLoad( event, interceptData, buffer, rc, prc ) {
+		// writeDump("test");abort;
+		// binder.map( "inventoryItemPropertyDetails@sysinfo" ).to( "#moduleMapping#.models.inventoryItemPropertyDetails" );
 	}
 }

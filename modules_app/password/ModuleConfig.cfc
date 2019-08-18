@@ -81,12 +81,12 @@ component {
 
 		// SES Routes
 		router
-			.route( "/", "password.index" )
-			.route( "/list", "password.index" )
-			.route( "/update/:id-numeric", "password.addEdit")
-			.route( "/add", "password.addEdit")
-			.route( "/delete/:id-numeric", "password.delete")
-			.route( "/delete", "password.delete")
+			.route( "", "password.index" )
+			.route( "list", "password.index" )
+			.route( "update/:id-numeric", "password.addEdit")
+			.route( "add", "password.addEdit")
+			.route( "delete/:id-numeric", "password.delete")
+			.route( "delete", "password.delete")
 			.route( "/:handler/:action" ).end();
 
 		// Custom Declared Points
@@ -110,5 +110,10 @@ component {
 	* Fired when the module is unregistered and unloaded
 	*/
 	function onUnload() {
+	}
+
+	function postModuleLoad( event, interceptData, buffer, rc, prc ) {
+		// writeDump("test");abort;
+		// binder.map( "passwordManagerService@sysinfo" ).to( "#moduleMapping#.models.inventoryItemPropertyDetails" );
 	}
 }
