@@ -105,4 +105,23 @@ component output="false" extends="model.utilsService" {
 
 		local.result = local.qry.execute();
 	}
+	
+	public query function getInventoryItems(
+		required string type
+	) {
+		local.qry = new query(
+			datasource = dsn.name,
+			sql = "
+				SELECT DISTINCT ii.id, ii.name, iipd.inventoryItemPropertyValue, iip.name propName
+				FROM inventoryItemDetails iid
+					INNER JOIN inventoryItems ii ON ii.id = iid.inventoryItemID AND ii.name = :type
+					INNER JOIN inventoryItemPropertyDetails iipd ON ii.id = iipd.inventoryItemID
+						AND iipd.inventoryItemPropertyID IN ( iid.brandID, iid.modelID, iid.cdID, iid.generationID, iid.frequencyID, iid.sizeID )
+					INNER JOIN inventoryItemProperties iip ON iipd.inventoryItemPropertyID = iip.id
+			"
+		);
+		local.qry.addParam(name="type", value="#arguments.type#", cfsqltype="cf_sql_varchar");
+
+		return local.qry.execute().getResult();
+	}
 }

@@ -7,6 +7,7 @@ BEGIN
 		updated datetime default(getDate()),
 		deleted bit default(0)
 	)
+	INSERT INTO inventoryItems ( name ) VALUES ( 'Motherboard' ), ( 'Processor' ), ( 'HDD' ), ( 'RAM' ), ( 'Cabinet' ), ( 'OS' )
 END
 
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[inventoryItemProperties]') AND type in (N'U'))
@@ -18,6 +19,7 @@ BEGIN
 		updated datetime default(getDate()),
 		deleted bit default(0)
 	)
+	INSERT INTO inventoryItemProperties ( name ) VALUES ( 'Brand' ), ( 'Model' ), ( 'CD name' ), ( 'Generation' ), ( 'Frequency' ), ( 'Size' )
 END
 
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[inventoryItemPropertyDetails]') AND type in (N'U'))
@@ -80,4 +82,21 @@ BEGIN
 	)
 
 	INSERT INTO taskRepeatDelays ( name ) VALUES ( 1 ), ( 2 ), ( 3 ), ( 4 ), ( 5 ), ( 6 ), ( 7 ), ( 8 ), ( 9 ), ( 10 )
+END
+
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[inventoryItemDetails]') AND type in (N'U'))
+BEGIN
+	CREATE TABLE inventoryItemDetails (
+		id int primary key identity(1,1),
+		inventoryItemID int NOT NULL,
+		brandID int,
+		modelID int,
+		cdID int,
+		generationID int,
+		frequencyID int,
+		sizeID int,
+		created datetime default(getDate()),
+		updated datetime default(getDate()),
+		deleted bit default(0)
+	)
 END

@@ -46,6 +46,9 @@ Header
 										<a href="/mitrahsoft/sysinfo/items">Inventory Items</a>
 									</li>
 									<li>
+										<a href="#event.buildLink("mitrahsoft.sysinfo.item-details")#">Inventory Item Details</a>
+									</li>
+									<li>
 										<a href="/mitrahsoft/sysinfo/item-props">Inventory Item Properties</a>
 									</li>
 									<li>
