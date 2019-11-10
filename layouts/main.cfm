@@ -23,7 +23,26 @@
 		<link href="#request.assetsPath#/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 		<link href="#request.assetsPath#/lib/magnific-popup/magnific-popup.css" rel="stylesheet">
 		<link href="#request.assetsPath#/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
-		<!--- <link href="#request.assetsPath#/vendor/jquery-menu/css/navbar.css" rel="stylesheet"> --->
+
+		<link href='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/core/main.css' rel='stylesheet' />
+		<link href='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.css' rel='stylesheet' />
+		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/core/main.js'></script>
+		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/interaction/main.js'></script>
+		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.js'></script>
+
+		<style>
+			body {
+				margin: 40px 10px;
+				padding: 0;
+				font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+				font-size: 14px;
+			}
+
+			##calendar {
+				max-width: 900px;
+				margin: 0 auto;
+			}
+		</style>
 
 		<!-- Main Stylesheet File -->
 		<link href="#request.assetsPath#/style.css" rel="stylesheet">

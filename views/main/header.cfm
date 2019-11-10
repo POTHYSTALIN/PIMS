@@ -33,6 +33,7 @@ Header
 				<li id="menu_home"><a href="/home">Home</a></li>
 				<cfif structKeyExists(session, "UserID")>
 					<li id="menu_password"><a href="/password">Password</a></li>
+					<li id="menu_events"><a href="/events">Events</a></li>
 					<li id="menu_mitrahsoft" class="menu-has-children">
 						<a href="##">MitrahSoft</a>
 						<ul id="menu_mitrahsoft_submenus">
@@ -52,7 +53,7 @@ Header
 										<a href="/mitrahsoft/sysinfo/prop-details">Hardware Property Details</a>
 									</li>
 									<li>
-										<a href="#event.buildLink("mitrahsoft.sysinfo.item-details")#">Hardware Details</a>
+										<a href="/mitrahsoft/sysinfo/item-details">Hardware Details</a>
 									</li>
 									<li>
 										<a href="/mitrahsoft/sysinfo/item-purchases">Hardware Purchases</a>

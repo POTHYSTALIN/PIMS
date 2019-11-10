@@ -21,7 +21,8 @@ component extends="coldbox.system.EventHandler" {
 			"security.signup",
 			"security.doSignup",
 			"login",
-			"logout"
+			"logout",
+			"route-visualizer"
 		];
 		// writeDump(event.getCurrentModule());abort;
 
