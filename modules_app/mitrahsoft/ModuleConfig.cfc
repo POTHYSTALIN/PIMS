@@ -81,7 +81,7 @@ component {
 
 		// SES Routes
 		router
-			.route( "", "main.index" )
+			.route( "", "dashboard.index" )
 			.route( "list", "mitrahsoft.index" )
 			.route( "update/:id-numeric", "mitrahsoft.addEdit")
 			.route( "add", "mitrahsoft.addEdit")

@@ -43,22 +43,22 @@ Header
 								<a href="/mitrahsoft/sysinfo">System Information</a>
 								<ul>
 									<li>
-										<a href="/mitrahsoft/sysinfo/items">Inventory Items</a>
+										<a href="/mitrahsoft/sysinfo/items">Hardwares</a>
 									</li>
 									<li>
-										<a href="#event.buildLink("mitrahsoft.sysinfo.item-details")#">Inventory Item Details</a>
+										<a href="/mitrahsoft/sysinfo/item-props">Hardware Properties</a>
 									</li>
 									<li>
-										<a href="/mitrahsoft/sysinfo/item-props">Inventory Item Properties</a>
+										<a href="/mitrahsoft/sysinfo/prop-details">Hardware Property Details</a>
 									</li>
 									<li>
-										<a href="/mitrahsoft/sysinfo/prop-details">Property Details</a>
+										<a href="#event.buildLink("mitrahsoft.sysinfo.item-details")#">Hardware Details</a>
 									</li>
 									<li>
-										<a href="/mitrahsoft/sysinfo/item-purchases">Purchases</a>
+										<a href="/mitrahsoft/sysinfo/item-purchases">Hardware Purchases</a>
 									</li>
 									<li>
-										<a href="/mitrahsoft/sysinfo/item-problems">System problems</a>
+										<a href="/mitrahsoft/sysinfo/item-problems">Hardware problems</a>
 									</li>
 								</ul>
 							</li>

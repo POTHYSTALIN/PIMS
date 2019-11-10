@@ -2,7 +2,7 @@
 	<form action="#event.buildLink( lCase(rc.formAction) )#" method="post">
 		<input type="hidden" name="id" value="#rc.id#">
 		<div class="form-group row">
-			<label for="name" class="col-sm-2 col-form-label">Site</label>
+			<label for="name" class="col-sm-2 col-form-label">Hardware</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="name" name="name" placeholder="name" value="#prc.item.name#">
 			</div>
@@ -10,7 +10,7 @@
 		<div class="form-group row">
 			<label for="deleted" class="col-sm-2 col-form-label">Deleted</label>
 			<div class="col-sm-10">
-				<input type="checkbox" class="form-control" id="deleted" name="deleted" <cfif prc.item.deleted EQ 1>checked</cfif> value="1">
+				<input type="checkbox" id="deleted" name="deleted" <cfif prc.item.deleted EQ 1>checked</cfif> value="1">
 			</div>
 		</div>
 		<div class="form-group row justify-content-sm-end">

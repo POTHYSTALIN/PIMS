@@ -4,9 +4,9 @@ function showEditModal(elem, id) {
 		function (res) {
 			// success function
 			if (parseInt(id) == 0)
-				jQuery(".modal-title").html("Add inventory item properties");
+				jQuery(".modal-title").html("Add hardware property detail");
 			else
-				jQuery(".modal-title").html("Update inventory item properties");
+				jQuery(".modal-title").html("Update hardware property detail");
 			jQuery(".modal-body").html(res);
 			jQuery("#myModal").modal();
 		}

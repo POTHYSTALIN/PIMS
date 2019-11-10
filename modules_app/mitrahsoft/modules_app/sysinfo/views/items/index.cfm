@@ -11,7 +11,7 @@
 			<thead>
 				<tr>
 					<th width="30%">ID</th>
-					<th width="30%">Item name</th>
+					<th width="30%">Hardware</th>
 					<th width="30%">status</th>
 					<th width="10%">Actions</th>
 				</tr>

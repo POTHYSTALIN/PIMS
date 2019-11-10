@@ -11,7 +11,7 @@
 			<thead>
 				<tr>
 					<th width="30%">ID</th>
-					<th width="30%">Property name</th>
+					<th width="30%">Hardware property</th>
 					<th width="30%">status</th>
 					<th width="10%">Actions</th>
 				</tr>

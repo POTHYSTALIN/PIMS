@@ -21,4 +21,31 @@ component output="false" {
 
 		return res;
 	}
+
+	public struct function createUser(
+		required string username,
+		required string password,
+		required string firstname,
+		required string lastname,
+		required string email,
+		required string phone,
+		string profileImg
+	) {
+		var res = {};
+
+		queryExecute(
+			"INSERT INTO persons( fname, lname, email, phone ) VALUES ( ?, ?, ?, ? )",
+			[ arguments.firstname, arguments.lastname, arguments.email, arguments.phone ],
+			{ datasource=variables.dsn, result="res.person" }
+		);
+		
+		queryExecute(
+			"INSERT INTO logins( username, password, personId ) VALUES ( ?, ?, ? )",
+			[ arguments.username, arguments.password, res.person.generatedKey ],
+			{ datasource=variables.dsn, result="res.data" }
+		);
+		res.isValid = yesNoFormat(res.person.generatedKey) && yesNoFormat(res.data.generatedKey);
+
+		return res;
+	}
 }

@@ -69,12 +69,12 @@ component output="false" extends="model.utilsService" {
 
 	public string function addItemDetails(
 		required numeric inventoryItemID,
-		required numeric brandID,
-		required numeric modelID,
-		required numeric cdID,
-		required numeric frequencyID,
-		required numeric generationID,
-		required numeric sizeID,
+		numeric brandID=0,
+		numeric modelID=0,
+		numeric cdID=0,
+		numeric frequencyID=0,
+		numeric generationID=0,
+		numeric sizeID=0,
 		boolean deleted=0,
 		string created = "#now()#"
 	) {
@@ -194,6 +194,52 @@ component output="false" extends="model.utilsService" {
 				WHERE 1 = 1
 			"
 		);
+
+		return local.qry.execute().getResult();
+	}
+
+	
+
+	public query function getPropertiesForTnventoryItem(
+		required numeric inventoryItemID
+	) {
+		local.qry = new query(
+			datasource = dsn.name,
+			sql = "
+				SELECT DISTINCT
+					ii.id AS hID, ii.name AS hardware,
+					iip.id AS propID, iip.name AS property,
+					iipd.id AS detailID, iipd.inventoryItemPropertyValue AS details
+				FROM inventoryItems ii
+					INNER JOIN inventoryItemPropertyDetails iipd ON ii.id = iipd.inventoryItemId
+					INNER JOIN inventoryItemProperties iip ON iipd.inventoryItemPropertyId = iip.id
+				WHERE 1 = 1
+					AND ii.deleted = 0
+					AND iip.deleted = 0
+					AND iipd.deleted = 0
+					AND ii.id = :inventoryItemID
+					AND NOT EXISTS(
+						SELECT id FROM inventoryItemDetails
+						WHERE inventoryItemID = ii.id
+							AND (
+								(
+									( brandID IS NULL AND iip.name != 'brand' )
+									OR ( brandID = iipd.id AND iip.name = 'brand' )
+								)
+								AND (
+									( modelID IS NULL AND iip.name != 'model' )
+									OR ( modelID = iipd.id AND iip.name = 'model' )
+								)
+								AND (
+									( cdID IS NULL AND iip.name != 'cd name' )
+									OR ( cdID = iipd.id AND iip.name = 'cd name' )
+								)
+							)
+					)
+				ORDER BY ii.id, ii.name, iip.name, iipd.inventoryItemPropertyValue ASC
+			"
+		);
+		local.qry.addParam(name="inventoryItemID", value="#arguments.inventoryItemID#", cfsqltype="cf_sql_integer");
 
 		return local.qry.execute().getResult();
 	}

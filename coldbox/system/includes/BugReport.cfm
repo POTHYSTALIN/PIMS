@@ -29,7 +29,10 @@ A reporting template about exceptions in your ColdBox Apps
 		<cfif oException.geterrorCode() neq "" AND oException.getErrorCode() neq 0>
 			#oException.getErrorCode()# :
 		</cfif>
-		Oopsy! Something went wrong!</h1>
+		Oopsy! Something went wrong!
+		<!--- Added manually --->
+		<a href="?fwreinit=true">thinking to reload?</a>
+	</h1>
 
 	<div class="notice">
 		<cfif oException.getExtraMessage() neq "">

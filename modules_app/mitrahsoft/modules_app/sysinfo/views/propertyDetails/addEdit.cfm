@@ -2,7 +2,7 @@
 	<form action="#event.buildLink( lCase(rc.formAction) )#" method="post">
 		<input type="hidden" name="id" value="#rc.id#">
 		<div class="form-group row">
-			<label for="inventoryItemId" class="col-sm-2 col-form-label">Item</label>
+			<label for="inventoryItemId" class="col-sm-2 col-form-label">Hardware</label>
 			<div class="col-sm-10">
 				<select class="form-control" name="inventoryItemId" id="inventoryItemId">
 					<option>Please select an item</option>
@@ -24,7 +24,7 @@
 			</div>
 		</div>
 		<div class="form-group row">
-			<label for="inventoryItemPropertyValue" class="col-sm-2 col-form-label">Value</label>
+			<label for="inventoryItemPropertyValue" class="col-sm-2 col-form-label">Details</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" id="inventoryItemPropertyValue" name="inventoryItemPropertyValue" placeholder="Property value" value="#prc.propertyDetail.inventoryItemPropertyValue#">
 			</div>
@@ -32,7 +32,7 @@
 		<div class="form-group row">
 			<label for="deleted" class="col-sm-2 col-form-label">Deleted</label>
 			<div class="col-sm-10">
-				<input type="checkbox" class="form-control" id="deleted" name="deleted" <cfif prc.propertyDetail.deleted EQ 1>checked</cfif> value="1">
+				<input type="checkbox" id="deleted" name="deleted" <cfif prc.propertyDetail.deleted EQ 1>checked</cfif> value="1">
 			</div>
 		</div>
 		<div class="form-group row justify-content-sm-end">

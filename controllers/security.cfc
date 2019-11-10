@@ -8,6 +8,9 @@ component extends="coldbox.system.EventHandler"{
 
 	function login( event, rc, prc ){
 		// business logics goes here
+		// writeDump(getSetting("RegisteredHandlers"));
+		// writeDump(getSetting("modules"));
+		// abort;
 		event.setLayout("main");
 		event.setView(view="security/index");
 	}
@@ -42,7 +45,11 @@ component extends="coldbox.system.EventHandler"{
 	}
 
 	function doSignup( event, rc, prc ){
-		writeDump(securityService);
-		writeDump(rc);abort;
+		// writeDump(securityService);
+		// writeDump(rc);abort;
+		var res = securityService.createUser( argumentCollection=rc );
+		rc.msgAction = "Success";
+		rc.msg = "Successfully signed up!!!";
+		setNextEvent(event = 'login', persist = "msg,msgAction");
 	}
 }

@@ -23,6 +23,7 @@
 		<link href="#request.assetsPath#/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 		<link href="#request.assetsPath#/lib/magnific-popup/magnific-popup.css" rel="stylesheet">
 		<link href="#request.assetsPath#/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+		<!--- <link href="#request.assetsPath#/vendor/jquery-menu/css/navbar.css" rel="stylesheet"> --->
 
 		<!-- Main Stylesheet File -->
 		<link href="#request.assetsPath#/style.css" rel="stylesheet">

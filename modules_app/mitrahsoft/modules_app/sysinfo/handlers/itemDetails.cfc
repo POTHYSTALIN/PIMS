@@ -10,6 +10,7 @@ component extends="coldbox.system.EventHandler" {
 
 	function addEdit( event, rc, prc ) {
 		param name="rc.id" default="0" type="numeric";
+		param name="rc.hid" default="0" type="numeric";
 		param name="rc.msg" default="";
 		param name="rc.msgAction" default="";
 
@@ -35,13 +36,17 @@ component extends="coldbox.system.EventHandler" {
 
 		prc.itemDetail = instance.inventoryItemDetailService.getItemDetails( id = rc.id );
 		prc.items = instance.inventoryItemService.getItems( deleted = 0 );
-		prc.brands = instance.inventoryItemDetailService.getPropertyDetails("brand");
-		prc.models = instance.inventoryItemDetailService.getPropertyDetails("model");
-		prc.cds = instance.inventoryItemDetailService.getPropertyDetails("CD name");
-		prc.generations = instance.inventoryItemDetailService.getPropertyDetails("generation");
-		prc.frequencies = instance.inventoryItemDetailService.getPropertyDetails("frequency");
-		prc.sizes = instance.inventoryItemDetailService.getPropertyDetails("size");
-		// writeDump(prc);abort;
+		prc.itemProps = instance.inventoryItemDetailService.getPropertiesForTnventoryItem( rc.hid );
+		prc.propertiesList = structNew("ordered");
+		for( prop in prc.itemProps ) {
+			if( !structKeyExists(prc.propertiesList, prop.property) ) {
+				prc.propertiesList[prop.property] = structNew("ordered");
+				prc.propertiesList[prop.property].id = prop.propID;
+				prc.propertiesList[prop.property].options = structNew("ordered");
+			}
+			prc.propertiesList[prop.property].options[prop.detailID] = prop.details;
+		}
+
 		event.setView( view="itemDetails/addEdit", noLayout=true );
 	}
 

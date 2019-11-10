@@ -11,9 +11,9 @@
 			<thead>
 				<tr>
 					<th width="10%">ID</th>
-					<th width="20%">Item name</th>
-					<th width="20%">Property name</th>
-					<th width="20%">Property value</th>
+					<th width="20%">Hardware</th>
+					<th width="20%">Property</th>
+					<th width="20%">Details</th>
 					<th width="10%">status</th>
 					<th width="20%">Actions</th>
 				</tr>
