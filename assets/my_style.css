@@ -24,3 +24,9 @@
 .hidden, .hiddenPwd.orig {
 	display: none;
 }
+
+/* Change bg color for custom bootstrap checkbox */
+.custom-control-input:checked ~ .custom-control-label::before {
+	background-color: #50d8af;
+	border-color: #50d8af;
+}
