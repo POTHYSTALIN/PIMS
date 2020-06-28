@@ -9,7 +9,8 @@
 		<meta content="width=device-width, initial-scale=1.0" name="viewport">
 
 		<!-- Google Fonts -->
-		<link href="#request.assetsPath#/vendor/fonts.googleapis/css.css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet">
+		<!--- <link href="#request.assetsPath#/vendor/fonts.googleapis/css.css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet"> --->
+		<link href="#request.assetsPath#/vendor/fonts.googleapis/css.css" rel="stylesheet">
 
 		<!-- Bootstrap CSS File -->
 		<!--- <link href="#request.assetsPath#/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"> --->
@@ -24,11 +25,11 @@
 		<link href="#request.assetsPath#/lib/magnific-popup/magnific-popup.css" rel="stylesheet">
 		<link href="#request.assetsPath#/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
 
-		<link href='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/core/main.css' rel='stylesheet' />
-		<link href='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.css' rel='stylesheet' />
-		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/core/main.js'></script>
-		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/interaction/main.js'></script>
-		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.js'></script>
+		<link href='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/core/main.min.css' rel='stylesheet' />
+		<link href='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.min.css' rel='stylesheet' />
+		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/core/main.min.js'></script>
+		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/interaction/main.min.js'></script>
+		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.min.js'></script>
 
 		<style>
 			body {

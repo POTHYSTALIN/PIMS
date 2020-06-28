@@ -33,6 +33,7 @@ Header
 				<li id="menu_home"><a href="/home">Home</a></li>
 				<cfif structKeyExists(session, "UserID")>
 					<li id="menu_password"><a href="/password">Password</a></li>
+					<li id="menu_password"><a href="/password">Transactions</a></li>
 					<li id="menu_events"><a href="/events">Events</a></li>
 					<li id="menu_mitrahsoft" class="menu-has-children">
 						<a href="##">MitrahSoft</a>

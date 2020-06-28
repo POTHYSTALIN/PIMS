@@ -1,5 +1,5 @@
 {
-    "name":"myapp",
+    "name":"myapp-lucee",
     "web":{
         "webroot":"",
         "host":"final.myapp.local",
@@ -18,7 +18,7 @@
         }
     },
     "app":{
-        "cfengine":"adobe@2018.0.3+314033"
+        "cfengine":"lucee@5.3.4+77"
     },
     "JVM":{
         "heapSize":"4096"
