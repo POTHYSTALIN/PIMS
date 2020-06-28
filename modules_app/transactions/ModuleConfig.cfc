@@ -46,6 +46,14 @@ component {
 			.route( "banks/delete/:id-numeric", "banks.delete" )
 			.route( "banks", "banks.index" )
 
+			.route( "bank-accounts/edit/:id-numeric", "bankAccounts.addEdit" )
+			.route( "bank-accounts/update/:id-numeric", "bankAccounts.update" )
+			.route( "bank-accounts/delete/:id-numeric", "bankAccounts.delete" )
+			.route( "bank-accounts", "bankAccounts.index" )
+
+			.route( "categories", "transactions.categories" )
+			.route( "category-types", "transactions.categoryTypes" )
+
 			.route( "/:handler/:action" ).end();
 
 		// Custom Declared Points

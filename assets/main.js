@@ -5,7 +5,7 @@ jQuery(document).ready(function ($) {
   // set active menu
   // remove second & third replace, if not needed
   currSelectMenu = "menu_" + currPage.replace("/", "_submenu_").replace("/", "_submenu_").replace("/", "_submenu_");
-  console.log(currSelectMenu);
+  console.log( "currSelectMenu ::: " + currSelectMenu );
   jQuery("#" + currSelectMenu).addClass("menu-active");
 
 
