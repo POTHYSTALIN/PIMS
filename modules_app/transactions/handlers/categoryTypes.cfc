@@ -42,7 +42,7 @@ component extends="coldbox.system.EventHandler" {
 			rc.msg = "Transaction category type deleted successfully.";
 		} else {
 			rc.msgAction = "Error";
-			rc.msg = "No such bank found.";
+			rc.msg = "No such transaction category type found.";
 		}
 		setNextEvent( event = "transactions.category-types", persist = "msg,msgAction" );
 	}

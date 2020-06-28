@@ -41,10 +41,10 @@ component extends="coldbox.system.EventHandler" {
 		if( val( rc.id ) ) {
 			instance.bankService.deleteBankAccount( ID = rc.id );
 			rc.msgAction = "Success";
-			rc.msg = "Bank deleted successfully.";
+			rc.msg = "Bank account deleted successfully.";
 		} else {
 			rc.msgAction = "Error";
-			rc.msg = "No such bank found.";
+			rc.msg = "No such bank account found.";
 		}
 		setNextEvent( event = "transactions.bank-accounts", persist = "msg,msgAction" );
 	}
