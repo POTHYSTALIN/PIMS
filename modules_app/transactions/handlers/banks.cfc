@@ -8,7 +8,7 @@ component extends="coldbox.system.EventHandler" {
 	public function addEdit( event, rc, prc ) {
 		param name="rc.id" default="0";
 
-		prc.formAction = val( rc.id ) ? "transactions.banks.update.#rc.id#" : "transactions.banks.add";
+		prc.formAction = "transactions.banks.update.#val( rc.id )#";
 		prc.formSubmit = val( rc.id ) ? "Update" : "Add";
 
 		prc.allBanks = instance.bankService.getBanks( includeDeleted = 1 );
@@ -22,11 +22,11 @@ component extends="coldbox.system.EventHandler" {
 		if( val( rc.id ) ) {
 			instance.bankService.updateBank( argumentCollection = rc );
 			rc.msgAction = "Success";
-			rc.msg = "Bank details saved successfully.";
+			rc.msg = "Bank details updated successfully";
 		} else {
 			instance.bankService.newBank( argumentCollection = rc );
 			rc.msgAction = "Success";
-			rc.msg = "Bank details added successfully.";
+			rc.msg = "Bank details added successfully";
 		}
 		setNextEvent(event = "transactions.banks", persist = "msg,msgAction");
 	}
@@ -37,10 +37,10 @@ component extends="coldbox.system.EventHandler" {
 		if( val( rc.id ) ) {
 			instance.bankService.deleteBank( ID = rc.id );
 			rc.msgAction = "Success";
-			rc.msg = "Bank deleted successfully.";
+			rc.msg = "Bank deleted successfully";
 		} else {
 			rc.msgAction = "Error";
-			rc.msg = "No such bank found.";
+			rc.msg = "No such bank found";
 		}
 		setNextEvent( event = "transactions.banks", persist = "msg,msgAction" );
 	}

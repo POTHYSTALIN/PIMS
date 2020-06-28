@@ -7,14 +7,14 @@
 				<input class="form-control" type="text" id="name" name="name" value="#prc.currBankDetails.name#" placeholder="Bank Name">
 			</div>
 		</div>
-		
-		
+
 		<div class="form-group row">
 			<label for="shortname" class="col-sm-2 col-form-label">Short name</label>
 			<div class="col-sm-10">
 				<input class="form-control" type="text" id="shortname" name="shortname" value="#prc.currBankDetails.shortname#" placeholder="Short Name">
 			</div>
 		</div>
+
 		<div class="form-group row">
 			<label for="deleted" class="col-sm-2 col-form-label">Status</label>
 			<div class="col-sm-10">

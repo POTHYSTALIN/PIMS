@@ -8,7 +8,7 @@ component extends="coldbox.system.EventHandler" {
 	public function addEdit( event, rc, prc ) {
 		param name="rc.id" default="0";
 
-		prc.formAction = val( rc.id ) ? "transactions.category-types.update.#rc.id#" : "transactions.category-types.add";
+		prc.formAction = "transactions.category-types.update.#val( rc.id )#";
 		prc.formSubmit = val( rc.id ) ? "Update" : "Add";
 
 		

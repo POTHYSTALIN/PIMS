@@ -7,7 +7,7 @@ component extends="coldbox.system.EventHandler" {property name="categoriesServic
 	public function addEdit( event, rc, prc ) {
 		param name="rc.id" default="0";
 
-		prc.formAction = val( rc.id ) ? "transactions.categories.update.#rc.id#" : "transactions.categories.add";
+		prc.formAction = "transactions.categories.update.#val( rc.id )#";
 		prc.formSubmit = val( rc.id ) ? "Update" : "Add";
 
 		prc.allCategories = instance.categoriesService.getCategories( includeDeleted = 1 );

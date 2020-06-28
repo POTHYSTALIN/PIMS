@@ -7,20 +7,21 @@
 				<cf_dropdown dropdownName="bankID" selectedValue="#prc.currBankAccountDetails.bankID#" selectedLabel="#prc.currBankAccountDetails.name#" baseQuery="#prc.allBanks#" onclick="javascript: changeDropdown('bankID', @@currValue, this);" />
 			</div>
 		</div>
-		
-		
+
 		<div class="form-group row">
 			<label for="accountID" class="col-sm-2 col-form-label">Account no</label>
 			<div class="col-sm-10">
 				<input class="form-control" type="text" name="accountID" value="#prc.currBankAccountDetails.accountID#" placeholder="Account no">
 			</div>
 		</div>
+
 		<div class="form-group row">
 			<label for="personID" class="col-sm-2 col-form-label">Person</label>
 			<div class="col-sm-10">
 				<cf_dropdown dropdownName="personID" optionLabel="personName" optionValue="ID" selectedValue="#prc.currBankAccountDetails.personID#" selectedLabel="#prc.currBankAccountDetails.personName#" baseQuery="#prc.allPersons#" onclick="javascript: changeDropdown('personID', @@currValue, this);" />
 			</div>
 		</div>
+
 		<div class="form-group row">
 			<label for="deleted" class="col-sm-2 col-form-label">Status</label>
 			<div class="col-sm-10">
