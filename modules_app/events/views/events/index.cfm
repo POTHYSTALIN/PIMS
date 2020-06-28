@@ -20,18 +20,24 @@
 		<link href="/assets/js/jquery-ui-1.12.1.custom/jquery-ui.css" rel="stylesheet" />
 		<!--- bootstrap date time picker --->
 		<link href="/assets/js/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-		<script type="text/javascript" src="/assets/js/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+		<script type="text/javascript" src="/assets/js/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script> --->
 
 		<style>
 			#calendar {
 				max-width: 1300px;
-				margin-top: 8% !important;
 				margin: 0 auto;
 			}
-			#events{
-				margin-top: 3%;
+			.fc-button-primary {
+				color: #50d8af;
+				background-color: #FFFFFF;
+				border-color: #50d8af;
 			}
-		</style> --->
+			.fc-button-primary:hover {
+				color: #FFFFFF;
+				background-color: #50d8af;
+				border-color: #50d8af;
+			}
+		</style>
 
 	</head>
 	<cfoutput>
