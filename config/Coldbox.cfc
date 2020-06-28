@@ -4,7 +4,7 @@
 		coldbox = {
 			// Application Setup
 			appName = "MyApp_v0001",
-			BaseURL = "http://final.myapp.com/",
+			BaseURL = "https://final.myapp.com/",
 
 			// Conventions
 			eventName = "action",
@@ -74,7 +74,7 @@
 	}
 
 	public function development() {
-		coldbox.BaseURL = "http://final.myapp.local/";
+		coldbox.BaseURL = "https://final.myapp.local/";
 		coldbox.reinitpassword = "";
 		coldbox.eventCaching = false;
 		coldbox.handlerCaching = false;

@@ -36,4 +36,7 @@
 		desc
 		solution
 		otherdetails
-	
+
+
+Use this kind of popover for modals or confirmations etc ( Need to check it is actively developed or not )
+https://www.tutorialrepublic.com/codelab.php?topic=bootstrap&file=set-popovers-container
