@@ -25,7 +25,6 @@ function showDeleteConfirmModal( elem, id ) {
 }
 
 function deleteBank( id ) {
-	alert( "deleteBank" );
 	jQuery( "#myModal" ).modal( "hide" );
 	window.location.href = "/transactions/banks/delete/" + id;
 }

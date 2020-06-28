@@ -51,8 +51,15 @@ component {
 			.route( "bank-accounts/delete/:id-numeric", "bankAccounts.delete" )
 			.route( "bank-accounts", "bankAccounts.index" )
 
-			.route( "categories", "transactions.categories" )
-			.route( "category-types", "transactions.categoryTypes" )
+			.route( "categories/edit/:id-numeric", "categories.addEdit" )
+			.route( "categories/update/:id-numeric", "categories.update" )
+			.route( "categories/delete/:id-numeric", "categories.delete" )
+			.route( "categories", "categories.index" )
+
+			.route( "category-types/edit/:id-numeric", "categoryTypes.addEdit" )
+			.route( "category-types/update/:id-numeric", "categoryTypes.update" )
+			.route( "category-types/delete/:id-numeric", "categoryTypes.delete" )
+			.route( "category-types", "categoryTypes.index" )
 
 			.route( "/:handler/:action" ).end();
 
