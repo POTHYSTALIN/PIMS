@@ -44,8 +44,8 @@ Description :
 
 	<cfscript>
 		// THE LOCATION OF EMBEDDED COLDBOX
-		this.mappings["/coldbox"] = COLDBOX_APP_ROOT_PATH & "coldbox/";
-		this.customTagPaths = COLDBOX_APP_ROOT_PATH & "/views/customTags";
+		this.mappings["/coldbox"] 	= COLDBOX_APP_ROOT_PATH & "coldbox/";
+		this.customTagPaths 		= COLDBOX_APP_ROOT_PATH & "views/customTags";
 	</cfscript>
 
 	<!--- on Application Start --->

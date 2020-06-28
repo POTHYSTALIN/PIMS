@@ -36,7 +36,7 @@ component extends="coldbox.system.EventHandler" {
 
 		prc.itemDetail = instance.inventoryItemDetailService.getItemDetails( id = rc.id );
 		prc.items = instance.inventoryItemService.getItems( deleted = 0 );
-		prc.itemProps = instance.inventoryItemDetailService.getPropertiesForTnventoryItem( rc.hid );
+		prc.itemProps = instance.inventoryItemDetailService.getPropertiesForInventoryItem( rc.hid );
 		prc.propertiesList = structNew("ordered");
 		for( prop in prc.itemProps ) {
 			if( !structKeyExists(prc.propertiesList, prop.property) ) {

@@ -8,6 +8,7 @@ component output="false" extends="model.utilsService" {
 
 	public query function getItems(
 		numeric id,
+		numeric inventoryItemID,
 		numeric deleted,
 		string searchStr = ""
 	) {
@@ -17,6 +18,9 @@ component output="false" extends="model.utilsService" {
 		}
 		if( structKeyExists( arguments, "id" ) ) {
 			local.sqlString &= "AND id = :id ";
+		}
+		if( structKeyExists( arguments, "inventoryItemID" ) ) {
+			local.sqlString &= "AND inventoryItemID = :inventoryItemID ";
 		}
 		if( len( arguments.searchStr ) ) {
 			local.sqlString &= "AND ( name LIKE :searchStr ) ";
@@ -30,6 +34,9 @@ component output="false" extends="model.utilsService" {
 		}
 		if( structKeyExists( arguments, "id" ) ) {
 			local.qry.addParam(name="id", value="#arguments.id#", cfsqltype="cf_sql_integer");
+		}
+		if( structKeyExists( arguments, "inventoryItemID" ) ) {
+			local.qry.addParam(name="inventoryItemID", value="#arguments.inventoryItemID#", cfsqltype="cf_sql_integer");
 		}
 		if( len( arguments.searchStr ) ) {
 			local.qry.addParam(name="searchStr", value="%#arguments.searchStr#%", cfsqltype="cf_sql_varchar");

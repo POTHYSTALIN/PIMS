@@ -28,7 +28,7 @@
 					<select class="form-control" name="#propName#ID" id="#propName#ID" required>
 						<option value="">Please select a #lCase(currProp)#</option>
 						<cfloop collection="#prc.propertiesList[currProp].options#" item="currOption">
-							<option value="#currOption#" <cfif currOption EQ prc.itemDetail.brandID>selected</cfif>>#prc.propertiesList[currProp].options[currOption]#</option>
+							<option value="#currOption#" <cfif currOption EQ prc.itemDetail[ lCase( propName ) & "ID" ][1]>selected</cfif>>#prc.propertiesList[currProp].options[currOption]#</option>
 						</cfloop>
 					</select>
 				</div>

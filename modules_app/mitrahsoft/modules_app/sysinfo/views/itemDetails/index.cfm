@@ -28,7 +28,7 @@
 					<td>#prc.itemDetails.item#</td>
 					<td>#currNameDetails#</td>
 					<td>
-						<i class="fas fa-edit cursor" onclick="javascript: showEditModal(this, '#prc.itemDetails.id#');"></i> &nbsp;
+						<i class="fas fa-edit cursor" onclick="javascript: showEditModal(this, '#prc.itemDetails.id#', '#prc.itemDetails.inventoryItemID#');"></i> &nbsp;
 						<i class="fas fa-trash cursor text-danger" onclick="javascript: showDeleteConfirmModal(this, '#prc.itemDetails.id#');"></a>
 					</td>
 				</tr>

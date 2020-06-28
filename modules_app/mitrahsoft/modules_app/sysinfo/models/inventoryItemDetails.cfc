@@ -200,7 +200,7 @@ component output="false" extends="model.utilsService" {
 
 	
 
-	public query function getPropertiesForTnventoryItem(
+	public query function getPropertiesForInventoryItem(
 		required numeric inventoryItemID
 	) {
 		local.qry = new query(

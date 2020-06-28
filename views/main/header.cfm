@@ -57,6 +57,9 @@ Header
 										<a href="/mitrahsoft/sysinfo/item-details">Hardware Details</a>
 									</li>
 									<li>
+										<a href="/mitrahsoft/sysinfo/list">System Details</a>
+									</li>
+									<li>
 										<a href="/mitrahsoft/sysinfo/item-purchases">Hardware Purchases</a>
 									</li>
 									<li>
