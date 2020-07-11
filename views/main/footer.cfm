@@ -17,7 +17,7 @@
 <!-- JavaScript Libraries -->
 <script src="#request.assetsPath#/lib/jquery/jquery.min.js"></script>
 <!--- <script src="#request.assetsPath#/lib/jquery/jquery-migrate.min.js"></script> --->
-<script src="#request.assetsPath#/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="#request.bootstrapPath#/js/bootstrap.bundle.min.js"></script>
 <!--- <script src="#request.assetsPath#/lib/easing/easing.min.js"></script> --->
 <script src="#request.assetsPath#/lib/superfish/hoverIntent.js"></script>
 <script src="#request.assetsPath#/lib/superfish/superfish.min.js"></script>
@@ -39,6 +39,10 @@
 		<script src="/assets/modules#currPath#.js"></script>
 	</cfif>
 </cfloop>
+<script>
+	// TODO:: console
+	console.log( "page-specific-js: #currPath#" );
+</script>
 
 <!--- <cfset moduleSpec = listRest(rc.action, ":")>
 <cfset handlerSpec = listRest(moduleSpec, ":")>

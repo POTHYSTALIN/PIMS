@@ -15,7 +15,7 @@ function showEditModal( elem, id ) {
 }
 
 function showDeleteConfirmModal( elem, id ) {
-	var confirmContent = '<h4>Are you sure to delete this Category?</h4><div class="row"><div class="col-sm-offset-8 col-sm-2"><button type="button" class="btn btn-danger" onclick="javascript: deleteCategory(' + id + ')">Delete</button></div><div class="col-sm-2"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div></div>';
+	var confirmContent = '<p>Are you sure to delete this Category?</p><div class="row"><div class="col-sm-offset-8 col-sm-2"><button type="button" class="btn btn-sm btn-danger" onclick="javascript: deleteCategory(' + id + ')">Delete</button></div><div class="col-sm-2"><button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button></div></div>';
 	jQuery( ".modal-title" ).html( "Confirm delete" );
 	jQuery( ".modal-body" ).html( confirmContent );
 	jQuery( "#myModal" ).modal({

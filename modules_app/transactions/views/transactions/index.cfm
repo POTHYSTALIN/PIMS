@@ -46,15 +46,3 @@
 		</table>
 	</div>
 </cfoutput>
-
-
-<cfoutput>
-	<div class="container">
-		<div style="min-height: 10px;">&nbsp;</div>
-		<cf_alerts msg="#rc.msg#" msgAction="#rc.msgAction#">
-
-		<!--- search pane --->
-		
-	</div>
-<!--- End --->
-</cfoutput>

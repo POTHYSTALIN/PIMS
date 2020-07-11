@@ -26,7 +26,20 @@
 }
 
 /* Change bg color for custom bootstrap checkbox */
-.custom-control-input:checked ~ .custom-control-label::before {
+/* Change color for btn-success */
+.custom-control-input:checked ~ .custom-control-label::before, .btn-success {
 	background-color: #50d8af;
 	border-color: #50d8af;
+}
+
+.btn-success:hover {
+	background-color: #50afaf;
+	border-color: #50afaf;
+}
+
+.text-danger {
+	color: #ac3545!important
+}
+.btn-danger {
+	background-color: #ac3545!important
 }

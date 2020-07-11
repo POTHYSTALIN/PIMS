@@ -7,6 +7,7 @@
 		<meta charset="utf-8">
 		<title>myapp.com - Manages all your transactions</title>
 		<meta content="width=device-width, initial-scale=1.0" name="viewport">
+		<link rel="shortcut icon" href="/assets/img/logo.png">
 
 		<!-- Google Fonts -->
 		<!--- <link href="#request.assetsPath#/vendor/fonts.googleapis/css.css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700" rel="stylesheet"> --->
