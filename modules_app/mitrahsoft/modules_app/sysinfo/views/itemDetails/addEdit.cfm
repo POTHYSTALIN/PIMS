@@ -40,11 +40,11 @@
 				<input type="checkbox" class="form-control" id="deleted" name="deleted" <cfif prc.itemDetail.deleted EQ 1>checked</cfif> value="1">
 			</div>
 		</div> --->
-		<div class="form-group row justify-content-sm-end">
-			<div class="col-sm-2">
-				<input type="submit" class="btn btn-success" name="Submit" value="#rc.formSubmit#">
+		<div class="form-group row">
+			<div class="offset-9 col-sm-1 pr-0 pl-4 mr-1">
+				<input type="submit" class="btn btn-success" name="Submit" value="#prc.formSubmit#">
 			</div>
-			<div class="col-sm-2">
+			<div class="col-sm-1 p-0 mr-2 ml-5">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 			</div>
 		</div>

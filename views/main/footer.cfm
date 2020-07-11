@@ -4,9 +4,9 @@
 	<div class="modal-dialog modal-lg">
 		<!-- Modal content-->
 		<div class="modal-content">
-			<div class="modal-header">
+			<div class="modal-header my-success">
 				<h4 class="modal-title">Update password details</h4>
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<button type="button" class="close text-white" data-dismiss="modal">&times;</button>
 			</div>
 			<div class="modal-body">
 				<p>Some text in the modal.</p>

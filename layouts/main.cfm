@@ -1,5 +1,6 @@
 <cfparam name="rc.msg" default="">
 <cfparam name="rc.msgAction" default="">
+<cfheader name="Access-Control-Allow-Origin" value="https://fonts.gstatic.com">
 <cfoutput>
 <!DOCTYPE html>
 <html>

@@ -27,9 +27,10 @@
 
 /* Change bg color for custom bootstrap checkbox */
 /* Change color for btn-success */
-.custom-control-input:checked ~ .custom-control-label::before, .btn-success {
+.custom-control-input:checked ~ .custom-control-label::before, .btn-success, .my-success {
 	background-color: #50d8af;
 	border-color: #50d8af;
+	color: white;
 }
 
 .btn-success:hover {

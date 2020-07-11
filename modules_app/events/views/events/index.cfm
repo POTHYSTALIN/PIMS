@@ -66,7 +66,7 @@
 
 			<div style="min-height: 10px;">&nbsp;</div>
 			<div id="calendar"></div>
-			<div class="modal fade" id="events" data-backdrop="false">
+			<!--- <div class="modal fade" id="events" data-backdrop="false">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -116,7 +116,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div> --->
 		</body>
 	</cfoutput>
 
