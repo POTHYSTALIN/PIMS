@@ -27,11 +27,11 @@
 		<link href="#request.assetsPath#/lib/magnific-popup/magnific-popup.css" rel="stylesheet">
 		<link href="#request.assetsPath#/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
 
-		<link href='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/core/main.min.css' rel='stylesheet' />
-		<link href='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.min.css' rel='stylesheet' />
-		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/core/main.min.js'></script>
-		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/interaction/main.min.js'></script>
-		<script src='#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.min.js'></script>
+		<link href="#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/core/main.min.css" rel="stylesheet" />
+		<link href="#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.min.css" rel="stylesheet" />
+		<script src="#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/core/main.min.js"></script>
+		<script src="#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/interaction/main.min.js"></script>
+		<script src="#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.min.js"></script>
 
 		<style>
 			body {
@@ -55,17 +55,17 @@
 		<cfset currPath = "">
 		<cfloop list="#currAssetPaths#" item="currItem">
 			<cfset currPath &= "/" & currItem />
-			<cfset pageSpecificCss = expandPath('/assets/modules#currPath#.css')>
+			<cfset pageSpecificCss = expandPath("/assets/modules#currPath#.css")>
 			<cfif fileExists(pageSpecificCss)>
 				<link href="/assets/modules#currPath#.css" rel="stylesheet" />
 			</cfif>
 		</cfloop>
 		
-		<!--- <cfset pageSpecificCss = expandPath('/assets/#listFirst(rc.action, '.')#.css')>
+		<!--- <cfset pageSpecificCss = expandPath("/assets/#listFirst(rc.action, '.')#.css")>
 		<cfif fileExists(pageSpecificCss)>
 			<link href="/assets/#listFirst(rc.action, '.')#.css" rel="stylesheet" />
 		</cfif>
-		<cfset pageSpecificCss = expandPath('/assets/#cgi.path_info#.css')>
+		<cfset pageSpecificCss = expandPath("/assets/#cgi.path_info#.css")>
 		<cfif fileExists(pageSpecificCss)>
 			<link href="/assets/#cgi.path_info#.css" rel="stylesheet" />
 		</cfif> --->

@@ -12,7 +12,7 @@
 
 		<!--- <link href="/assets/js/fullcalendar-3.9.0/fullcalendar.css" rel="stylesheet" />
 
-		<link href='/assets/js/fullcalendar-3.9.0/fullcalendar.print.css' rel='stylesheet' media='print' />
+		<link href="/assets/js/fullcalendar-3.9.0/fullcalendar.print.css" rel="stylesheet" media="print" />
 
 		<script type="text/javascript" src="/assets/js/fullcalendar-3.9.0/lib/moment.min.js"></script>
 		<script type="text/javascript" src="/assets/js/fullcalendar-3.9.0/fullcalendar.js"></script>
@@ -123,16 +123,16 @@
 	<!--- <script type="text/javascript">
 
 		$(document).ready(function() {
-				// var eventData = $('#eventsData').val();
+				// var eventData = $("#eventsData").val();
 				// var eventRes = JSON.parse(eventData);
 				// console.log(eventRes.DATA);
 			// page is now ready, initialize the calendar...
-			$('#calendar').fullCalendar({
+			$("#calendar").fullCalendar({
 				// put your options and callbacks here
 				header: {
-					left: 'prev,next today',
-					center: 'title',
-					right: 'month,agendaWeek,agendaDay,listWeek'
+					left: "prev,next today",
+					center: "title",
+					right: "month,agendaWeek,agendaDay,listWeek"
 				},
 				height: 450,
 				theme: true,
@@ -144,9 +144,9 @@
 					$el.popover({
 						title: eventObj.title,
 						content: eventObj.description,
-						trigger: 'hover',
-						placement: 'top',
-						container: 'body'
+						trigger: "hover",
+						placement: "top",
+						container: "body"
 					});
 				},
 				dayClick: function(date, jsEvent, view) {
@@ -172,10 +172,10 @@
 				}
 			});
 
-			$('#sdate,#edate').datetimepicker();
+			$("#sdate,#edate").datetimepicker();
 			$("#sdate").on("dp.change", function (e) {
-				if($('#edate').val() != '')
-					$('#edate').data("DateTimePicker").minDate(e.date);
+				if($("#edate").val() != "")
+					$("#edate").data("DateTimePicker").minDate(e.date);
 			});
 		});
 	</script> --->

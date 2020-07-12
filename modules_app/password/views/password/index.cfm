@@ -49,7 +49,7 @@
 						<td>#prc.passwordDetails.site#</td>
 						<td>#prc.passwordDetails.Username#</td>
 						<td>
-							<cfset currPwd = (len(prc.passwordDetails.password) ? decrypt(prc.passwordDetails.password, prc.passwordDetails.salt) : '')>
+							<cfset currPwd = (len(prc.passwordDetails.password) ? decrypt(prc.passwordDetails.password, prc.passwordDetails.salt) : "")>
 							<span class="hiddenPwd orig">#currPwd#</span>
 							<span class="hiddenPwd encrypted">**********</span>
 

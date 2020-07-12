@@ -34,7 +34,7 @@
 <cfset currPath = "">
 <cfloop list="#currAssetPaths#" item="currItem">
 	<cfset currPath &= "/" & currItem />
-	<cfset pageSpecificjs = expandPath('/assets/modules#currPath#.js')>
+	<cfset pageSpecificjs = expandPath("/assets/modules#currPath#.js")>
 	<cfif fileExists(pageSpecificjs)>
 		<script src="/assets/modules#currPath#.js"></script>
 	</cfif>
@@ -47,13 +47,13 @@
 <!--- <cfset moduleSpec = listRest(rc.action, ":")>
 <cfset handlerSpec = listRest(moduleSpec, ":")>
 
-<cfif fileExists(expandPath('/assets/#listFirst(rc.action, ":")#.js'))>
+<cfif fileExists(expandPath("/assets/#listFirst(rc.action, ":")#.js"))>
 	<!--- module specific js --->
 	<script src="/assets/#listFirst(rc.action, ":")#.js"></script>
-<cfelseif fileExists(expandPath('/assets/#listFirst(moduleSpec, ".")#.js'))>
+<cfelseif fileExists(expandPath("/assets/#listFirst(moduleSpec, ".")#.js"))>
 	<!--- handler specific js --->
 	<script src="/assets/#listFirst(moduleSpec, ".")#.js"></script>
-<cfelseif fileExists(expandPath('/assets/#cgi.path_info#.js'))>
+<cfelseif fileExists(expandPath("/assets/#cgi.path_info#.js"))>
 	<script src="/assets/#cgi.path_info#.js"></script>
 </cfif> --->
 <script>
