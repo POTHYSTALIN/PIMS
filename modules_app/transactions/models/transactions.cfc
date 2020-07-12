@@ -125,6 +125,7 @@
 				INNER JOIN transactionModes tm ON b.modeId = tm.id
 				LEFT JOIN bankAccounts ba ON b.accountId = ba.id AND b.personId = ba.personId
 			WHERE b.personId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
+				AND b.deleted = 0
 		</cfquery>
 
 		<cfquery name="allIncomes" datasource="#dsn.name#">
@@ -133,6 +134,7 @@
 			FROM transactions t
 				INNER JOIN transactionModes tm ON t.modeId = tm.id
 			WHERE t.toPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
+				AND t.deleted = 0
 			GROUP BY t.toAccountId
 		</cfquery>
 
@@ -142,6 +144,7 @@
 			FROM transactions t
 				INNER JOIN transactionModes tm ON t.modeId = tm.id
 			WHERE t.fromPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
+				AND t.deleted = 0
 			GROUP BY t.fromAccountId
 		</cfquery>
 
