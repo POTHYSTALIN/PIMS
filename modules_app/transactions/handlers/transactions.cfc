@@ -21,10 +21,11 @@ component extends="coldbox.system.EventHandler" {
 		param name="rc.msg" default="";
 		param name="rc.msgAction" default="";
 
-		prc.formAction = val( rc.id ) ? "transactions.update.#rc.id#" : "transactions.add";
+		prc.formAction = "transactions.update.#rc.id#";
 		prc.formSubmit = val( rc.id ) ? "Update" : "Add";
 
 		prc.currTransactionDetails = instance.transactionsService.list( id = rc.id );
+		prc.allTransactionModes = instance.categoriesService.getTransactionModes();
 		prc.allCategories = instance.categoriesService.getCategories();
 		prc.allBankAccounts = instance.bankService.getBankAccounts();
 		prc.allPersons = instance.userService.getPersons();

@@ -7,6 +7,17 @@
 <cfparam name="attributes.optionValue" default="ID">
 <cfparam name="attributes.optionLabel" default="name">
 
+<cfif isArray( attributes.baseQuery )>
+	<!--- Convert static array as query --->
+	<cfset temp = duplicate( attributes.baseQuery ) />
+	<cfset attributes.baseQuery = queryNew( "id,name", "integer,varchar", temp ) />
+	<!--- <cfdump var="#attributes#" /><cfabort /> --->
+	<cfset attributes.selectedLabel = attributes.baseQuery.reduce( function( a,b ) {
+
+		if( attributes.selectedValue == b.id ) { return b.name; }
+	}, "") />
+<cfdump var="#attributes#" /><cfabort />
+</cfif>
 <style>
 	.dropdown-menu.custom li {
 		background-color: white;
@@ -38,7 +49,7 @@
 		</button>
 		<ul class="dropdown-menu custom w-100 border-light-grey">
 			<cfloop query="#attributes.baseQuery#">
-				<li><a href="##" onclick="#replaceNoCase(attributes.onclick, "@@currValue", "#attributes.baseQuery[attributes.optionValue][attributes.baseQuery.currentrow]#", "ALL")#">#attributes.baseQuery[attributes.optionLabel][attributes.baseQuery.currentrow]#</a></li>
+				<li class="cursor" onclick="#replaceNoCase(attributes.onclick, "@@currValue", "#attributes.baseQuery[attributes.optionValue][attributes.baseQuery.currentrow]#", "ALL")#"><a href="##">#attributes.baseQuery[attributes.optionLabel][attributes.baseQuery.currentrow]#</a></li>
 			</cfloop>
 		</ul>
 		<input type="hidden" id="#attributes.dropdownName#" name="#attributes.dropdownName#" value="#attributes.selectedValue#">
@@ -48,9 +59,9 @@
 
 <script>
 	if( !window.changeDropdown ) {
-		window.changeDropdown = function( elem, value, cliked ) {
-			jQuery("#" + elem + "Dropdown span:first").html( jQuery( cliked ).text() );
-			jQuery("#" + elem).val(value);
+		window.changeDropdown = function( elem, value, clicked ) {
+			jQuery("#" + elem + "Dropdown span:first").html( jQuery( clicked ).text() );
+			jQuery("#" + elem).val( value );
 		}
 	}
 </script>

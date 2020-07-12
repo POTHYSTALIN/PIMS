@@ -36,7 +36,7 @@
 				<tr>
 					<td>#rc.allTransactions.type#</td>
 					<td>#rc.allTransactions.category#</td>
-					<td>#rc.allTransactions.personName#</td>
+					<td>#rc.allTransactions.fromPersonName#</td>
 					<td>#rc.allTransactions.amount#</td>
 					<td align="center">
 						<i class="fas fa-edit cursor" onclick="javascript: showEditModal(this, '#rc.allTransactions.id#');"></i> &nbsp;

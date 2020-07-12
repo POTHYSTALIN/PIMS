@@ -35,7 +35,18 @@ BEGIN
 		deleted bit default(0)
 	)
 	INSERT INTO persons( fname, lname, email, phone )
-	VALUES( N'Pothys', N'Ravichandran', N'pothystalin@gmail.com', N'+91 xxxxxxxxxx' )
+	VALUES
+		( N'Pothys', N'Ravichandran', N'test@gmail.com', N'+91 xxxxxxxxxx' ),
+		( N'Packiya', N'Papitha', N'test@gmail.com', N'+91 xxxxxxxxxx' ),
+		( N'Aadhitya', N'P', NULL, NULL ),
+		( N'Ashwin', N'P', NULL, NULL ),
+		( N'Venezia', N'P', NULL, NULL ),
+		( N'Gopi', N'Ravichandran', N'test@gmail.com', N'+91 xxxxxxxxxx' ),
+		( N'Anand', N'Ravichandran', N'test@gmail.com', N'+91 xxxxxxxxxx' ),
+		( N'Shanmugathai', N'R', NULL, NULL ),
+		( N'Manickam', N'P', NULL, NULL ),
+		( N'Vijaya', N'M', NULL, NULL ),
+		( N'Others', N'', NULL, NULL )
 END
 
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[logins]') AND type in (N'U'))

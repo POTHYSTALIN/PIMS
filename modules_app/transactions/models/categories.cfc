@@ -80,10 +80,30 @@
 	</cffunction>
 
 
+	<!--- Transaction Modes --->
+	<cffunction name="getTransactionModes" access="public" returntype="query" output="false">
+		<cfargument name="id" type="string" required="false">
+		<cfargument name="includeDeleted" type="boolean" required="false">
+
+		<cfquery name="local.qry" datasource="#dsn.name#">
+			SELECT * FROM transactionModes
+			WHERE 1 = 1
+			<cfif structKeyExists(arguments, "id")>
+				AND id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
+			</cfif>
+			<cfif NOT structKeyExists( arguments, "includeDeleted" )>
+				AND deleted = 0
+			</cfif>
+		</cfquery>
+
+		<cfreturn local.qry>
+	</cffunction>
+
+
 	<!--- ======================================================================== --->
 	<!--- =========================== category types ============================= --->
 	<!--- ======================================================================== --->
-	<cffunction name="getCategoryTypes" access="public" returntype="Query" output="false">
+	<cffunction name="getCategoryTypes" access="public" returntype="query" output="false">
 		<cfargument name="ID" type="string" required="false">
 		<cfargument name="includeDeleted" type="string" required="false">
 

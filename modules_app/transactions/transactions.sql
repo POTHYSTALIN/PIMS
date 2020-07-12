@@ -2,10 +2,31 @@
 -- under construction
 -- tables needed
 	-- transactionTypes
+	-- transactionModes
 	-- transactionCategories
 	-- transactions
 	-- bankAccounts ( for account based balance report )
 	-- persons
+
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[balances]') AND type in (N'U'))
+BEGIN
+	CREATE TABLE balances(
+		id int primary key identity(1,1),
+		personId int,
+		type varchar(50), -- amount in hand / amount in bank
+		accountId int,
+		amount money not null,
+		created datetime default(getDate()),
+		updated datetime default(getDate()),
+		deleted bit default(0)
+	)
+	INSERT INTO balances( personId, type, accountId, amount )
+	VALUES
+		( 1, N'hand', NULL, 1 ),
+		( 1, N'bank', 1, 1 )
+		( 1, N'bank', 2, 1 )
+END
+
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[transactionTypes]') AND type in (N'U'))
 BEGIN
 	CREATE TABLE transactionTypes(
@@ -21,6 +42,21 @@ BEGIN
 	VALUES( N'Expense', 0 )
 END
 
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[transactionModes]') AND type in (N'U'))
+BEGIN
+	CREATE TABLE transactionModes(
+		id int primary key identity(1,1),
+		name nvarchar(50) not null,
+		created datetime default(getDate()),
+		updated datetime default(getDate()),
+		deleted bit default(0)
+	)
+	INSERT INTO transactionModes( name, deleted )
+	VALUES( N'Cash', 0 )
+	INSERT INTO transactionModes( name, deleted )
+	VALUES( N'Transfer', 0 )
+END
+
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[transactionCategories]') AND type in (N'U'))
 BEGIN
 	CREATE TABLE transactionCategories(
@@ -32,10 +68,10 @@ BEGIN
 		updated datetime default(getDate()),
 		deleted bit default(0)
 	)
-	INSERT INTO transactionCategories( name, typeID, deleted )
-	VALUES( N'Salary', 1, 0 )
-	INSERT INTO transactionCategories( name, typeID, deleted )
-	VALUES( N'Travel expense', 2, 0 )
+	-- INSERT INTO transactionCategories( name, typeID, deleted )
+	-- VALUES( N'Salary', 1, 0 )
+	-- INSERT INTO transactionCategories( name, typeID, deleted )
+	-- VALUES( N'Travel expense', 2, 0 )
 END
 
 -- fields for transactions table
@@ -53,11 +89,14 @@ IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tra
 BEGIN
 	CREATE TABLE transactions(
 		id int primary key identity(1,1),
-		categoryID int,
-		bankAccountID int,
-		personID int not null,
-		description text,
+		categoryId int,
+		modeId int,
+		fromPersonId int not null,
+		fromAccountId int,
+		toPersonId int not null,
+		toAccountId int,
 		amount money,
+		description text,
 		created datetime default(getDate()),
 		updated datetime default(getDate()),
 		deleted bit default(0)
