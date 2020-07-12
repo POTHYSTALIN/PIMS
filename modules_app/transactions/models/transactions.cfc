@@ -105,4 +105,93 @@
 			DELETE FROM transactions WHERE ID = #arguments.ID#;
 		</cfquery>
 	</cffunction>
+
+	<cffunction name="getCurrentBalances" returntype="array" access="public" output="true">
+		<cfargument name="personId" type="numeric" required="yes" />
+
+		<cfset var res = [] />
+		<cfset var currPersonBalances = "" />
+		<cfset var allIncomes = "" />
+		<cfset var allExpenses = "" />
+		<cfset var inHandBalance = "" />
+		<cfset var inBankBalance = "" />
+
+		<cfquery name="currPersonBalances" datasource="#dsn.name#">
+			SELECT
+				b.*,
+				tm.name as type,
+				ba.accountId as account
+			FROM balances b
+				INNER JOIN transactionModes tm ON b.modeId = tm.id
+				LEFT JOIN bankAccounts ba ON b.accountId = ba.id AND b.personId = ba.personId
+			WHERE b.personId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
+		</cfquery>
+
+		<cfquery name="allIncomes" datasource="#dsn.name#">
+			SELECT
+				sum( t.amount ) AS income, t.toAccountId AS accountId
+			FROM transactions t
+				INNER JOIN transactionModes tm ON t.modeId = tm.id
+			WHERE t.toPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
+			GROUP BY t.toAccountId
+		</cfquery>
+
+		<cfquery name="allExpenses" datasource="#dsn.name#">
+			SELECT
+				sum( t.amount ) AS expense, t.fromAccountId AS accountId
+			FROM transactions t
+				INNER JOIN transactionModes tm ON t.modeId = tm.id
+			WHERE t.fromPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
+			GROUP BY t.fromAccountId
+		</cfquery>
+
+		<cfquery name="inHandBalance" dbtype="query">
+			SELECT TOP 1 * FROM currPersonBalances
+			WHERE type = 'Cash'
+		</cfquery>
+
+		<cfif inHandBalance.recordcount>
+			<cfquery name="handIncomes" dbtype="query">
+				SELECT TOP 1 * FROM allIncomes
+				WHERE accountId = NULL
+			</cfquery>
+
+			<cfquery name="handExpenses" dbtype="query">
+				SELECT TOP 1 * FROM allExpenses
+				WHERE accountId = NULL
+			</cfquery>
+
+			<cfset res.append({
+				"type": "hand",
+				"account": "",
+				"accountName": "In Hand",
+				"amount": val( inHandBalance.amount ) + val( handIncomes.income ) - val( handExpenses.expense )
+			}) />
+		</cfif>
+
+		<cfquery name="inBankBalance" dbtype="query">
+			SELECT * FROM currPersonBalances
+			WHERE type = 'Transfer'
+		</cfquery>
+
+		<cfloop query="inBankBalance">
+			<cfquery name="bankIncomes" dbtype="query">
+				SELECT TOP 1 * FROM allIncomes
+				WHERE accountId = #inBankBalance.accountId#
+			</cfquery>
+
+			<cfquery name="bankExpenses" dbtype="query">
+				SELECT TOP 1 * FROM allExpenses
+				WHERE accountId = #inBankBalance.accountId#
+			</cfquery>
+			<cfset res.append( {
+				"type": "bank",
+				"account": inBankBalance.accountId,
+				"accountName": inBankBalance.account,
+				"amount": val( inBankBalance.amount ) + val( bankIncomes.income ) - val( bankExpenses.expense )
+			}) />
+		</cfloop>
+
+		<cfreturn res />
+	</cffunction>
 </cfcomponent>

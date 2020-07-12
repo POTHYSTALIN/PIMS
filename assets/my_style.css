@@ -30,7 +30,7 @@
 .custom-control-input:checked ~ .custom-control-label::before, .btn-success, .my-success {
 	background-color: #50d8af;
 	border-color: #50d8af;
-	color: white;
+	color: white !important;
 }
 
 .btn-success:hover {

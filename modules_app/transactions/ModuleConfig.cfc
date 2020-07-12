@@ -43,6 +43,7 @@ component {
 			.route( "edit/:id-numeric", "transactions.addEdit" )
 			.route( "update/:id-numeric", "transactions.update" )
 			.route( "delete/:id-numeric", "transactions.delete" )
+			.route( "report/:id-numeric", "transactions.reports" )
 
 			.route( "banks/edit/:id-numeric", "banks.addEdit" )
 			.route( "banks/update/:id-numeric", "banks.update" )

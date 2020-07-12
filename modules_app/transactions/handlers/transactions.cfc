@@ -49,7 +49,7 @@ component extends="coldbox.system.EventHandler" {
 		setNextEvent(event = "transactions", persist = "msg,msgAction");
 	}
 
-	public function delete( event, rc, prc ){
+	public function delete( event, rc, prc ) {
 		param name="rc.id" default="0";
 
 		if( val( rc.id ) )
@@ -57,5 +57,16 @@ component extends="coldbox.system.EventHandler" {
 		rc.msgAction = "Success";
 		rc.msg = "Transaction details deleted successfully.";
 		setNextEvent(event = "transactions", persist = "msg,msgAction");
+	}
+
+	public function reports( event, rc, prc ) {
+		param name="rc.id" default="0";
+
+		if( rc.id == 1 ) {
+			// Balance report
+			prc.currBalances = instance.transactionsService.getCurrentBalances( session.userId );
+		}
+
+		event.setView( view="transactions/report_1", noLayout=true );
 	}
 }

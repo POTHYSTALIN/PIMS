@@ -13,18 +13,18 @@ BEGIN
 	CREATE TABLE balances(
 		id int primary key identity(1,1),
 		personId int,
-		type varchar(50), -- amount in hand / amount in bank
+		modeId int,
 		accountId int,
 		amount money not null,
 		created datetime default(getDate()),
 		updated datetime default(getDate()),
 		deleted bit default(0)
 	)
-	INSERT INTO balances( personId, type, accountId, amount )
+	INSERT INTO balances( personId, modeId, accountId, amount )
 	VALUES
-		( 1, N'hand', NULL, 1 ),
-		( 1, N'bank', 1, 1 )
-		( 1, N'bank', 2, 1 )
+		( 1, 1, NULL, 40300.00 ),
+		( 1, 2, 1, 12446.92 ),
+		( 1, 2, 2, 2161.51 )
 END
 
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[transactionTypes]') AND type in (N'U'))

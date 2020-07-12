@@ -28,3 +28,17 @@ function deleteTransaction( id ) {
 	$( "#myModal" ).modal( "hide" );
 	window.location.href = "/transactions/delete/" + id;
 }
+
+function showBalanceReport() {
+	jQuery.post(
+		"/transactions/report/1",
+		function (res) {
+			// success function
+			let currDate = new Date();
+			jQuery(".modal-title").html("Balance amount on " + currDate.getDate() + " / " + currDate.toLocaleString('default', { month: 'short' }) + " / " + currDate.getFullYear() );
+			jQuery(".modal-body").html( res );
+			jQuery("#myModal").modal();
+		}
+	);
+	return false;
+}
