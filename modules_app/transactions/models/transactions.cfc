@@ -6,7 +6,7 @@
 	</cffunction>
 
 	<cffunction name="list" access="public" returntype="query" output="false">
-		<cfargument name="ID" type="numeric" required="false">
+		<cfargument name="id" type="numeric" required="false">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
 			SELECT
@@ -25,7 +25,7 @@
 				LEFT JOIN bankAccounts ba2 ON t.toAccountID = ba2.id
 			WHERE 1 = 1
 				<cfif structKeyExists(arguments, "id")>
-					AND t.id = <cfqueryparam value="#arguments.ID#" cfsqltype="cf_sql_integer">
+					AND t.id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
 				</cfif>
 		</cfquery>
 
@@ -77,32 +77,31 @@
 				toPersonId = #arguments.toPersonId#,
 				toAccountId = <cfqueryparam value="#arguments.toAccountId#" cfsqltype="cf_sql_numeric" null="#(arguments.toAccountId EQ 0)#">,
 				amount = '#arguments.amount#',
-				description = '#arguments.description#'
+				description = '#arguments.description#',
+				updated = getDate()
 			WHERE id = #arguments.id#
 		</cfquery>
 	</cffunction>
 
 	<cffunction name="delete" access="public" returntype="void" output="false">
-		<cfargument name="ID" type="numeric" required="true">
+		<cfargument name="id" type="numeric" required="true">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
-			IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[transactions_deleted]') AND type in (N'U'))
-			BEGIN
-				CREATE TABLE transactions_deleted(
-					id int primary key identity(1,1),
-					categoryID int,
-					bankAccountID int,
-					personID int not null,
-					description text,
-					amount money,
-					created datetime default(getDate()),
-					updated datetime default(getDate()),
-					deleted bit default(0)
-				)
-			END
-			INSERT INTO transactions_deleted( categoryID, bankAccountID, personID, description, amount, created, updated, deleted )
-			SELECT categoryID, bankAccountID, personID, description, amount, created, updated, deleted FROM transactions WHERE ID = #arguments.ID#;
-			DELETE FROM transactions WHERE ID = #arguments.ID#;
+			UPDATE transactions SET
+				deleted = 1,
+				updated = getDate()
+			WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
+		</cfquery>
+	</cffunction>
+
+	<cffunction name="undelete" access="public" returntype="void" output="false">
+		<cfargument name="id" type="numeric" required="true">
+
+		<cfquery name="local.qry" datasource="#dsn.name#">
+			UPDATE transactions SET
+				deleted = 0,
+				updated = getDate()
+			WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
 		</cfquery>
 	</cffunction>
 

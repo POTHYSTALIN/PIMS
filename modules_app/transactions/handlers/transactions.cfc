@@ -13,7 +13,7 @@ component extends="coldbox.system.EventHandler" {
 
 	public function index( event, rc, prc ) {
 		param name="rc.searchStr" default="";
-		rc.allTransactions = instance.transactionsService.list();
+		prc.allTransactions = instance.transactionsService.list();
 	}
 
 	public function addEdit( event, rc, prc ) {
@@ -41,7 +41,7 @@ component extends="coldbox.system.EventHandler" {
 				rc.id = instance.transactionsService.new( argumentCollection=rc );
 			rc.msgAction = "Success";
 			rc.msg = "Transaction details updated successfully.";
-		} catch( any e ){
+		} catch( any e ) {
 			writeDump(e);abort;
 			rc.msgAction = "Error";
 			rc.msg = (len(e.message)?e.message:e.detail);
@@ -52,8 +52,13 @@ component extends="coldbox.system.EventHandler" {
 	public function delete( event, rc, prc ) {
 		param name="rc.id" default="0";
 
-		if( val( rc.id ) )
+		if( val( rc.id ) && ( prc.currentRoute == "undelete/:id-numeric/" ) ) {
+			instance.transactionsService.undelete( ID = rc.id );
+			rc.msg = "Transaction details undeleted successfully.";
+		} else {
 			instance.transactionsService.delete( ID = rc.id );
+			rc.msg = "Transaction details deleted successfully.";
+		}
 		rc.msgAction = "Success";
 		rc.msg = "Transaction details deleted successfully.";
 		setNextEvent(event = "transactions", persist = "msg,msgAction");

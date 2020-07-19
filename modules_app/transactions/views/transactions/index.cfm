@@ -28,22 +28,35 @@
 		<table class="table table-bordered table-striped table-hover">
 			<thead>
 				<tr>
-					<th width="25%">Type</th>
-					<th width="25%">Category</th>
-					<th width="25%">Person</th>
-					<th width="15%">Amount</th>
-					<th width="10%">Actions</th>
+					<th width="10%">Type</th>
+					<th width="15%">Category</th>
+					<th width="10%">Amount</th>
+					<th width="15%">From</th>
+					<th width="15%">To</th>
+					<th width="20%">Details</th>
+					<th width="5%" class="text-center">Status</th>
+					<th width="10%" class="text-center">Actions</th>
 				</tr>
 			</thead>
-			<cfloop query="#rc.allTransactions#">
+			<cfloop query="#prc.allTransactions#">
 				<tr>
-					<td>#rc.allTransactions.type#</td>
-					<td>#rc.allTransactions.category#</td>
-					<td>#rc.allTransactions.fromPersonName#</td>
-					<td>#rc.allTransactions.amount#</td>
+					<td>#prc.allTransactions.type#</td>
+					<td>#prc.allTransactions.category#</td>
+					<td><i class="fas fa-rupee-sign"></i> #numberFormat( prc.allTransactions.amount, "__.__" )#</td>
+					<td>#prc.allTransactions.fromPersonName#</td>
+					<td>#prc.allTransactions.toPersonName#</td>
+					<td>#prc.allTransactions.description#</td>
+					<td class="text-center">
+						<cfif prc.allTransactions.deleted><i class="fas fa-times text-danger"><cfelse><i class="fas fa-check text-success"></i></cfif>
+					</td>
 					<td align="center">
-						<i class="fas fa-edit cursor" onclick="javascript: showEditModal(this, '#rc.allTransactions.id#');"></i> &nbsp;
-						<i class="fas fa-trash cursor text-danger" onclick="javascript: showDeleteConfirmModal(this, '#rc.allTransactions.id#');"></a></td>
+						<i class="fas fa-edit cursor" onclick="javascript: showEditModal(this, '#prc.allTransactions.id#');"></i>&nbsp;
+						<cfif NOT prc.allTransactions.deleted>
+							<i class="fas fa-trash cursor text-danger" title="delete" onclick="javascript: showDeleteConfirmModal(this, '#prc.allTransactions.id#');"></i>
+						<cfelse>
+							<i class="fas fa-check cursor text-warning" title="Undelete this transaction" onclick="javascript: showDeleteConfirmModal(this, '#prc.allTransactions.id#', true);"></i>
+						</cfif>
+					</td>
 				</tr>
 			</cfloop>
 		</table>
