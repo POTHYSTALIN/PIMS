@@ -1,18 +1,26 @@
 ﻿/**
-********************************************************************************
 * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-* www.coldbox.org | www.luismajano.com | www.ortussolutions.com
-********************************************************************************
-* A ColdBox base internal service
+* www.ortussolutions.com
+* ---
+* Base Helper class for all ColdBox services
 */
 component accessors="true"{
 
-	// controller reference
+	/**
+	* ColdBox Controller
+	*/
 	property name="controller";
 
 	// ************************ INTERNAL EVENTS ************************//
 
+	/**
+	* Once configuration file loads
+	*/
 	function onConfigurationLoad(){}
+
+	/**
+	* On framework shutdown
+	*/
 	function onShutdown(){}
 
 }

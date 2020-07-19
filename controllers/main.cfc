@@ -1,33 +1,36 @@
-component extends="base" {
-	public function index( event, rc, prc ){
-		// var a = controller.getModuleService();
-		// a.activateAllModules();
-		// writeDump(a.getLoadedModules());
-		// abort;
-
-		// writeDump(controller.getConfigSettings());
-		// writeDump(controller.getColdboxSettings());
-		// abort;
-
-		// writeDump(CBConfigSettings);
-		// writeDump(CBFWSettings);
-		// abort;
+component extends="coldbox.system.EventHandler" {
+	// property name="router" inject="router@coldbox";
+	function index( event, rc, prc ){
+		// business logics goes here
+		// event.noLayout();
+		// event.setView(view="main/index", noLayout=true);
+		event.setLayout("main");
 	}
 
-	public function password( event, rc, prc ){
+	function demo( event, rc, prc ){
+		// business logics goes here
+		event.setLayout("main");
 	}
+
 	/* --------------------- PRIVATE EVENTS ----------------------------- */
-
 	public function onRequestStart( event, rc, prc ) {
 		// List of pages, can be accessed without logged in.
 		local.WhiteList = [
 			"security.login",
 			"security.doLogin",
+			"security.signup",
+			"security.doSignup",
 			"login",
-			"logout"
+			"logout",
+			"route-visualizer"
 		];
+		// writeDump(event.getCurrentModule());abort;
 
-		if( NOT structKeyExists(session, "userID") AND NOT ArrayFindNoCase( local.WhiteList, rc.Action )){
+		// writeDump(event.isSES());
+		// writeDump(getSetting("htmlBaseURL"));
+		// writeDump(event);abort;
+		// writeDump(router);abort;
+		if( NOT structKeyExists(session, "userID") AND NOT ArrayFindNoCase( local.WhiteList, rc.action )){
 			rc.msgAction = "Error";
 			rc.msg = "Please try after login";
 			setNextEvent(event = 'login', persist = "msg,msgAction");
@@ -37,7 +40,7 @@ component extends="base" {
 			"security.login"
 		];
 
-		if (structKeyExists(session, "userID") AND ArrayFindNoCase( local.BlackList, rc.Action )){
+		if (structKeyExists(session, "userID") AND ArrayFindNoCase( local.BlackList, rc.action )){
 			setNextEvent(event = 'home');
 		}
 	}

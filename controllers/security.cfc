@@ -1,38 +1,55 @@
-component extends="base" {
-	property name="userService" inject="model.users" scope="instance";
-	property name="bankService" inject="model.banks" scope="instance";
+component extends="coldbox.system.EventHandler"{
+	property name="securityService" inject="securityService";
 
-	public function login( event, rc, prc ){
-		event.setLayout("login");
+	// function index( event, rc, prc ){
+	// 	event.noLayout();
+	// 	setNextEvent("security.login");
+	// }
+
+	function login( event, rc, prc ){
+		// business logics goes here
+		// writeDump(getSetting("RegisteredHandlers"));
+		// writeDump(getSetting("modules"));
+		// abort;
+		event.setLayout("main");
+		event.setView(view="security/index");
 	}
 
-	public function doLogin( event, rc, prc ){
-		if(structKeyExists(rc, "username") AND structKeyExists(rc, "password")){
-			var tmpLogin = instance.userService.authenticateLogin( argumentCollection = rc );
-			if( tmpLogin.recordcount ){
-				session.userID = tmpLogin.ID;
-				session.userName = tmpLogin.fname & " " & tmpLogin.lname;
-				session.myBankAccounts = instance.bankService.getBankAccounts( personID = session.userID );
-				rc.msgAction = "Success";
-				rc.msg = "Welcome back, #Session.UserName# !!!";
-				setNextEvent(event = 'home', persist = "msg,msgAction");
-			} else if( rc.username EQ "admin" AND rc.password EQ "admin" ) {
-				session.userID = -1;
-				Session.userName = "POTHYS";
-				rc.msgAction = "Success";
-				rc.msg = "Welcome back, #Session.UserName# !!!";
-				setNextEvent(event = 'home', persist = "msg,msgAction");
-			}
+	function doLogin( event, rc, prc ){
+		var tmpLogin = securityService.validateLogin( argumentCollection = rc );
+		if(tmpLogin.isValid) {
+			session.userID = tmpLogin.data.ID;
+			session.userName = tmpLogin.data.fname & " " & tmpLogin.data.lname;
+			// session.myBankAccounts = instance.bankService.getBankAccounts( personID = session.userID );
+			rc.msgAction = "Success";
+			rc.msg = "Welcome #session.userName#!";
+			setNextEvent(event = 'home', persist = "msg,msgAction");
+		} else {
+			rc.msgAction = "Error";
+			rc.msg = "Invalid credentials!!!";
+			setNextEvent(event = 'login', persist = "msg,msgAction");
 		}
-		rc.msgAction = "Error";
-		rc.msg = "Invalid credentials!!!";
+	}
+	
+	function logout( event, rc, prc ){
+		// clear all session variables & redirect the user to login page
+		session.clear();
+		rc.msgAction = "Success";
+		rc.msg = "Successfully logged out!!!";
 		setNextEvent(event = 'login', persist = "msg,msgAction");
 	}
 
-	public function logout( event, rc, prc ){
-		structClear(session);
+	function signup( event, rc, prc ){
+		// business logics goes here
+		event.setLayout("main");
+	}
+
+	function doSignup( event, rc, prc ){
+		// writeDump(securityService);
+		// writeDump(rc);abort;
+		var res = securityService.createUser( argumentCollection=rc );
 		rc.msgAction = "Success";
-		rc.msg = "Logged out successfully!!!";
+		rc.msg = "Successfully signed up!!!";
 		setNextEvent(event = 'login', persist = "msg,msgAction");
 	}
 }

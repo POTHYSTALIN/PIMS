@@ -1,10 +1,9 @@
 ﻿/**
-*********************************************************************************
 * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-* www.coldbox.org | www.luismajano.com | www.ortussolutions.com
-********************************************************************************
-* Loads the framwork into memory and provides a ColdBox application.
+* www.ortussolutions.com
+* ---
 * @author Luis Majano <lmajano@ortussolutions.com>
+* Loads the framwork into memory and provides a ColdBox application.
 */
 component serializable="false" accessors="true"{
 
@@ -22,6 +21,8 @@ component serializable="false" accessors="true"{
 	property name="lockTimeout";
 	// The application hash used for locks
 	property name="appHash";
+	// By default if an app is reiniting and a request hits it, we will fail fast with a message
+	property name="COLDBOX_FAIL_FAST";
 
 	// param the properties with defaults
 	param name="COLDBOX_CONFIG_FILE" 	default="";
@@ -30,48 +31,82 @@ component serializable="false" accessors="true"{
 	param name="COLDBOX_APP_MAPPING" 	default="";
 	param name="appHash"				default="#hash( getBaseTemplatePath() )#";
 	param name="lockTimeout"			default="30" type="numeric";
+	param name="COLDBOX_FAIL_FAST"		default="true";
 
 	/**
-	* Constructor, called by your Application CFC
-	* @COLDBOX_CONFIG_FILE.hint The override location of the config file
-	* @COLDBOX_APP_ROOT_PATH.hint The location of the app on disk
-	* @COLDBOX_APP_KEY.hint The key used in application scope for this application
-	* @COLDBOX_APP_MAPPING.hint The application mapping override, only used for Flex/SOAP apps, this is auto-calculated
-	*/
-	function init(
+	 * Constructor, called by your Application CFC
+	 * @COLDBOX_CONFIG_FILE The override location of the config file
+	 * @COLDBOX_APP_ROOT_PATH The location of the app on disk
+	 * @COLDBOX_APP_KEY The key used in application scope for this application
+	 * @COLDBOX_APP_MAPPING The application mapping override, only used for Flex/SOAP apps, this is auto-calculated
+	 * @COLDBOX_FAIL_FAST By default if an app is reiniting and a request hits it, we will fail fast with a message. This can be a boolean indicator or a closure.
+	 */
+	Bootstrap function init(
 		required string COLDBOX_CONFIG_FILE,
 		required string COLDBOX_APP_ROOT_PATH,
 		string COLDBOX_APP_KEY,
-		string COLDBOX_APP_MAPPING=""
+		string COLDBOX_APP_MAPPING="",
+		any COLDBOX_FAIL_FAST=true
 	){
 		// Set vars for two main locations
 		setCOLDBOX_CONFIG_FILE( arguments.COLDBOX_CONFIG_FILE );
 		setCOLDBOX_APP_ROOT_PATH( arguments.COLDBOX_APP_ROOT_PATH );
 		setCOLDBOX_APP_MAPPING( arguments.COLDBOX_APP_MAPPING );
+		setCOLDBOX_FAIL_FAST( arguments.COLDBOX_FAIL_FAST );
 
 		// App Key Check
 		if( structKeyExists( arguments, "COLDBOX_APP_KEY" ) AND len( trim( arguments.COLDBOX_APP_KEY ) ) ){
 			setCOLDBOX_APP_KEY( arguments.COLDBOX_APP_KEY );
 		}
+
 		return this;
 	}
 
 	/**
-	* Loads the framework into application scope and executes app start procedures
+	 * Loads the framework into application scope and executes app start procedures
+	 *
+	 * @throws InvalidColdBoxMapping
 	*/
 	function loadColdBox(){
 		var appKey = locateAppKey();
+
 		// Cleanup of old code, just in case
 		if( structkeyExists( application, appKey ) ){
 			structDelete( application, appKey );
 		}
+
+		// Verify Mapping
+		if( !fileExists( expandPath( "/coldbox/system/web/Controller.cfc" ) ) ){
+			var coldboxDirectory = reReplaceNoCase(
+				getDirectoryFromPath( getCurrentTemplatePath() ),
+				"[\\/]system",
+				""
+			);
+			throw(
+				message = "Cannot find the '/'coldbox' mapping",
+				detail 	= "It seems that you do not have a '/coldbox' mapping in your application and we cannot continue to process the request.
+				The good news is that you can easily resolve this by either creating a mapping in your Admnistrator or in this application's
+				Application.cfc that points to this directory: '#coldboxDirectory#'.  You can also copy the code snippet
+				below to add to your Application.cfc's pseudo constructor: this.mappings[ '/coldbox' ] = '#coldboxDirectory#'",
+				type	= "InvalidColdBoxMapping"
+			);
+		}
+
 		// Create Brand New Controller
 		application[ appKey ] = new coldbox.system.web.Controller( COLDBOX_APP_ROOT_PATH, appKey );
 		// Setup the Framework And Application
 		application[ appKey ].getLoaderService().loadApplication( COLDBOX_CONFIG_FILE, COLDBOX_APP_MAPPING );
 		// Application Start Handler
-		if ( len( application[ appKey ].getSetting( "ApplicationStartHandler" ) ) ){
-			application[ appKey ].runEvent( event=application[ appKey ].getSetting( "ApplicationStartHandler" ) );
+		try {
+			if ( len( application[ appKey ].getSetting( "ApplicationStartHandler" ) ) ){
+				application[ appKey ].runEvent( event=application[ appKey ].getSetting( "ApplicationStartHandler" ) );
+			}
+		}
+		catch ( any e ) {
+			// process the exception
+			writeOutput( processException( application[ appKey ], e ) );
+			// abort it, something went really wrong.
+			abort;
 		}
 		// Check if fwreinit is sent, if sent, ignore it, we are loading the framework
 		if( structKeyExists( url, "fwreinit" ) ){
@@ -94,19 +129,27 @@ component serializable="false" accessors="true"{
 			lock type="exclusive" name="#appHash#" timeout="#lockTimeout#" throwontimeout="true"{
 				// double lock
 				if( NOT structkeyExists( application, appkey ) OR NOT application[ appKey ].getColdboxInitiated() OR needReinit ){
-
-					// Verify if we are Reiniting?
-					if( structkeyExists( application, appKey ) AND application[ appKey ].getColdboxInitiated() AND needReinit ){
-						// process preReinit interceptors
-						application[ appKey ].getInterceptorService().processState( "preReinit" );
-						// Shutdown the application services
-						application[ appKey ].getLoaderService().processShutdown();
+					try{
+						// Tell the word we are reiniting
+						application.fwReinit = true;
+						// Verify if we are Reiniting?
+						if( structkeyExists( application, appKey ) AND application[ appKey ].getColdboxInitiated() AND needReinit ){
+							// Load Module CF Mappings so modules can unload properly
+							application[ appKey ].getModuleService().loadMappings();
+							// process preReinit interceptors
+							application[ appKey ].getInterceptorService().processState( "preReinit" );
+							// Shutdown the application services
+							application[ appKey ].getLoaderService().processShutdown();
+						}
+						// Reload ColdBox
+						loadColdBox();
+						// Remove any context stragglers
+						structDelete( request, "cb_requestContext" );
+					} catch ( any e ){
+						rethrow;
+					} finally {
+						application.fwReinit = false;
 					}
-
-					// Reload ColdBox
-					loadColdBox();
-					// Remove any context stragglers
-					structDelete( request, "cb_requestContext" );
 				}
 			} // end lock
 		}
@@ -120,12 +163,6 @@ component serializable="false" accessors="true"{
 			if( cbController.getSetting( "Wirebox" ).singletonReload ){
 				lock type="exclusive" name="#appHash#" timeout="#lockTimeout#" throwontimeout="true"{
 					cbController.getWireBox().clearSingletons();
-				}
-			}
-			// Modules AutoReload
-			if( cbController.getSetting( "ModulesAutoReload" ) ){
-				lock type="exclusive" name="#appHash#" timeout="#lockTimeout#" throwontimeout="true"{
-					cbController.getModuleService().reloadAll();
 				}
 			}
 			// Handler's Index Auto Reload
@@ -155,7 +192,7 @@ component serializable="false" accessors="true"{
 		}
 		// Local references
 		var interceptorService 	= cbController.getInterceptorService();
-		var templateCache		= cbController.getCacheBox().getCache( "template" );
+		var cacheBox 			= cbController.getCacheBox();
 
 		try{
 			// set request time, for info purposes
@@ -172,48 +209,81 @@ component serializable="false" accessors="true"{
 			}
 
 			//****** EVENT CACHING CONTENT DELIVERY *******/
-			var refResults = {};
-			if( structKeyExists( event.getEventCacheableEntry(), "cachekey" ) ){
-				refResults.eventCaching = templateCache.get( event.getEventCacheableEntry().cacheKey );
+			var refResults	 = {};
+			var eCacheEntry	 = event.getEventCacheableEntry();
+
+			// Verify if event caching item is in selected cache
+			if( eCacheEntry.keyExists( "cachekey" ) ){
+				// Get cache element.
+				refResults.eventCaching = cacheBox
+					.getCache( eCacheEntry.provider )
+					.get( eCacheEntry.cacheKey );
 			}
+
 			// Verify if cached content existed.
-			if ( structKeyExists( refResults, "eventCaching" ) ){
+			if ( !isNull( refresults.eventCaching ) ){
 				// check renderdata
 				if( refResults.eventCaching.renderData ){
 					refResults.eventCaching.controller = cbController;
 					renderDataSetup( argumentCollection=refResults.eventCaching );
 				}
-				// Authoritative Header
-				getPageContext().getResponse().setStatus( 203, "Non-Authoritative Information" );
+
+				// Caching Header Identifier
+				getPageContextResponse().setHeader( "x-coldbox-cache-response", "true" );
+
+				// Stop Gap for upgrades, remove by 4.2
+				if( isNull( refResults.eventCaching.responseHeaders ) ){
+					refResults.eventCaching.responseHeaders = {};
+				}
+				// Response Headers that were cached
+				refResults.eventCaching.responseHeaders.each( function( key, value ){
+					event.setHTTPHeader( name=key, value=value );
+				} );
+
 				// Render Content as binary or just output
 				if( refResults.eventCaching.isBinary ){
 					cbController.getDataMarshaller().renderContent( type="#refResults.eventCaching.contentType#", variable="#refResults.eventCaching.renderedContent#" );
 				} else {
+					cbController.getDataMarshaller().renderContent( type="#refResults.eventCaching.contentType#", reset=true );
 					writeOutput( refResults.eventCaching.renderedContent );
 				}
 			} else {
 				//****** EXECUTE MAIN EVENT *******/
-				if( NOT event.isNoExecution() ){
+				if( NOT event.getIsNoExecution() ){
 					refResults.results = cbController.runEvent( defaultEvent=true );
 				}
 				//****** RENDERING PROCEDURES *******/
 				if( not event.isNoRender() ){
 					var renderedContent = "";
+
 					// pre layout
 					interceptorService.processState( "preLayout" );
+
 					// Check for Marshalling and data render
 					var renderData = event.getRenderData();
+
 					// Rendering/Marshalling of content
-					if( isStruct( renderData ) and not structisEmpty( renderData ) ){
+					if( !structisEmpty( renderData ) ){
 						renderedContent = cbController.getDataMarshaller().marshallData( argumentCollection=renderData );
 					}
-					// Check for Event Handler return results
-					else if( structKeyExists( refResults, "results" ) ){
-						renderedContent = refResults.results;
+					// Check if handler returned results
+					else if(
+						!isNull( refResults.results )
+					){
+						// If simple, just return it back, evaluates to HTML
+						if( isSimpleValue( refResults.results ) ){
+							renderedContent = refResults.results;
+						}
+						// ColdBox does native JSON if you return a complex object.
+						else {
+							renderedContent = serializeJSON( refResults.results, true );
+							getPageContextResponse().setContentType( "application/json" );
+						}
 					}
 					// Render Layout/View pair via set variable to eliminate whitespace
 					else {
-						renderedContent = cbcontroller.getRenderer().renderLayout( module=event.getCurrentLayoutModule(), viewModule=event.getCurrentViewModule() );
+						renderedContent = cbcontroller.getRenderer()
+							.renderLayout( module=event.getCurrentLayoutModule(), viewModule=event.getCurrentViewModule() );
 					}
 
 					//****** PRE-RENDER EVENTS *******/
@@ -221,49 +291,74 @@ component serializable="false" accessors="true"{
 						renderedContent = renderedContent
 					};
 					interceptorService.processState( "preRender", interceptorData );
-					// replace back content in case of modification
+					// replace back content in case of modification, strings passed by value
 					renderedContent = interceptorData.renderedContent;
 
 					//****** EVENT CACHING *******/
 					var eCacheEntry = event.getEventCacheableEntry();
-					if( structKeyExists( eCacheEntry, "cacheKey") AND
-					    structKeyExists( eCacheEntry, "timeout")  AND
-					    structKeyExists( eCacheEntry, "lastAccessTimeout" )
+					if(
+						eCacheEntry.keyExists( "cacheKey" ) AND
+						getPageContextResponse().getStatus() neq 500 AND
+						(
+							renderData.isEmpty()
+							OR
+							(
+								renderData.keyExists( "statusCode" ) and
+								renderdata.statusCode neq 500
+							)
+						)
 					){
 						lock type="exclusive" name="#variables.appHash#.caching.#eCacheEntry.cacheKey#" timeout="#variables.lockTimeout#" throwontimeout="true"{
+
+							// Try to discover the content type
+							var defaultContentType = "text/html";
+							// Discover from event caching first.
+							if( !structisEmpty( renderData ) ){
+								defaultContentType 	= renderData.contentType;
+							} else {
+								// Else, ask the engine
+								defaultContentType = getPageContextResponse().getContentType();
+							}
+
 							// prepare storage entry
 							var cacheEntry = {
 								renderedContent = renderedContent,
 								renderData		= false,
-								contentType 	= "",
+								contentType 	= defaultContentType,
 								encoding		= "",
 								statusCode		= "",
 								statusText		= "",
-								isBinary		= false
+								isBinary		= false,
+								responseHeaders = event.getResponseHeaders()
 							};
+
 							// is this a render data entry? If So, append data
-							if( isStruct( renderData ) and not structisEmpty( renderData ) ){
-								cacheEntry.renderData = true;
+							if( !structisEmpty( renderData ) ){
+								cacheEntry.renderData 	= true;
 								structAppend( cacheEntry, renderData, true );
 							}
+
 							// Cache it
-							templateCache.set( eCacheEntry.cacheKey,
-											   cacheEntry,
-											   eCacheEntry.timeout,
-											   eCacheEntry.lastAccessTimeout );
+							cacheBox
+								.getCache( eCacheEntry.provider )
+								.set(
+									eCacheEntry.cacheKey,
+									cacheEntry,
+									eCacheEntry.timeout,
+									eCacheEntry.lastAccessTimeout
+								);
 						}
 
 					} // end event caching
 
 					// Render Data? With stupid CF whitespace stuff.
-					if( isStruct( renderData ) and not structisEmpty( renderData ) ){/*
-						*/renderData.controller = cbController;renderDataSetup(argumentCollection=renderData);/*
+					if( !structisEmpty( renderData ) ){/*
+						*/renderData.controller = cbController;renderDataSetup( argumentCollection=renderData );/*
 						// Binary
 						*/if( renderData.isBinary ){ cbController.getDataMarshaller().renderContent( type="#renderData.contentType#", variable="#renderedContent#" ); }/*
 						// Non Binary
 						*/else{ writeOutput( renderedContent ); }
-					}
-					else{
+					} else {
 						writeOutput( renderedContent );
 					}
 
@@ -275,16 +370,16 @@ component serializable="false" accessors="true"{
 
 			//****** POST PROCESS *******/
 			if( len( cbController.getSetting( "RequestEndHandler" ) ) ){
-				cbController.runEvent(event=cbController.getSetting("RequestEndHandler"), prePostExempt=true);
+				cbController.runEvent( event=cbController.getSetting("RequestEndHandler"), prePostExempt=true );
 			}
 			interceptorService.processState( "postProcess" );
+
 			//****** FLASH AUTO-SAVE *******/
 			if( cbController.getSetting( "flash" ).autoSave ){
 				cbController.getRequestService().getFlashScope().saveFlash();
 			}
 
-		}
-		catch(Any e){
+		} catch( Any e ) {
 			// process the exception and render its report
 			writeOutput( processException( cbController, e ) );
 		}
@@ -293,13 +388,13 @@ component serializable="false" accessors="true"{
 		request.fwExecTime = getTickCount() - request.fwExecTime;
 	}
 
+
+
 	/**
 	* Verify if a reinit is sent
 	*/
 	boolean function isFWReinit(){
-		var reinitPass 		= "";
-		var incomingPass 	= "";
-		var appKey 			= locateAppKey();
+		var appKey 	= locateAppKey();
 
 		// CF Parm Structures just in case
 		param name="FORM" 	default="#structNew()#";
@@ -314,9 +409,7 @@ component serializable="false" accessors="true"{
 		if ( structKeyExists( url, "fwreinit" ) or structKeyExists( form, "fwreinit" ) ){
 
 			// Check if we have a reinit password at hand.
-			if ( application[ appKey ].settingExists( "ReinitPassword" ) ){
-				reinitPass = application[ appKey ].getSetting( "ReinitPassword" );
-			}
+			var reinitPass = application[ appKey ].getSetting( name="ReinitPassword", defaultValue="" );
 
 			// pass Checks
 			if ( NOT len( reinitPass ) ){
@@ -324,6 +417,7 @@ component serializable="false" accessors="true"{
 			}
 
 			// Get the incoming pass from form or url
+			var incomingPass 	= "";
 			if( structKeyExists( form, "fwreinit" ) ){
 				incomingPass = form.fwreinit;
 			} else {
@@ -333,6 +427,8 @@ component serializable="false" accessors="true"{
 			// Compare the passwords
 			if( compare( reinitPass, hash( incomingPass ) ) eq 0 ){
 				return true;
+			} else {
+				application[ appKey ].getLog().warn( "The incoming reinit password is not valid." );
 			}
 
 		}//else if reinit found.
@@ -346,8 +442,31 @@ component serializable="false" accessors="true"{
 	* On request start
 	*/
 	boolean function onRequestStart( required targetPage ) output=true{
+		// Global flag to denote if we are in mid reinit or not.
+		cfparam( name="application.fwReinit", default =false );
+
+		// Fail fast so users coming in during a reinit just get a please try again message.
+		if( application.fwReinit ){
+
+			// Closure or UDF
+			if( isClosure( variables.COLDBOX_FAIL_FAST ) || isCustomFunction( variables.COLDBOX_FAIL_FAST ) ){
+				variables.COLDBOX_FAIL_FAST();
+				return false;
+			}
+			// Core Fail Fast Option
+			else if( isBoolean( variables.COLDBOX_FAIL_FAST ) && variables.COLDBOX_FAIL_FAST ){
+				writeOutput( 'Oops! Seems ColdBox is still not ready to serve requests, please try again.' );
+				// You don't have to return a 500, I just did this so JMeter would report it differently than a 200
+				cfheader( statusCode="503", statustext="ColdBox Not Available Yet!" );
+				// Break up!
+				return false;
+			}
+
+		}
+
 		// Verify Reloading
 		reloadChecks();
+
 		// Process A ColdBox Request Only
 		if( findNoCase( 'index.cfm', listLast( arguments.targetPage, '/' ) ) ){
 			processColdBoxRequest();
@@ -460,28 +579,32 @@ component serializable="false" accessors="true"{
 
 	/**
 	* Process an exception and returns a rendered bug report
-	* @controller.hint The ColdBox Controller
-	* @exception.hint The ColdFusion exception
+	* @controller The ColdBox Controller
+	* @exception The ColdFusion exception
 	*/
 	private string function processException( required controller, required exception ){
 		// prepare exception facade object + app logger
 		var oException	= new coldbox.system.web.context.ExceptionBean( arguments.exception );
 		var appLogger  	= arguments.controller.getLogBox().getLogger( this );
 		var event		= arguments.controller.getRequestService().getContext();
+		var rc 			= event.getCollection();
+		var prc 		= event.getPrivateCollection();
 
 		// Announce interception
 		arguments.controller.getInterceptorService()
 			.processState( "onException", { exception = arguments.exception } );
 
 		// Store exception in private context
-		event.setValue( "exception", oException, true );
+		event.setPrivateValue( "exception", oException );
 
-		//Run custom Exception handler if Found, else run default exception routines
+		// Set Exception Header
+		getPageContextResponse().setStatus( 500, "Internal Server Error" );
+
+		// Run custom Exception handler if Found, else run default exception routines
 		if ( len( arguments.controller.getSetting( "ExceptionHandler" ) ) ){
 			try{
 				arguments.controller.runEvent( arguments.controller.getSetting( "Exceptionhandler" ) );
-			}
-			catch(Any e){
+			} catch( Any e ) {
 				// Log Original Error First
 				appLogger.error( "Original Error: #arguments.exception.message# #arguments.exception.detail# ", arguments.exception );
 				// Log Exception Handler Error
@@ -497,22 +620,24 @@ component serializable="false" accessors="true"{
 		// Render out error via CustomErrorTemplate or Core
 		var customErrorTemplate = arguments.controller.getSetting( "CustomErrorTemplate" );
 		if( len( customErrorTemplate ) ){
-
-			// Do we have right path already, test by expanding
-			if( fileExists( expandPath( customErrorTemplate ) ) ){
-				bugReportTemplatePath = customErrorTemplate;
-			} else {
-				var appLocation = "/";
-				if( len( arguments.controller.getSetting( "AppMapping" ) ) ){
-					appLocation = appLocation & arguments.controller.getSetting( "AppMapping" ) & "/";
-				}
-				// Bug report path
-				var bugReportTemplatePath = appLocation & reReplace( customErrorTemplate, "^/", "" );
+			// Get app location path
+			var appLocation 			= "/";
+			if( len( arguments.controller.getSetting( "AppMapping" ) ) ){
+				appLocation = appLocation & arguments.controller.getSetting( "AppMapping" ) & "/";
 			}
+			var bugReportRelativePath 	= appLocation & reReplace( customErrorTemplate, "^/", "" );
+			var bugReportAbsolutePath 	= customErrorTemplate;
+
 			// Show Bug Report
 			savecontent variable="local.exceptionReport"{
-				include "#bugReportTemplatePath#";
+				// Do we have right path already, test by expanding
+				if( fileExists( expandPath( bugReportRelativePath ) ) ){
+					include "#bugReportRelativePath#";
+				} else {
+					include "#bugReportAbsolutePath#";
+				}
 			}
+
 		} else {
 			// Default ColdBox Error Template
 			savecontent variable="local.exceptionReport"{
@@ -548,11 +673,11 @@ component serializable="false" accessors="true"{
 
 	/**
 	* Process render data setup
-	* @controller.hint The ColdBox controller
-	* @statusCode.hint The status code to send
-	* @statusText.hint The status text to send
-	* @contentType.hint The content type to send
-	* @encoding.hint The content encoding
+	* @controller The ColdBox controller
+	* @statusCode The status code to send
+	* @statusText The status text to send
+	* @contentType The content type to send
+	* @encoding The content encoding
 	*/
 	private Bootstrap function renderDataSetup(
 		required controller,
@@ -562,7 +687,7 @@ component serializable="false" accessors="true"{
 		required encoding
 	){
     	// Status Codes
-		getPageContext().getResponse().setStatus( arguments.statusCode, arguments.statusText );
+		getPageContextResponse().setStatus( arguments.statusCode, arguments.statusText );
 		// Render the Data Content Type
 		controller.getDataMarshaller().renderContent( type=arguments.contentType, encoding=arguments.encoding, reset=true );
 		return this;
@@ -577,4 +702,18 @@ component serializable="false" accessors="true"{
 		}
 		return "cbController";
 	}
+
+	/**
+	* Helper method to deal with ACF2016's overload of the page context response, come on Adobe, get your act together!
+	**/
+	private function getPageContextResponse(){
+		var response = getPageContext().getResponse();
+		try{
+			response.getStatus();
+			return response;
+		}catch( any e ){
+			return response.getResponse();
+		}
+	}
+
 }

@@ -1,8 +1,7 @@
 /**
-*********************************************************************************
 * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-* www.coldbox.org | www.luismajano.com | www.ortussolutions.com
-********************************************************************************
+* www.ortussolutions.com
+* ---
 * The system web renderer
 * @author Luis Majano <lmajano@ortussolutions.com>
 */
@@ -10,8 +9,10 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 
 	/************************************** DI *********************************************/
 
+	/**
+	* Template cache provider
+	*/
 	property name="templateCache" 	inject="cachebox:template";
-	property name="html"			inject="HTMLHelper@coldbox";
 
 	/************************************** PROPERTIES *********************************************/
 
@@ -44,11 +45,13 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 	property name="event";
 	property name="rc";
 	property name="prc";
+	property name="html";
 
 	/************************************** CONSTRUCTOR *********************************************/
 
 	/**
 	* Constructor
+	* @controller The ColdBox main controller
 	* @controller.inject coldbox
 	*/
 	function init( required controller ){
@@ -73,8 +76,9 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		variables.layoutsExternalLocation 	= variables.controller.getSetting( "LayoutsExternalLocation" );
 		variables.modulesConfig				= variables.controller.getSetting( "modules" );
 		variables.viewsHelper				= variables.controller.getSetting( "viewsHelper" );
+		variables.viewCaching				= variables.controller.getSetting( "viewCaching" );
 		variables.isViewsHelperIncluded		= false;
-		variables.explicitView 				= "";
+		variables.explicitView 				= {};
 
 		// Verify View Helper Template extension + location
 		if( len( variables.viewsHelper ) ){
@@ -88,8 +92,8 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		variables.renderedHelpers	= {};
 		variables.lockName			= "rendering.#variables.controller.getAppHash()#";
 
-		// Discovery caching is tied to handlers for discovery.
-		variables.isDiscoveryCaching = controller.getSetting( "handlerCaching" );
+		// Discovery caching
+		variables.isDiscoveryCaching = controller.getSetting( "viewCaching" );
 
 		// Set event scope, we are not caching, so it is threadsafe.
 		variables.event = getRequestContext();
@@ -98,8 +102,14 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		variables.rc 	= event.getCollection();
 		variables.prc 	= event.getCollection( private=true );
 
+		// HTML Helper
+		variables.html 	= variables.wirebox.getInstance( dsl="@HTMLHelper" );
+
 		// Load global UDF Libraries into target
 		loadApplicationHelpers();
+
+		// Announce interception
+		announceInterception( "afterRendererInit", { variables = variables, this = this } );
 
 		return this;
 	}
@@ -107,34 +117,45 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 	/************************************** VIEW METHODS *********************************************/
 
 	/**
-	* set the explicit view bit, used mostly internally
-	* @view.hint The name of the view to render
+	 * set the explicit view bit, used mostly internally
+	 *
+	 * @view The name of the view to render
+	 * @module The name of the module this view comes from
+	 * @args The view/layout passthrough arguments
+	 *
+	 * @return Renderer
 	*/
-	function setExplicitView( required view ){
-		explicitView = arguments.view;
+	function setExplicitView( required view, module="", struct args={} ){
+		variables.explicitView = {
+			"view" 		: arguments.view,
+			"module" 	: arguments.module,
+			"args"		: arguments.args
+		};
 		return this;
 	}
 
 	/**
-	* Render out a view
-	* @view.hint The the view to render, if not passed, then we look in the request context for the current set view.
-	* @args.hint A struct of arguments to pass into the view for rendering, will be available as 'args' in the view.
-	* @module.hint The module to render the view from explicitly
-	* @cache.hint Cached the view output or not, defaults to false
-	* @cacheTimeout.hint The time in minutes to cache the view
-	* @cacheLastAccessTimeout.hint The time in minutes the view will be removed from cache if idle or requested
-	* @cacheSuffix.hint The suffix to add into the cache entry for this view rendering
-	* @cacheProvider.hint The provider to cache this view in, defaults to 'template'
-	* @collection.hint A collection to use by this Renderer to render the view as many times as the items in the collection (Array or Query)
-	* @collectionAs.hint The name of the collection variable in the partial rendering.  If not passed, we will use the name of the view by convention
-	* @collectionStartRow.hint The start row to limit the collection rendering with
-	* @collectionMaxRows.hint The max rows to iterate over the collection rendering with
-	* @collectionDelim.hint  A string to delimit the collection renderings by
-	* @prePostExempt.hint If true, pre/post view interceptors will not be fired. By default they do fire
+	 * Render out a view
+	 *
+	 * @view The the view to render, if not passed, then we look in the request context for the current set view.
+	 * @args A struct of arguments to pass into the view for rendering, will be available as 'args' in the view.
+	 * @module The module to render the view from explicitly
+	 * @cache Cached the view output or not, defaults to false
+	 * @cacheTimeout The time in minutes to cache the view
+	 * @cacheLastAccessTimeout The time in minutes the view will be removed from cache if idle or requested
+	 * @cacheSuffix The suffix to add into the cache entry for this view rendering
+	 * @cacheProvider The provider to cache this view in, defaults to 'template'
+	 * @collection A collection to use by this Renderer to render the view as many times as the items in the collection (Array or Query)
+	 * @collectionAs The name of the collection variable in the partial rendering.  If not passed, we will use the name of the view by convention
+	 * @collectionStartRow The start row to limit the collection rendering with
+	 * @collectionMaxRows The max rows to iterate over the collection rendering with
+	 * @collectionDelim  A string to delimit the collection renderings by
+	 * @prePostExempt If true, pre/post view interceptors will not be fired. By default they do fire
+	 * @name The name of the rendering region to render out, Usually all arguments are coming from the stored region but you override them using this function's arguments.
 	*/
 	function renderView(
 		view="",
-		struct args="#variables.event.getCurrentViewArgs()#",
+		struct args=variables.event.getCurrentViewArgs(),
 		module="",
 		boolean cache=false,
 		cacheTimeout="",
@@ -146,7 +167,8 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		numeric collectionStartRow="1",
 		numeric collectionMaxRows=0,
 		collectionDelim="",
-		boolean prePostExempt=false
+		boolean prePostExempt=false,
+		name
 	){
 		var viewCacheKey 		= "";
 		var viewCacheEntry 		= "";
@@ -155,29 +177,52 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		var explicitModule 		= false;
 		var viewLocations		= "";
 
+		// Rendering Region call?
+		if( !isNull( arguments.name ) and len( arguments.name ) ){
+			var regions = event.getRenderingRegions();
+			// Verify Region
+			if( !structKeyExists( regions, arguments.name ) ){
+				throw(
+					message = "Invalid rendering region: #arguments.name#",
+					detail 	= "Valid regions are: #structKeyList( regions )#",
+					type 	= "InvalidRenderingRegion"
+				);
+			}
+			// Incorporate region data
+			structAppend( arguments, regions[  arguments.name ] );
+			// Clean yourself like a ninja
+			structDelete( arguments, 'name' );
+		}
+
+		// Rendering an explicit view or do we need to get the view from the context or explicit context?
+		if( NOT len( arguments.view ) ){
+			// Rendering an explicit Renderer view/layout combo?
+			if( !variables.explicitView.isEmpty() ){
+				// Populate from explicit notation
+				arguments.view 		= variables.explicitView.view;
+				arguments.module 	= variables.explicitView.module;
+				arguments.args.append( variables.explicitView.args, false );
+
+				// clear the explicit view now that it has been used
+				setExplicitView( {} );
+			}
+			// Render the view in the context
+			else{
+				arguments.view = event.getCurrentView();
+			}
+		}
+
 		// If no incoming explicit module call, default the value to the one in the request context for convenience
 		if( NOT len( arguments.module ) ){
 			// check for an explicit view module
 			arguments.module = event.getCurrentViewModule();
 			// if module is still empty check the event pattern
 			// if no module is execution, this will be empty anyways.
-			if( NOT len(arguments.module) ){
+			if( NOT len( arguments.module ) ){
 				arguments.module = event.getCurrentModule();
 			}
 		} else {
 			explicitModule = true;
-		}
-
-		// Rendering an explicit view or do we need to get the view from the context or explicit context?
-		if( NOT len( arguments.view ) ){
-			// Rendering an explicit Renderer view/layout combo?
-			if( len( variables.explicitView ) ){
-				arguments.view = variables.explicitView;
-				// clear the explicit view now that it has been used
-				setExplicitView( "" );
-			}
-			// Render the view in the context
-			else{ arguments.view = event.getCurrentView(); }
 		}
 
 		// Do we have a view To render? Else throw exception
@@ -211,7 +256,7 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		viewCacheKey &= arguments.view & arguments.cacheSuffix;
 
 		// Are we caching?
-		if ( arguments.cache ){
+		if ( arguments.cache && variables.viewCaching){
 			// Which provider you want to use?
 			if( arguments.cacheProvider neq "template" ){
 				viewCacheProvider = getCache( arguments.cacheProvider );
@@ -219,9 +264,9 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 			// Try to get from cache
 			iData.renderedView = viewCacheProvider.get( viewCacheKey );
 			// Verify it existed
-			if( structKeyExists(iData, "renderedView") ){
+			if( structKeyExists( iData, "renderedView" ) ){
 				// Post View Render Interception
-				if( NOT arguments.prepostExempt ){ announceInterception("postViewRender", iData); }
+				if( NOT arguments.prepostExempt ){ announceInterception( "postViewRender", iData ); }
 				// Return it
 				return iData.renderedView;
 			}
@@ -238,14 +283,19 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		}
 		// Render simple composite view
 		else{
-			iData.renderedView = renderViewComposite(arguments.view, viewLocations.viewPath, viewLocations.viewHelperPath, arguments.args);
+			iData.renderedView = renderViewComposite(
+				arguments.view,
+				viewLocations.viewPath,
+				viewLocations.viewHelperPath,
+				arguments.args
+			);
 		}
 
 		// Post View Render Interception point
 		if( NOT arguments.prepostExempt ){ announceInterception( "postViewRender", iData ); }
 
 		// Are we caching view
-		if ( arguments.cache ){
+		if ( arguments.cache && variables.viewCaching){
 			viewCacheProvider.set( viewCacheKey, iData.renderedView, arguments.cacheTimeout, arguments.cacheLastAccessTimeout );
 		}
 
@@ -293,7 +343,14 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 					buffer.append( arguments.collectionDelim );
 				}
 				// render item composite
-				buffer.append( renderViewComposite( arguments.view, arguments.viewPath, arguments.viewHelperPath, arguments.args ) );
+				buffer.append(
+					renderViewComposite(
+						arguments.view,
+						arguments.viewPath,
+						arguments.viewHelperPath,
+						arguments.args
+					)
+				);
 			}
 			return buffer.toString();
 		}
@@ -305,24 +362,45 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 			variables._items = arguments.collectionMaxRows;
 		}
 
-		for( x=arguments.collectionStartRow; x lte ( arguments.collectionStartRow+variables._items )-1; x++){
+		//local counter when using startrow is greater than one and x values is reletive to lookup
+		var _localCounter = 1;
+		for( x=arguments.collectionStartRow; x lte ( arguments.collectionStartRow + variables._items ) - 1; x++ ){
 			// setup local cvariables
-			variables._counter  = arguments.collection.currentRow;
-			variables[ arguments.collectionAs ] = arguments.collection;
+			variables._counter  = _localCounter;
+
+			var columnList = arguments.collection.columnList;
+			for( var j=1; j <= listLen( columnList ); j++){
+				variables[ arguments.collectionAs ][ ListGetAt( columnList, j ) ] = arguments.collection[ ListGetAt( columnList, j ) ][ x ];
+			}
+
 			// prepend the delim
 			if ( variables._counter NEQ 1 ) {
 				buffer.append( arguments.collectionDelim );
 			}
+
 			// render item composite
-			buffer.append( renderViewComposite( arguments.view, arguments.viewPath, arguments.viewHelperPath, arguments.args) );
+			buffer.append(
+				renderViewComposite(
+					arguments.view,
+					arguments.viewPath,
+					arguments.viewHelperPath,
+					arguments.args
+				)
+			);
+			_localCounter++;
 		}
 
 		return buffer.toString();
     }
 
     /**
-    * Render a view alongside its helpers, used mostly internally, use at your own risk.
-    */
+     * Render a view alongside its helpers, used mostly internally, use at your own risk.
+     *
+     * @view The view to render
+     * @viewPath The path of the view to render
+     * @viewHelperPath The helpers for the view to load before it
+     * @args The view arguments
+     */
     private function renderViewComposite(
     	view,
     	viewPath,
@@ -337,11 +415,18 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 				include "#variables.viewsHelper#";
 				variables.isViewsHelperIncluded = true;
 			}
-			// view helper
-			if( len( arguments.viewHelperPath ) AND NOT structKeyExists( renderedHelpers,arguments.viewHelperPath ) ){
-				include "#arguments.viewHelperPath#";
-				renderedHelpers[arguments.viewHelperPath] = true;
+
+			// view helpers ( directory + view + whatever )
+			if(
+				arguments.viewHelperPath.len() AND
+				NOT variables.renderedHelpers.keyExists( hash( arguments.viewHelperPath.toString() ) )
+			){
+				arguments.viewHelperPath.each( function( item ){
+					include "#arguments.item#";
+				} );
+				variables.renderedHelpers[ hash( arguments.viewHelperPath.toString() ) ] = true;
 			}
+
 			//writeOutput( include "#arguments.viewPath#.cfm" );
 			include "#arguments.viewPath#.cfm";
 		}
@@ -351,17 +436,17 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 
     /**
     * Renders an external view anywhere that cfinclude works.
-    * @view.hint The the view to render
-	* @args.hint A struct of arguments to pass into the view for rendering, will be available as 'args' in the view.
-	* @cache.hint Cached the view output or not, defaults to false
-	* @cacheTimeout.hint The time in minutes to cache the view
-	* @cacheLastAccessTimeout.hint The time in minutes the view will be removed from cache if idle or requested
-	* @cacheSuffix.hint The suffix to add into the cache entry for this view rendering
-	* @cacheProvider.hint The provider to cache this view in, defaults to 'template'
+    * @view The the view to render
+	* @args A struct of arguments to pass into the view for rendering, will be available as 'args' in the view.
+	* @cache Cached the view output or not, defaults to false
+	* @cacheTimeout The time in minutes to cache the view
+	* @cacheLastAccessTimeout The time in minutes the view will be removed from cache if idle or requested
+	* @cacheSuffix The suffix to add into the cache entry for this view rendering
+	* @cacheProvider The provider to cache this view in, defaults to 'template'
 	*/
     function renderExternalView(
     	required view,
-    	struct args=event.getCurrentViewArgs(),
+    	struct args=variables.event.getCurrentViewArgs(),
     	boolean cache=false,
     	cacheTimeout="",
     	cacheLastAccessTimeout="",
@@ -388,13 +473,15 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		// Get view locations
 		viewLocations = discoverViewPaths( view=arguments.view, module="", explicitModule=false );
 		// Render External View
-		cbox_renderedView = renderViewComposite( view=view,
-												 viewPath=viewLocations.viewPath,
-												 viewHelperPath=viewLocations.viewHelperPath,
-												 args=args,
-												 renderer=this );
+		cbox_renderedView = renderViewComposite(
+			view           = view,
+			viewPath       = viewLocations.viewPath,
+			viewHelperPath = viewLocations.viewHelperPath,
+			args           = args,
+			renderer       = this
+		);
 		// Are we caching it
-		if( arguments.cache ){
+		if( arguments.cache && variables.viewCaching ){
 			cbox_cacheProvider.set( cbox_cacheKey, cbox_renderedView, arguments.cacheTimeout, arguments.cacheLastAccessTimeout );
 		}
 		return cbox_renderedView;
@@ -403,19 +490,20 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 	/************************************** LAYOUT METHODS *********************************************/
 
 	/**
-	* Render a layout or a layout + view combo
-	* @layout.hint The layout to render out
-	* @module.hint The module to explicitly render this layout from
-	* @view.hint The view to render within this layout
-	* @args.hint An optional set of arguments that will be available to this layouts/view rendering ONLY
-	* @viewModule.hint The module to explicitly render the view from
-	* @prePostExempt.hint If true, pre/post layout interceptors will not be fired. By default they do fire
+	 * Render a layout or a layout + view combo
+	 *
+	 * @layout The layout to render out
+	 * @module The module to explicitly render this layout from
+	 * @view The view to render within this layout
+	 * @args An optional set of arguments that will be available to this layouts/view rendering ONLY
+	 * @viewModule The module to explicitly render the view from
+	 * @prePostExempt If true, pre/post layout interceptors will not be fired. By default they do fire
 	*/
 	function renderLayout(
 		layout,
 		module="",
 		view="",
-		struct args=event.getCurrentViewArgs(),
+		struct args=variables.event.getCurrentViewArgs(),
 		viewModule="",
 		boolean prePostExempt=false
 	){
@@ -429,9 +517,16 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		var viewLocations			= "";
 
 		// Are we doing a nested view/layout explicit combo or already in its rendering algorithm?
-		if( len( trim( arguments.view ) ) AND arguments.view neq explicitView ){
+		if(
+			arguments.view.trim().len() AND
+			(
+				!variables.explicitView.keyExists( "view" )
+				OR
+				variables.explicitView.keyExists( "view" ) and arguments.view != variables.explicitView.view
+			)
+		){
 			return controller.getRenderer()
-				.setExplicitView( arguments.view )
+				.setExplicitView( arguments.view, arguments.viewModule, arguments.args )
 				.renderLayout( argumentCollection=arguments );
 		}
 
@@ -489,18 +584,23 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 			} else {
 				lock name="#cbox_layoutLocationKey#.#lockname#" type="exclusive" timeout="15" throwontimeout="true"{
 					cbox_layoutLocation = cbox_locateUDF( layout=cbox_currentLayout, module=arguments.module, explicitModule=cbox_explicitModule );
-					structInsert( controller.getSetting( "layoutsRefMap" ), cbox_layoutLocationKey, cbox_layoutLocation, true);
+					structInsert( controller.getSetting( "layoutsRefMap" ), cbox_layoutLocationKey, cbox_layoutLocation, true );
 				}
 			}
 			// Get the view locations
-			var viewLocations = discoverViewPaths( view=reverse ( listRest( reverse( cbox_layoutLocation ), "." ) ),
-												   module=arguments.module,
-												   explicitModule=cbox_explicitModule );
+			var viewLocations = discoverViewPaths(
+				view           = reverse ( listRest( reverse( cbox_layoutLocation ), "." ) ),
+				module         = arguments.module,
+				explicitModule = cbox_explicitModule
+			);
+
 			// RenderLayout
-			iData.renderedLayout = renderViewComposite( view=cbox_currentLayout,
-														viewPath=viewLocations.viewPath,
-														viewHelperPath=viewLocations.viewHelperPath,
-														args=args );
+			iData.renderedLayout = renderViewComposite(
+				view           = cbox_currentLayout,
+				viewPath       = viewLocations.viewPath,
+				viewHelperPath = viewLocations.viewHelperPath,
+				args           = args
+			);
 		}
 
 		// Announce
@@ -513,7 +613,7 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 
 	/**
 	* Locate a layout in the conventions system
-	* @layout.hint The layout name
+	* @layout The layout name
 	*/
 	function locateLayout( required layout ){
 		// Default path is the conventions
@@ -540,9 +640,9 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 
 	/**
 	* Locate a layout in the conventions system
-	* @layout.hint The layout name
-	* @module.hint The name of the module we are searching for
-	* @explicitModule.hint Are we locating explicitly or implicitly for a module layout
+	* @layout The layout name
+	* @module The name of the module we are searching for
+	* @explicitModule Are we locating explicitly or implicitly for a module layout
 	*/
 	function locateModuleLayout(
 		required layout,
@@ -601,7 +701,7 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 
 	/**
 	* Locate a view in the conventions or external paths
-	* @view.hint The view to locate
+	* @view The view to locate
 	*/
 	function locateView( required view ){
 		// Default path is the conventions
@@ -618,9 +718,9 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 
 	/**
 	* Locate a view in the conventions system
-	* @view.hint The view name
-	* @module.hint The name of the module we are searching for
-	* @explicitModule.hint Are we locating explicitly or implicitly for a module layout
+	* @view The view name
+	* @module The name of the module we are searching for
+	* @explicitModule Are we locating explicitly or implicitly for a module layout
 	*/
 	function locateModuleView(
 		required view,
@@ -646,15 +746,15 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		// Check parent view order setup
 		if( variables.modulesConfig[moduleName].viewParentLookup ){
 			// We check if view is overriden in parent first.
-			if( fileExists(expandPath(parentModuleViewPath & ".cfm")) ){
+			if( fileExists(expandPath(parentModuleViewPath & ".cfm" )) ){
 				return parentModuleViewPath;
 			}
 			// Check if parent has a common view override
-			if( fileExists(expandPath(parentCommonViewPath & ".cfm")) ){
+			if( fileExists(expandPath(parentCommonViewPath & ".cfm" )) ){
 				return parentCommonViewPath;
 			}
 			// Check module for view
-			if( fileExists(expandPath(moduleViewPath & ".cfm")) ){
+			if( fileExists(expandPath(moduleViewPath & ".cfm" )) ){
 				return moduleViewPath;
 			}
 			// Return normal view lookup
@@ -662,15 +762,15 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		}
 
 		// If we reach here then we are doing module lookup first then if not parent.
-		if( fileExists(expandPath(moduleViewPath & ".cfm")) ){
+		if( fileExists(expandPath(moduleViewPath & ".cfm" )) ){
 			return moduleViewPath;
 		}
 		// We check if view is overriden in parent first.
-		if( fileExists(expandPath(parentModuleViewPath & ".cfm")) ){
+		if( fileExists(expandPath(parentModuleViewPath & ".cfm" )) ){
 			return parentModuleViewPath;
 		}
 		// Check if parent has a common view override
-		if( fileExists(expandPath(parentCommonViewPath & ".cfm")) ){
+		if( fileExists(expandPath(parentCommonViewPath & ".cfm" )) ){
 			return parentCommonViewPath;
 		}
 
@@ -678,24 +778,25 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		return locateView(arguments.view);
 	}
 
-	/************************************** PRIVATE *********************************************/
-
 	/**
-	* Discover view+helper path locations
-	* @view.hint The view to discover
-	* @module.hint The module address
-	* @explicitModule.hint Is the module explicit or discoverable.
+	 * Discover view+helper path locations
+	 *
+	 * @view The view to discover
+	 * @module The module address
+	 * @explicitModule Is the module explicit or discoverable.
+	 *
+	 * @return struct  = { viewPath:string, viewHelperPath:string }
 	*/
-	private function discoverViewPaths( required view, module, boolean explicitModule=false ){
+	function discoverViewPaths( required view, module, boolean explicitModule=false ){
 		var locationKey 	= arguments.view & arguments.module & arguments.explicitModule;
 		var locationUDF 	= variables.locateView;
-		var dPath			= "";
-		var refMap			= "";
+		var refMap			= { viewPath = "", viewHelperPath = [] };
+		var viewsRefMap 	= controller.getSetting( "viewsRefMap" );
 
 		// Check cached paths first --->
 		lock name="#locationKey#.#lockName#" type="readonly" timeout="15" throwontimeout="true"{
-			if( structkeyExists( controller.getSetting("viewsRefMap") ,locationKey ) AND variables.isDiscoveryCaching ){
-				return structFind( controller.getSetting("viewsRefMap"), locationKey);
+			if( structkeyExists( viewsRefMap, locationKey ) AND variables.isDiscoveryCaching ){
+				return structFind( viewsRefMap, locationKey );
 			}
 		}
 
@@ -703,7 +804,7 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 
 			refMap = {
 				viewPath = arguments.view,
-				viewHelperPath = ""
+				viewHelperPath = []
 			};
 
 		} else { // view discovery based on relative path
@@ -714,30 +815,34 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 			// Locate the view to render according to discovery algorithm and create cache map
 			refMap = {
 				viewPath = locationUDF( arguments.view, arguments.module, arguments.explicitModule ),
-				viewHelperPath = ""
+				viewHelperPath = []
 			};
 
 		}
 
-		// Check for view helper convention
-		dPath = getDirectoryFromPath( refMap.viewPath );
-		if( fileExists(expandPath( refMap.viewPath & "Helper.cfm")) ){
-			refMap.viewHelperPath = refMap.viewPath & "Helper.cfm";
+		var dPath = getDirectoryFromPath( refMap.viewPath );
+
+		// Check for directory helper convention first
+		if( fileExists( expandPath( dPath & listLast( dPath,"/" ) & "Helper.cfm" ) ) ){
+			refMap.viewHelperPath.append( dPath & listLast( dPath,"/" ) & "Helper.cfm" );
 		}
-		// Check for directory helper convention
-		else if( fileExists( expandPath( dPath & listLast(dPath,"/") & "Helper.cfm" ) ) ){
-			refMap.viewHelperPath = dPath & listLast(dPath,"/") & "Helper.cfm";
+
+		// Check for view helper convention second
+		if( fileExists( expandPath( refMap.viewPath & "Helper.cfm" ) ) ){
+			refMap.viewHelperPath.append( refMap.viewPath & "Helper.cfm" );
 		}
 
 		// Lock and create view entry
-		if( NOT structkeyExists( controller.getSetting("viewsRefMap") ,locationKey) ){
+		if( NOT structkeyExists( viewsRefMap, locationKey ) ){
 			lock name="#locationKey#.#lockName#" type="exclusive" timeout="15" throwontimeout="true"{
-				structInsert( controller.getSetting("viewsRefMap"), locationKey, refMap, true);
+				structInsert( viewsRefMap, locationKey, refMap, true );
 			}
 		}
 
 		return refMap;
-    }
+	}
+
+	/************************************** PRIVATE *********************************************/
 
 	/**
 	* Checks if implicit views are turned on and if so, calculate view according to event.
@@ -756,7 +861,7 @@ component accessors="true" serializable="false" extends="coldbox.system.Framewor
 		if( NOT len( event.getCurrentView() ) ){
 
 			// Implicit views
-			if( controller.getSetting( name="caseSensitiveImplicitViews", defaultValue=false ) ){
+			if( controller.getSetting( name="caseSensitiveImplicitViews", defaultValue=true ) ){
 				event.setView( replace( cEvent, ".", "/", "all" ) );
 			} else {
 				event.setView( lcase( replace( cEvent, ".", "/", "all" ) ) );

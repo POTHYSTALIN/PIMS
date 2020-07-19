@@ -3,4 +3,8 @@
 /assets/uploads
 /config/*.xml
 /config/*.json
-/apache_configs
+*.zip
+/apache_configs/*
+.vscode
+*.log
+modules

@@ -1,7 +1,7 @@
 <!-----------------------------------------------------------------------
 ********************************************************************************
 Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-www.coldbox.org | www.luismajano.com | www.ortussolutions.com
+www.ortussolutions.com
 ********************************************************************************
 
 Author     :	Luis Majano
@@ -26,9 +26,8 @@ Description :
     <cffunction name="selfAutowire" output="false" access="private" hint="Autowire the proxy on creation. This references the super class only, we use cgi information to get the actual proxy component path.">
 		<cfscript>
 			var script_name = cgi.script_name;
-
-			// Only process this logic if hitting a remote proxy CFC directly
-			if( len( script_name ) < 5 || right( script_name, 4 ) != '.cfc' ) {
+			// Only process this logic if hitting a remote proxy CFC directly and if ColdBox exists. 
+			if( len( script_name ) < 5 || right( script_name, 4 ) != '.cfc' || !verifyColdBox( throwOnNotExist=false ) ) {
 				return;
 			}
 
@@ -38,7 +37,7 @@ Description :
 			var binder = injector.getBinder();
 			var mapping = '';
 
-			// Prevent recursive object creation in Railo/Lucee
+			// Prevent recursive object creation in Lucee
 			if( !structKeyExists( request, 'proxyAutowire' ) ){
 				request.proxyAutowire = true;
 
@@ -93,41 +92,45 @@ Description :
 			// Locate ColdBox Controller
 			cbController = getController();
 
+			// Load Module CF Mappings
+			cbController.getModuleService().loadMappings();
 			// Create the request context
 			event = cbController.getRequestService().requestCapture();
 
 			// Test event Name in the arguemnts.
-			if( not structKeyExists(arguments,event.getEventName()) ){
-				throw( message="Event not detected",
-					   detail="The #event.geteventName()# variable does not exist in the arguments.",
-					   type="ColdBoxProxy.NoEventDetected" );
+			if( not structKeyExists( arguments, event.getEventName() ) ){
+				throw( 
+					message="Event not detected",
+					detail="The #event.geteventName()# variable does not exist in the arguments.",
+					type="ColdBoxProxy.NoEventDetected" 
+				);
 			}
 
 			//Append the arguments to the collection
-			event.collectionAppend(arguments,true);
+			event.collectionAppend( arguments, true );
 			//Set that this is a proxy request.
 			event.setProxyRequest();
 
 			//Execute a pre process interception.
-			cbController.getInterceptorService().processState("preProcess");
+			cbController.getInterceptorService().processState( "preProcess" );
 
 			//Request Start Handler if defined
-			if ( cbController.getSetting("RequestStartHandler") neq "" ){
-				cbController.runEvent(cbController.getSetting("RequestStartHandler"),true);
+			if ( cbController.getSetting( "RequestStartHandler" ) neq "" ){
+				cbController.runEvent(cbController.getSetting( "RequestStartHandler" ),true);
 			}
 
 			//Execute the Event if not demarcated to not execute
-			if( NOT event.isNoExecution() ){
-				refLocal.results = cbController.runEvent(default=true);
+			if( NOT event.getIsNoExecution() ){
+				refLocal.results = cbController.runEvent( defaultEvent=true );
 			}
 
 			//Request END Handler if defined
-			if ( cbController.getSetting("RequestEndHandler") neq "" ){
-				cbController.runEvent(cbController.getSetting("RequestEndHandler"),true);
+			if ( cbController.getSetting( "RequestEndHandler" ) neq "" ){
+				cbController.runEvent( cbController.getSetting( "RequestEndHandler" ), true );
 			}
 
 			//Execute the post process interceptor
-			cbController.getInterceptorService().processState("postProcess");
+			cbController.getInterceptorService().processState(" postProcess" );
 			</cfscript>
 
 			<cfcatch>
@@ -166,9 +169,6 @@ Description :
 				// Return The results
 				return refLocal.results;
 			}
-
-			// Trace that no results where found, returns void or null
-			tracer('No outgoing results found in the local scope.');
 		</cfscript>
 	</cffunction>
 
@@ -210,12 +210,18 @@ Description :
 
 	<!--- verifyColdBox --->
 	<cffunction name="verifyColdBox" output="false" access="private" returntype="boolean" hint="Verify the coldbox app">
+		<cfargument name="throwOnNotExist" default="true">
 		<cfscript>
+			
 			//Verify the coldbox app is ok, else throw
 			if ( not structKeyExists(application,COLDBOX_APP_KEY) ){
-				throw( message="ColdBox Controller Not Found", 
-					   detail="The coldbox main controller has not been initialized",
-					   type="ColdBoxProxy.ControllerIllegalState");
+				if( arguments.throwOnNotExist ) {
+					throw( message="ColdBox Controller Not Found", 
+						   detail="The coldbox main controller has not been initialized",
+						   type="ColdBoxProxy.ControllerIllegalState");
+				} else {
+					return false;
+				}
 			}
 			else{
 				return true;
@@ -234,7 +240,7 @@ Description :
 	</cffunction>
 
 	<!--- Get the cachebox instance --->
-	<cffunction name="getCacheBox" output="false" access="private" returntype="any" hint="Get the CacheBox reference." colddoc:generic="coldbox.system.cache.CacheFactory">
+	<cffunction name="getCacheBox" output="false" access="private" returntype="any" hint="Get the CacheBox reference." doc_generic="coldbox.system.cache.CacheFactory">
 		<cfreturn getController().getCacheBox()>
 	</cffunction>
 
@@ -247,7 +253,7 @@ Description :
     <cffunction name="getInstance" output="false" access="private" returntype="any" hint="Locates, Creates, Injects and Configures an object model instance">
     	<cfargument name="name" 			required="true" 	hint="The mapping name or CFC instance path to try to build up"/>
 		<cfargument name="dsl"				required="false" 	hint="The dsl string to use to retrieve the instance model object, mutually exclusive with 'name'"/>
-		<cfargument name="initArguments" 	required="false" 	hint="The constructor structure of arguments to passthrough when initializing the instance" colddoc:generic="struct"/>
+		<cfargument name="initArguments" 	required="false" 	hint="The constructor structure of arguments to passthrough when initializing the instance" doc_generic="struct"/>
 		<cfreturn getWireBox().getInstance(argumentCollection=arguments)>
 	</cffunction>
 
@@ -291,13 +297,13 @@ Description :
 		<!--- ************************************************************* --->
 		<cfargument name="name" 			required="false" 	hint="The mapping name or CFC instance path to try to build up"/>
 		<cfargument name="dsl"				required="false" 	hint="The dsl string to use to retrieve the instance model object, mutually exclusive with 'name'"/>
-		<cfargument name="initArguments" 	required="false" 	default="#structnew()#" hint="The constructor structure of arguments to passthrough when initializing the instance" colddoc:generic="struct"/>
+		<cfargument name="initArguments" 	required="false" 	default="#structnew()#" hint="The constructor structure of arguments to passthrough when initializing the instance" doc_generic="struct"/>
 		<!--- ************************************************************* --->
 		<cfreturn getWireBox().getInstance(argumentCollection=arguments)>
 	</cffunction>
 
 	<!--- Get a CacheBox Cache --->
-	<cffunction name="getCache" access="private" output="false" returntype="any" hint="Get a CacheBox Cache Provider" colddoc:generic="coldbox.system.cache.IColdboxApplicationCache">
+	<cffunction name="getCache" access="private" output="false" returntype="any" hint="Get a CacheBox Cache Provider" doc_generic="coldbox.system.cache.IColdboxApplicationCache">
 		<cfargument name="cacheName" type="string" required="false" default="default" hint="The cache name to retrieve"/>
 		<cfreturn getController().getCache( arguments.cacheName )/>
 	</cffunction>

@@ -1,21 +1,24 @@
-component {
-	public function configure() {
-
+﻿component{
+	// https://coldbox.ortusbooks.com/intro/introduction
+	function configure(){
 		coldbox = {
 			// Application Setup
 			appName = "MyApp_v0001",
-			BaseURL = "http://final.myapp.com/",
+			BaseURL = "https://final.myapp.com/",
 
 			// Conventions
 			eventName = "action",
-			eventAction = "index",
-			handlersLocation = "controllers",
-			viewsLocation = "views",
-			layoutsLocation = "layouts",
-			modelsLocation = "model",
-			modulesLocation = "/modules",
-			modulesExternalLocation = [ "/modules_app" ],
-			modulesAutoReload = true,
+
+			// These items moved into a separate struct in CB5
+			// eventAction = "index",
+			// handlersLocation = "controllers",
+			// viewsLocation = "views",
+			// layoutsLocation = "layouts",
+			// modelsLocation = "model",
+			// modulesLocation = "/modules",
+
+			// modulesExternalLocation = [ "/modules_app" ],
+			// modulesAutoReload = true,
 
 			// Implicit Events
 			defaultEvent			= "main.index",
@@ -42,22 +45,19 @@ component {
 			caseSensitiveImplicitViews = true,
 
 			// Application Aspects
-			handlersIndexAutoReload = false,
+			handlersIndexAutoReload = true,
 			handlerCaching 			= false,
 			eventCaching			= true
 		};
 
+		//Conventions
 		conventions = {
 			handlersLocation = "controllers",
-			pluginsLocation = "plugins",
-			viewsLocation 	 = "views",
+			viewsLocation      = "views",
 			layoutsLocation  = "layouts",
-			modulesLocation	 = "modules"
-		};
-
-		// Datasources
-		datasources = {
-			latestMyApp = { name="latestMyApp", dbType="", username="", password=""}
+			modelsLocation      = "model",
+			modulesLocation  = "modules",
+			eventAction      = "index"
 		};
 
 		// Environments, check CGI.HTTP_HOST for string, $ matches end, ^ matches start
@@ -66,37 +66,21 @@ component {
 			development = "^127,^localhost,\.dev$,\.local$"
 		};
 
-		interceptors = [
-			//SES
-			{class="coldbox.system.interceptors.SES"}
-		];
-
 		settings = {
-			"globalConfigPath" = "/config/myconfig.xml",
+			latestMyApp = { name="latestMyApp", dbType="", username="", password=""},
+			globalConfigPath = "/config/myconfig.xml",
 			modulesAutoReload = true
 		};
-
-		modules = {
-			// Will auto reload the modules in each request. Great for development but can cause some loading/re-loading issues
-			autoReload = true,
-			// An array of modules to load ONLY
-			include = [],
-			// An array of modules to EXCLUDE for operation
-			exclude = [ "paidModule1", "paidModule2" ]
-		};
-
-	};
+	}
 
 	public function development() {
-		coldbox.BaseURL = "http://final.myapp.dev/";
+		coldbox.BaseURL = "https://final.myapp.local/";
 		coldbox.reinitpassword = "";
 		coldbox.eventCaching = false;
 		coldbox.handlerCaching = false;
 		coldbox.customErrorTemplate = "/coldbox/system/includes/BugReport.cfm";
 		coldbox.handlersIndexAutoReload = true;
-		datasources = {
-			latestMyApp = { name="latestMyApp_dev", dbType="", username="", password=""}
-		};
+		settings.latestMyApp = { name="latestMyApp_dev", dbType="", username="", password=""};
 
 		wirebox.singletonReload = true;
 	}

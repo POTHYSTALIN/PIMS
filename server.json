@@ -1,0 +1,27 @@
+{
+    "name":"myapp-lucee",
+    "web":{
+        "webroot":"",
+        "host":"final.myapp.local",
+        "rewrites":{
+            "enable":true,
+            "config":"urlrewrites.xml"
+        },
+        "http":{
+            "port":"80"
+        },
+        "SSL":{
+            "port":"443",
+            "enable":"true",
+            "certFile":"apache_configs/myapp.crt",
+            "keyFile":"apache_configs/myapp.key"
+        }
+    },
+    "app":{
+        "cfengine":"lucee@5.3.4+77"
+    },
+    "JVM":{
+        "heapSize":"4096"
+    },
+    "openBrowserURL":"/"
+}

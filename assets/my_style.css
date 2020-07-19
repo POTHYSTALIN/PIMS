@@ -1,0 +1,46 @@
+.pull-left {
+	/* This style has been removed from older versions of font-awesome */
+	float: left;
+}
+
+.sf-arrows .sf-with-ul::after {
+	/* For down arrow support */
+	font-family: "Font Awesome 5 Free" !important;
+	font-weight: 900 !important;
+	content: "\f105";
+}
+
+.sf-arrows .sf-with-ul:hover:after {
+	/* changing the icon on hover */
+	content: "\f107";
+}
+
+/* cursor like pointer */
+.cursor {
+	cursor: pointer;
+}
+
+/* hiding elements */
+.hidden, .hiddenPwd.orig {
+	display: none;
+}
+
+/* Change bg color for custom bootstrap checkbox */
+/* Change color for btn-success */
+.custom-control-input:checked ~ .custom-control-label::before, .btn-success, .my-success {
+	background-color: #50d8af;
+	border-color: #50d8af;
+	color: white !important;
+}
+
+.btn-success:hover {
+	background-color: #50afaf;
+	border-color: #50afaf;
+}
+
+.text-danger {
+	color: #ac3545!important
+}
+.btn-danger {
+	background-color: #ac3545!important
+}

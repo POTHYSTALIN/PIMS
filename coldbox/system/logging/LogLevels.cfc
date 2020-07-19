@@ -1,8 +1,7 @@
 ﻿/**
-*********************************************************************************
 * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-* www.coldbox.org | www.luismajano.com | www.ortussolutions.com
-********************************************************************************
+* www.ortussolutions.com
+* ---
 * The different logging levels available in LogBox. Log levels available in the this scope: OFF=-1, FATAL=0, ERROR=1, WARN=2, INFO=3, DEBUG=4
 * @author Luis Majano <lmajano@ortussolutions.com>
 */
@@ -23,8 +22,13 @@ component{
 	this.MINLEVEL = -1;
 	this.MAXLEVEL = 4;
 	
-	function lookup(level){
-		switch(level){
+	/**
+	 * Lookup a level in our numeric enum, else it returns void.
+	 *
+	 * @level The numeric level
+	 */
+	function lookup( required level ){
+		switch( level ){
 			case -1: return "OFF";
 			case 0: return "FATAL";
 			case 1: return "ERROR";
@@ -34,22 +38,32 @@ component{
 		}
 	}
 	
-	function lookupAsInt(level){
-		switch(level){
-			case "OFF": return -1;
-			case "FATAL": return 0;
-			case "ERROR": return 1;
-			case "WARN": return 2;
-			case "WARNING" : return 2;
-			case "INFO": return 3;
+	/**
+	 * Lookup level in numeric format from a string. If not found a 999 is returned
+	 *
+	 * @level The string level
+	 */
+	function lookupAsInt( required level ){
+		switch( level ){
+			case "OFF"         : return -1;
+			case "FATAL"       : return 0;
+			case "ERROR"       : return 1;
+			case "WARN"        : return 2;
+			case "WARNING"     : return 2;
+			case "INFO"        : return 3;
 			case "INFORMATION" : return 3;
-			case "DEBUG": return 4;	
-			default: return 999;	
+			case "DEBUG"       : return 4;	
+			default            : return 999;	
 		}
 	}
 	
-	function lookupCF(level){
-		switch(level){
+	/**
+	 * Lookup a CF level using a number
+	 *
+	 * @level Numeric level
+	 */
+	function lookupCF( required level ){
+		switch( level ){
 			case -1: return "OFF";
 			case 0: return "Fatal";
 			case 1: return "Error";
@@ -60,7 +74,12 @@ component{
 		}
 	}
 	
-	function isLevelValid(level){
+	/**
+	 * Verifies if a level is valid or not
+	 *
+	 * @level numeric level
+	 */
+	function isLevelValid( required level ){
 		return ( arguments.level gte this.MINLEVEL AND arguments.level lte this.MAXLEVEL );
 	}
 }

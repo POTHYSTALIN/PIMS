@@ -1,7 +1,7 @@
 ﻿<!-----------------------------------------------------------------------
 ********************************************************************************
 Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-www.coldbox.org | www.luismajano.com | www.ortussolutions.com
+www.ortussolutions.com
 ********************************************************************************
 
 Author     :	Luis Majano
@@ -14,22 +14,19 @@ Description :
 
 	<cffunction name="init" access="public" returntype="MixerUtil" output="false" hint="Constructor">
 		<cfscript>
-			instance = structnew();
-			instance.mixins = StructNew();
-
-			// Place our methods on the mixins struct
-			instance.mixins[ "removeMixin" ] 				= variables.removeMixin;
-			instance.mixins[ "injectMixin" ] 				= variables.injectMixin;
-			instance.mixins[ "invokerMixin" ] 				= variables.invokerMixin;
-			instance.mixins[ "injectPropertyMixin" ] 		= variables.injectPropertyMixin;
-			instance.mixins[ "removePropertyMixin" ] 		= variables.removePropertyMixin;
-			instance.mixins[ "populatePropertyMixin" ] 		= variables.populatePropertyMixin;
-			instance.mixins[ "includeitMixin" ] 			= variables.includeitMixin;
-			instance.mixins[ "getPropertyMixin" ]			= variables.getPropertyMixin;
-			instance.mixins[ "exposeMixin" ]				= variables.exposeMixin;
-			instance.mixins[ "methodProxy" ]				= variables.methodProxy;
-
-			instance.system = createObject('java','java.lang.System');
+			variables.mixins = {
+				"removeMixin"				= variables.removeMixin,
+				"injectMixin"				= variables.injectMixin,
+				"invokerMixin"				= variables.invokerMixin,
+				"injectPropertyMixin"		= variables.injectPropertyMixin,
+				"removePropertyMixin"		= variables.removePropertyMixin,
+				"populatePropertyMixin"		= variables.populatePropertyMixin,
+				"includeitMixin"			= variables.includeitMixin,
+				"getPropertyMixin"			= variables.getPropertyMixin,
+				"exposeMixin"				= variables.exposeMixin,
+				"methodProxy"				= variables.methodProxy,
+				"getVariablesMixin"			= variables.getVariablesMixin
+			};
 
 			return this;
 		</cfscript>
@@ -40,35 +37,19 @@ Description :
 	<!--- Start Method Injection on a CFC --->
 	<cffunction name="start" hint="Start method injection set -> Injects: includeitMixin,injectMixin,removeMixin,invokerMixin,injectPropertyMixin,removePropertyMixin,getPropertyMixin,populatePropertyMixin" access="public" returntype="void" output="false">
 		<cfargument name="CFC" required="true" hint="The cfc to mixin">
-		<cfset var udf = 0>
-
-		<cfif NOT structKeyExists(arguments.CFC, "$mixed")>
-		<cflock name="mixerUtil.#instance.system.identityHashCode(arguments.CFC)#" type="exclusive" timeout="15" throwontimeout="true">
-			<cfif NOT structKeyExists(arguments.CFC, "$mixed")>
-			<cfscript>
-				for( udf in instance.mixins ){
-					arguments.CFC[udf] = instance.mixins[udf];
-				}
-				arguments.CFC.$mixed = true;
-			</cfscript>
-			</cfif>
-		</cflock>
-		</cfif>
+		<cfscript>
+			structAppend( arguments.cfc, variables.mixins, true );
+		</cfscript>
 	</cffunction>
 
 	<!--- Stop the injection, do cleanup --->
 	<cffunction name="stop" hint="stop injection block. Removes mixed in methods." access="public" returntype="void" output="false">
 		<cfargument name="CFC" hint="The cfc to inject the method into" type="any" required="Yes">
-		<cfset var udf = 0>
-
-		<cflock name="mixerUtil.#instance.system.identityHashCode(arguments.CFC)#" type="exclusive" timeout="15" throwontimeout="true">
-			<cfscript>
-				for( udf in instance.mixins ){
-					arguments.CFC[udf] = instance.mixins[udf];
-					StructDelete(arguments.CFC, udf);
-				}
-			</cfscript>
-		</cflock>
+		<cfscript>
+			for( var udf in variables.mixins ){
+				structDelete( arguments.CFC, udf );
+			}
+		</cfscript>
 	</cffunction>
 
 <!------------------------------------------- MIXINS ------------------------------------------>
@@ -107,9 +88,11 @@ Description :
 			var methodName = getFunctionCalledName();
 
 			if( !structKeyExists( this.$exposedMethods, methodName ) ){
-				throw( message="The exposed method you are calling: #methodName# does not exist",
-					   detail="Exposed methods are #structKeyList( this.$exposedMethods )#",
-					   type="ExposedMethodProxy" );
+				throw(
+					message = "The exposed method you are calling: #methodName# does not exist",
+					detail  = "Exposed methods are #structKeyList( this.$exposedMethods )#",
+					type    = "ExposedMethodProxy"
+				);
 			}
 
 			var method = this.$exposedMethods[ methodName ];
@@ -118,31 +101,41 @@ Description :
 	</cffunction>
 
 	<!--- includeitMixin --->
-	<cffunction name="includeitMixin" access="public" hint="Facade for cfinclude" returntype="void" output="true">
+	<cffunction name="includeitMixin" access="public" hint="Facade for cfinclude" returntype="any" output="true">
 		<cfargument name="template" required="true">
 		<cfinclude template="#template#">
+		<cfreturn this>
+	</cffunction>
+
+	<!--- getVariablesMixin --->
+	<cffunction name="getVariablesMixin" access="public" hint="Get the variables scope" returntype="any" output="true">
+		<cfreturn variables>
 	</cffunction>
 
 	<!--- injectMixin --->
-	<cffunction name="injectMixin" hint="Injects a method into the CFC" access="public" returntype="void" output="false">
+	<cffunction name="injectMixin" hint="Injects a method into the CFC" access="public" returntype="any" output="false">
 		<cfargument name="name" 	required="true"  hint="The name to inject the UDF as"/>
 		<cfargument name="UDF"		required="true"  hint="UDF to inject">
 		<cfscript>
-			variables[arguments.name] 	= arguments.UDF;
-			this[arguments.name] 		= arguments.UDF;
+			variables[ arguments.name ] = arguments.UDF;
+			this[ arguments.name ] 		= arguments.UDF;
+
+			return this;
 		</cfscript>
 	</cffunction>
 
 	<!--- populatePropertyMixin --->
-	<cffunction name="populatePropertyMixin" hint="Populates a property if it exists" access="public" returntype="void" output="false">
+	<cffunction name="populatePropertyMixin" hint="Populates a property if it exists" access="public" returntype="any" output="false">
 		<cfargument name="propertyName" 	required="true" hint="The name of the property to inject."/>
 		<cfargument name="propertyValue" 	required="true" hint="The value of the property to inject"/>
 		<cfargument name="scope" 			required="false" default="variables" hint="The scope to which inject the property to."/>
 		<cfscript>
 			// Validate Property
-			if( structKeyExists(evaluate(arguments.scope),arguments.propertyName) ){
+			if( structKeyExists( evaluate( arguments.scope ), arguments.propertyName ) ){
 				"#arguments.scope#.#arguments.propertyName#" = arguments.propertyValue;
 			}
+
+			return this;
 		</cfscript>
 	</cffunction>
 
@@ -164,30 +157,36 @@ Description :
 	</cffunction>
 
 	<!--- injectPropertyMixin --->
-	<cffunction name="injectPropertyMixin" hint="injects a property into the passed scope" access="public" returntype="void" output="false">
+	<cffunction name="injectPropertyMixin" hint="injects a property into the passed scope" access="public" returntype="any" output="false">
 		<cfargument name="propertyName" 	required="true" hint="The name of the property to inject."/>
 		<cfargument name="propertyValue" 	required="true" hint="The value of the property to inject"/>
 		<cfargument name="scope" 			required="false" default="variables" hint="The scope to which inject the property to."/>
 		<cfscript>
 			"#arguments.scope#.#arguments.propertyName#" = arguments.propertyValue;
+
+			return this;
 		</cfscript>
 	</cffunction>
 
 	<!--- removeMixin --->
-	<cffunction name="removeMixin" hint="Removes a method in a CFC" access="public" returntype="void" output="false">
+	<cffunction name="removeMixin" hint="Removes a method in a CFC" access="public" returntype="any" output="false">
 		<cfargument name="UDFName" hint="Name of the UDF to be removed" type="string" required="Yes">
 		<cfscript>
-			structDelete(this, arguments.udfName);
-			structDelete(variables, arguments.udfName);
+			structDelete( this, arguments.udfName );
+			structDelete( variables, arguments.udfName );
+
+			return this;
 		</cfscript>
 	</cffunction>
 
 	<!--- removePropertyMixin --->
-	<cffunction name="removePropertyMixin" hint="removes a property from the cfc used." access="public" returntype="void" output="false">
+	<cffunction name="removePropertyMixin" hint="removes a property from the cfc used." access="public" returntype="any" output="false">
 		<cfargument name="propertyName" 	required="true" hint="The name of the property to remove."/>
 		<cfargument name="scope" 			required="false" default="variables" hint="The scope to which inject the property to."/>
 		<cfscript>
-			structDelete(evaluate(arguments.scope),arguments.propertyName);
+			structDelete( evaluate( arguments.scope ), arguments.propertyName );
+
+			return this;
 		</cfscript>
 	</cffunction>
 

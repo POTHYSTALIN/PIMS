@@ -1,8 +1,7 @@
 ﻿/**
-*********************************************************************************
 * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-* www.coldbox.org | www.luismajano.com | www.ortussolutions.com
-********************************************************************************
+* www.ortussolutions.com
+* ---
 * This flash scope is smart enough to not create unecessary session variables
 * unless data is put in it.  Else, it does not abuse session.
 * @author Luis Majano <lmajano@ortussolutions.com>
@@ -42,8 +41,13 @@ component extends="coldbox.system.web.flash.AbstractFlashScope" accessors="true"
 	boolean function flashExists(){
 		// Check if session is defined first
 		if( NOT isDefined( "session" ) ) { return false; }
-		// Check if storage is set and not empty
-		return ( structKeyExists( session, getFlashKey() ) AND NOT structIsEmpty( session[ getFlashKey() ] ) );
+		// Check if storage is set and not empty, try/catch due to ACF11 bug, trying it out.
+		try{
+			return ( structKeyExists( session, getFlashKey() ) AND NOT structIsEmpty( session[ getFlashKey() ] ) );
+		} catch( any e ){
+			writeLog( text="Error checking flash exists: #e.message# #e.detail#", type="error", file="coldbox.SessionFlash" );
+			return false;
+		}
 	}
 
 	/**

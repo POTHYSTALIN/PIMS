@@ -1,19 +1,18 @@
 ﻿/**
-*********************************************************************************
 * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-* www.coldbox.org | www.luismajano.com | www.ortussolutions.com
-********************************************************************************
+* www.ortussolutions.com
+* ---
 * ColdBox Main Configuration Defaults
 */
 component{
 
 	// Release Metadata
-	this.codename 		= "ColdBox SEEK";
+	this.codename 		= "ColdBox Perseverance";
 	this.author			= "Ortus Solutions";
-	this.authorEmail 	= "coldbox@ortussolutions.com";
-	this.authorWebsite	= "http://www.ortussolutions.com";
-	this.suffix			= "Gideon";
-	this.version		= "4.1.0+00002";
+	this.authorEmail 	= "info@ortussolutions.com";
+	this.authorWebsite	= "https://www.ortussolutions.com";
+	this.suffix			= "Joshua 1:9";
+	this.version		= "5.3.0+837";
 	this.description	= "This is the ColdBox Platform for ColdFusion Powered Web Applications.";
 
 	// Operation Defaults
@@ -23,12 +22,12 @@ component{
 
 	// flash scope defaults
 	this.flash = {
-		scope = "session",
-		properties = {},
-		inflateToRC = true,
+		scope        = "session",
+		properties   = {},
+		inflateToRC  = true,
 		inflateToPRC = false,
-		autoPurge = true,
-		autoSave = true
+		autoPurge    = true,
+		autoSave     = true
 	};
 
     // Conventions
@@ -39,5 +38,7 @@ component{
 	this.modelsConvention	= "models";
 	this.configConvention	= "config.Coldbox";
 	this.modulesConvention	= "modules";
+	this.includesConvention = "includes";
 
+	function configure(){}
 }

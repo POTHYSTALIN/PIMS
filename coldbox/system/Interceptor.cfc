@@ -1,8 +1,7 @@
 ﻿/**
-********************************************************************************
 * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
-* www.coldbox.org | www.luismajano.com | www.ortussolutions.com
-********************************************************************************
+* www.ortussolutions.com
+* ---
 * Base class for all interceptors
 * @author Luis Majano <lmajano@ortussolutions.com>
 */
@@ -27,8 +26,8 @@ component extends="coldbox.system.FrameworkSupertype" serializable="false" acces
 
 	/**
 	* Constructor
-	* @controller.hint The ColdBox controller
-	* @properties.hint The properties to init the Interceptor with
+	* @controller The ColdBox controller
+	* @properties The properties to init the Interceptor with
 	*
 	* @result Interceptor
 	*/
@@ -62,17 +61,24 @@ component extends="coldbox.system.FrameworkSupertype" serializable="false" acces
 
 	/**
 	* Get an interceptor property
-	* @property.hint The property to retrieve
-	* @defaultValue.hint The default value to return if property does not exist
+	* @property The property to retrieve
+	* @defaultValue The default value to return if property does not exist
 	*/
 	any function getProperty( required property, defaultValue ){
 		return ( structKeyExists( variables.properties, arguments.property ) ? variables.properties[ arguments.property ] : arguments.defaultValue );
 	}
 
 	/**
+	* Get struct of properties
+	*/
+	any function getProperties(){
+		return variables.properties;
+	}
+
+	/**
 	* Store an interceptor property
-	* @property.hint The property to store
-	* @value.hint The value to store
+	* @property The property to store
+	* @value The value to store
 	*
 	* @return Interceptor instance
 	*/
@@ -83,7 +89,7 @@ component extends="coldbox.system.FrameworkSupertype" serializable="false" acces
 
 	/**
 	* Verify an interceptor property
-	* @property.hint The property to check
+	* @property The property to check
 	*/
 	boolean function propertyExists( required property ){
 		return structKeyExists( variables.properties, arguments.property );
@@ -91,7 +97,7 @@ component extends="coldbox.system.FrameworkSupertype" serializable="false" acces
 
 	/**
 	* Unregister the interceptor
-	* @state.hint The named state to unregister this interceptor from
+	* @state The named state to unregister this interceptor from
 	*
 	* @return Interceptor
 	*/
@@ -104,7 +110,8 @@ component extends="coldbox.system.FrameworkSupertype" serializable="false" acces
 	/**************************************** BUFFER METHODS ****************************************/
 
 	/**
-	* Clear the interceptor buffer
+	* Clear the interceptor buffer: Deprecated, please use incoming buffer arguements instead, this is not thread safe
+	* @deprecated
 	* @return Interceptor
 	*/
 	function clearBuffer(){
@@ -113,31 +120,37 @@ component extends="coldbox.system.FrameworkSupertype" serializable="false" acces
 	}
 
 	/**
-	* Append to the interceptor buffer
-	* @str.hint The string to append to the buffer
-	*
-	* @return Interceptor
-	*/
+	 * Append to the interceptor buffer: Deprecated, please use incoming buffer arguments instead, this is not thread safe
+	 * @deprecated Please use the incoming `buffer` argument instead
+	 *
+	 * @str The string to append to the buffer
+	 *
+	 * @return Interceptor
+	 */
 	function appendToBuffer( required str ){
 		getBufferObject().append( arguments.str );
 		return this;
 	}
 
 	/**
-	* Get the string representation of the buffer
+	* Get the string representation of the buffer: Deprecated, please use incoming buffer arguements instead, this is not thread safe
+	* @deprecated Please use the incoming `buffer` argument instead
 	*/
 	string function getBufferString(){
 		return getBufferObject().getString();
 	}
 
 	/**
-	* Get the request buffer object from scope.
-	* @return coldbox.system.core.util.RequestBuffer
+	* Get the request buffer object from scope.: Deprecated, please use incoming buffer arguements instead, this is not thread safe
+	* @deprecated Please use the incoming `buffer` argument instead
+
+	* @return struct
 	*/
 	function getBufferObject(){
-		return variables.interceptorService.getRequestBuffer();
+		if( !request.keyExists( "__cbox_buffer" ) ){
+			request[ "__cbox_buffer" ] = variables.interceptorService.getLazyBuffer();
+		}
+		return request[ "__cbox_buffer" ];
 	}
-
-
 
 }
