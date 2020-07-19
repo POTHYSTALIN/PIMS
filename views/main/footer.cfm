@@ -31,8 +31,10 @@
 <script src="#request.assetsPath#/main.js"></script>
 
 <cfset currAssetPaths = listChangeDelims(rc.action, ",", ":.")>
+<script>console.log( '<cfoutput>#currAssetPaths#</cfoutput>' );</script>
 <cfset currPath = "">
 <cfloop list="#currAssetPaths#" item="currItem">
+	<script>console.log( '<cfoutput>#currItem#</cfoutput>' );</script>
 	<cfset currPath &= "/" & currItem />
 	<cfset pageSpecificjs = expandPath("/assets/modules#currPath#.js")>
 	<cfif fileExists(pageSpecificjs)>

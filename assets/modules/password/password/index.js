@@ -22,7 +22,7 @@ function addNewSecurityItem() {
 	newElem += '<div for="password" class="col-sm-3">';
 	newElem += '<div class="dropdown">';
 	newElem += '<button class="btn btn-secondary btn-sm dropdown-toggle-split" type="button" data-toggle="dropdown" id="secTypeDropdown' + id + '">SMS';
-	newElem += '<span class="fas fa-angle-down"></span></button>';
+	newElem += ' <i class="fas fa-angle-down"></i></button>';
 	newElem += '<ul class="dropdown-menu">';
 	newElem += '<li><a href="#" onclick="javascript: changeSecType(\''+ id + '\', \'SMS\');">SMS</a></li>';
 	newElem += '<li><a href="#" onclick="javascript: changeSecType(\''+ id + '\', \'Email\');">Email</a></li>';
@@ -43,7 +43,7 @@ function addNewSecurityItem() {
 }
 
 function changeSecType(id, type) {
-	jQuery("#secTypeDropdown" + id).html(type+' <span class="fas fa-angle-down"></span>');
+	jQuery("#secTypeDropdown" + id).html(type+' <i class="fas fa-angle-down"></i>');
 	jQuery("#addSec" + id + "Type").val(type);
 }
 

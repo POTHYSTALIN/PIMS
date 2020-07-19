@@ -24,8 +24,8 @@ component extends="coldbox.system.EventHandler" {
 		param name="rc.msg" default="";
 		param name="rc.msgAction" default="";
 
-		rc.formAction = val(rc.id)?"password.update":"password.add";
-		rc.formSubmit = val(rc.id)?"Update":"Add";
+		prc.formAction = val( rc.id ) ? "password.update" : "password.add";
+		prc.formSubmit = val( rc.id ) ? "Update" : "Add";
 
 		if( structKeyExists(rc, "submit") ) {
 			try {
