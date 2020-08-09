@@ -97,9 +97,12 @@ BEGIN
 		toAccountId int,
 		amount money,
 		description text,
-		created datetime default(getDate()),
-		updated datetime default(getDate()),
-		deleted bit default(0)
+		transactionDate datetime not null default( getDate() ),
+		created datetime default( getDate() ),
+		updated datetime default( getDate() ),
+		archived bit not null default( 0 ),
+		archivedDate datetime,
+		deleted bit default( 0 )
 	)
 END
 

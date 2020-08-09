@@ -27,6 +27,7 @@
 				<cfif structKeyExists(arguments, "id")>
 					AND t.id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
 				</cfif>
+			ORDER BY t.transactionDate DESC
 		</cfquery>
 
 		<cfreturn local.qry/>
@@ -34,6 +35,7 @@
 
 	<cffunction name="new" access="public" returntype="void" output="false">
 		<cfargument name="categoryId" type="numeric" required="true">
+		<cfargument name="transactionDate" type="date" required="true">
 		<cfargument name="modeId" type="numeric" required="true">
 		<cfargument name="fromPersonId" type="numeric" required="true">
 		<cfargument name="fromAccountId" type="numeric" required="false" default="0">
@@ -43,9 +45,10 @@
 		<cfargument name="amount" type="string" required="true">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
-			INSERT INTO transactions( categoryId, modeId, fromPersonId, fromAccountId, toPersonId, toAccountId, amount, description )
+			INSERT INTO transactions( categoryId, transactionDate, modeId, fromPersonId, fromAccountId, toPersonId, toAccountId, amount, description )
 			VALUES(
 				#arguments.categoryId#,
+				<cfqueryparam value="#parseDateTime( arguments.transactionDate )#" cfsqltype="cf_sql_date">,
 				#arguments.modeId#,
 				#arguments.fromPersonId#,
 				<cfqueryparam value="#arguments.fromAccountId#" cfsqltype="cf_sql_numeric" null="#(arguments.fromAccountId EQ 0)#">,
@@ -59,25 +62,53 @@
 
 	<cffunction name="update" access="public" returntype="void" output="false">
 		<cfargument name="id" type="numeric" required="true">
-		<cfargument name="categoryId" type="numeric" required="true">
-		<cfargument name="modeId" type="numeric" required="true">
-		<cfargument name="fromPersonId" type="numeric" required="true">
+		<cfargument name="transactionDate" type="date" required="false">
+		<cfargument name="categoryId" type="numeric" required="false">
+		<cfargument name="modeId" type="numeric" required="false">
+		<cfargument name="fromPersonId" type="numeric" required="false">
 		<cfargument name="fromAccountId" type="numeric" required="false" default="0">
-		<cfargument name="toPersonId" type="numeric" required="true">
+		<cfargument name="toPersonId" type="numeric" required="false">
 		<cfargument name="toAccountId" type="numeric" required="false" default="0">
-		<cfargument name="description" type="string" required="true">
-		<cfargument name="amount" type="string" required="true">
+		<cfargument name="description" type="string" required="false">
+		<cfargument name="amount" type="string" required="false">
+		<cfargument name="archived" type="boolean" required="false">
+		<cfargument name="archivedDate" type="date" required="false">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
 			UPDATE transactions SET
-				categoryId = #arguments.categoryId#,
-				modeId = #arguments.modeId#,
-				fromPersonId = #arguments.fromPersonId#,
-				fromAccountId = <cfqueryparam value="#arguments.fromAccountId#" cfsqltype="cf_sql_numeric" null="#(arguments.fromAccountId EQ 0)#">,
-				toPersonId = #arguments.toPersonId#,
-				toAccountId = <cfqueryparam value="#arguments.toAccountId#" cfsqltype="cf_sql_numeric" null="#(arguments.toAccountId EQ 0)#">,
-				amount = '#arguments.amount#',
-				description = '#arguments.description#',
+				<cfif structKeyExists( arguments, "categoryId" )>
+					categoryId = #arguments.categoryId#,
+				</cfif>
+				<cfif structKeyExists( arguments, "transactionDate" )>
+					transactionDate = <cfqueryparam value="#parseDateTime( arguments.transactionDate )#" cfsqltype="cf_sql_date">,
+				</cfif>
+				<cfif structKeyExists( arguments, "modeId" )>
+					modeId = #arguments.modeId#,
+				</cfif>
+				<cfif structKeyExists( arguments, "fromPersonId" )>
+					fromPersonId = #arguments.fromPersonId#,
+				</cfif>
+				<cfif structKeyExists( arguments, "fromAccountId" )>
+					fromAccountId = <cfqueryparam value="#arguments.fromAccountId#" cfsqltype="cf_sql_numeric" null="#(arguments.fromAccountId EQ 0)#">,
+				</cfif>
+				<cfif structKeyExists( arguments, "toPersonId" )>
+					toPersonId = #arguments.toPersonId#,
+				</cfif>
+				<cfif structKeyExists( arguments, "toAccountId" )>
+					toAccountId = <cfqueryparam value="#arguments.toAccountId#" cfsqltype="cf_sql_numeric" null="#(arguments.toAccountId EQ 0)#">,
+				</cfif>
+				<cfif structKeyExists( arguments, "amount" )>
+					amount = '#arguments.amount#',
+				</cfif>
+				<cfif structKeyExists( arguments, "description" )>
+					description = '#arguments.description#',
+				</cfif>
+				<cfif structKeyExists( arguments, "archived" )>
+					archived = <cfqueryparam value="#arguments.archived#" cfsqltype="cf_sql_bit">,
+				</cfif>
+				<cfif structKeyExists( arguments, "archivedDate" )>
+					archivedDate = <cfqueryparam value="#parseDateTime( arguments.archivedDate )#" cfsqltype="cf_sql_date">,
+				</cfif>
 				updated = getDate()
 			WHERE id = #arguments.id#
 		</cfquery>

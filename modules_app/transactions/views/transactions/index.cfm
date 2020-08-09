@@ -31,8 +31,9 @@
 					<th width="10%">Type</th>
 					<th width="15%">Category</th>
 					<th width="10%">Amount</th>
-					<th width="15%">From</th>
-					<th width="15%">To</th>
+					<th width="10%">From</th>
+					<th width="10%">To</th>
+					<th width="10%">Date</th>
 					<th width="20%">Details</th>
 					<th width="5%" class="text-center">Status</th>
 					<th width="10%" class="text-center">Actions</th>
@@ -45,6 +46,7 @@
 					<td><i class="fas fa-rupee-sign"></i> #numberFormat( prc.allTransactions.amount, "__.__" )#</td>
 					<td>#prc.allTransactions.fromPersonName#</td>
 					<td>#prc.allTransactions.toPersonName#</td>
+					<td>#dateFormat( prc.allTransactions.transactionDate, "yyyy-mmm-dd" )#</td>
 					<td>#prc.allTransactions.description#</td>
 					<td class="text-center">
 						<cfif prc.allTransactions.deleted><i class="fas fa-times text-danger"><cfelse><i class="fas fa-check text-success"></i></cfif>
