@@ -11,8 +11,8 @@ component extends="coldbox.system.EventHandler" {
 		param name="rc.msg" default="";
 		param name="rc.msgAction" default="";
 
-		rc.formAction = val(rc.id) ? "mitrahsoft.sysinfo.items.update" : "mitrahsoft.sysinfo.items.add";
-		rc.formSubmit = val(rc.id) ? "Update" : "Add";
+		prc.formAction = val(rc.id) ? "mitrahsoft.sysinfo.items.update" : "mitrahsoft.sysinfo.items.add";
+		prc.formSubmit = val(rc.id) ? "Update" : "Add";
 
 		if( structKeyExists(rc, "submit") ) {
 			try {

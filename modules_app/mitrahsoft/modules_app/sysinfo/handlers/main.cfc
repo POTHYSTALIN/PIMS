@@ -13,8 +13,8 @@ component extends="coldbox.system.EventHandler" {
 		param name="rc.msg" default="";
 		param name="rc.msgAction" default="";
 
-		rc.formAction = val(rc.id)?"main.update":"main.add";
-		rc.formSubmit = val(rc.id)?"Update":"Add";
+		prc.formAction = val( rc.id ) ? "main.update" : "main.add";
+		prc.formSubmit = val( rc.id ) ? "Update" : "Add";
 
 		prc.systemDetails = instance.systemDetailsService.getSystemDetails();
 		prc.cabinets = instance.inventoryItemDetailService.getPropertiesForInventoryItem( 5 );

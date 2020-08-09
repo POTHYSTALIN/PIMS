@@ -8,7 +8,7 @@
 				<!--- TYPE --->
 				<div class="col-sm-6 form-group">
 					<label for="category" class="col-form-label">Particular</label>
-					<cf_dropdown dropdownName="categoryID" selectedValue="#prc.currTransactionDetails.categoryID#" selectedLabel="#prc.currTransactionDetails.category#" baseQuery="#prc.allCategories#" onclick="javascript: changeDropdown('categoryID', @@currValue, this);" />
+					<cf_dropdown dropdownName="categoryID" selectedValue="#prc.currTransactionDetails.categoryID#" selectedLabel="#prc.currTransactionDetails.category#" baseQuery="#prc.allCategories#" onclick="javascript: changeDropdown( 'categoryID', @@currValue, this, toggleFields );" data="#{'type': 'Type'}#" />
 				</div>
 
 				<!--- TRANSACTION DATE --->
@@ -20,7 +20,7 @@
 				<!--- MODE --->
 				<div class="col-sm-6 form-group">
 					<label for="modeId" class="col-form-label">Mode</label>
-					<cf_dropdown dropdownName="modeId" selectedValue="#prc.currTransactionDetails.modeId#" selectedLabel="#prc.currTransactionDetails.mode#" baseQuery="#prc.allTransactionModes#" onclick="javascript: changeDropdown('modeId', @@currValue, this);" />
+					<cf_dropdown dropdownName="modeId" selectedValue="#prc.currTransactionDetails.modeId#" selectedLabel="#prc.currTransactionDetails.mode#" baseQuery="#prc.allTransactionModes#" onclick="javascript: changeDropdown( 'modeId', @@currValue, this, toggleFields );" data="#{'mode': 'name'}#" />
 				</div>
 
 				<!--- AMOUNT --->
@@ -32,21 +32,21 @@
 				<!--- FROM --->
 				<div class="col-sm-6 form-group">
 					<label for="fromPersonId" class="col-form-label">From</label>
-					<cf_dropdown dropdownName="fromPersonId" optionLabel="personName" optionValue="ID" selectedValue="#prc.currTransactionDetails.fromPersonId#" selectedLabel="#prc.currTransactionDetails.fromPersonName#" baseQuery="#prc.allPersons#" onclick="javascript: changeDropdown('fromPersonId', @@currValue, this);" />
+					<cf_dropdown dropdownName="fromPersonId" optionLabel="personName" optionValue="ID" selectedValue="#prc.currTransactionDetails.fromPersonId#" selectedLabel="#prc.currTransactionDetails.fromPersonName#" baseQuery="#prc.allPersons#" onclick="javascript: changeDropdown( 'fromPersonId', @@currValue, this, toggleFields );" />
 				</div>
 				<div class="col-sm-6 form-group">
 					<label for="fromAccountId" class="col-form-label">Account ( Optional )</label>
-					<cf_dropdown dropdownName="fromAccountId" selectedLabel="#prc.currTransactionDetails.fromAccount#" selectedValue="#val(prc.currTransactionDetails.fromAccountId)#" baseQuery="#prc.allBankAccounts#" optionValue="ID" optionLabel="accountID" onclick="javascript: changeDropdown('fromAccountId', @@currValue, this);" />
+					<cf_dropdown dropdownName="fromAccountId" selectedLabel="#prc.currTransactionDetails.fromAccount#" selectedValue="#val(prc.currTransactionDetails.fromAccountId)#" baseQuery="#prc.allBankAccounts#" optionValue="ID" optionLabel="accountID" onclick="javascript: changeDropdown( 'fromAccountId', @@currValue, this, toggleFields );" />
 				</div>
 
 				<!--- TO --->
 				<div class="col-sm-6 form-group">
 					<label for="toPersonId" class="col-form-label">To</label>
-					<cf_dropdown dropdownName="toPersonId" optionLabel="personName" optionValue="ID" selectedValue="#prc.currTransactionDetails.toPersonId#" selectedLabel="#prc.currTransactionDetails.toPersonName#" baseQuery="#prc.allPersons#" onclick="javascript: changeDropdown('toPersonId', @@currValue, this);" />
+					<cf_dropdown dropdownName="toPersonId" optionLabel="personName" optionValue="ID" selectedValue="#prc.currTransactionDetails.toPersonId#" selectedLabel="#prc.currTransactionDetails.toPersonName#" baseQuery="#prc.allPersons#" onclick="javascript: changeDropdown( 'toPersonId', @@currValue, this, toggleFields );" />
 				</div>
 				<div class="col-sm-6 form-group">
 					<label for="toAccountId" class="col-form-label">Account ( Optional )</label>
-					<cf_dropdown dropdownName="toAccountId" selectedLabel="#prc.currTransactionDetails.toAccount#" selectedValue="#val(prc.currTransactionDetails.toAccountId)#" baseQuery="#prc.allBankAccounts#" optionValue="ID" optionLabel="accountID" onclick="javascript: changeDropdown('toAccountId', @@currValue, this);" />
+					<cf_dropdown dropdownName="toAccountId" selectedLabel="#prc.currTransactionDetails.toAccount#" selectedValue="#val(prc.currTransactionDetails.toAccountId)#" baseQuery="#prc.allBankAccounts#" optionValue="ID" optionLabel="accountID" onclick="javascript: changeDropdown( 'toAccountId', @@currValue, this, toggleFields );" />
 				</div>
 
 				<div class="col-sm-12 form-group">
@@ -56,7 +56,7 @@
 			</div>
 			<div class="form-group row">
 				<div class="offset-9 col-sm-1 pr-0 pl-4 mr-1">
-					<input type="submit" class="btn btn-success" name="Submit" value="#prc.formSubmit#">
+					<input type="submit" class="btn btn-success" name="Submit" value="#prc.formSubmit#" onclick="javascript: return validate();">
 				</div>
 				<div class="col-sm-1 p-0 mr-2 ml-5">
 					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

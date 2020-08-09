@@ -74,7 +74,7 @@
 							<h4 class="modal-title">Add Events</h4>
 						</div>
 						<div class="modal-body">
-							<form class="form-horizontal" role="form" action="#event.buildLink(lCase(rc.formaction))#" method="post">
+							<form class="form-horizontal" role="form" action="#event.buildLink( lCase( prc.formAction ) )#" method="post">
 								<input type="hidden" name="id" id="id" value="0">
 								<div class="form-group">
 									<label  class="col-sm-2 control-label" for="name">Event Name</label>

@@ -51,3 +51,42 @@ function showBalanceReport() {
 	);
 	return false;
 }
+
+function toggleFields( elem, selected ) {
+	let id = jQuery( elem ).prop( "id" );
+	if( id == "categoryID" ) {
+		let type = jQuery( selected ).data( "type" );
+		if( type == "Expense" ) {
+			// TODO: Static name
+			changeDropdown( "fromPersonId", 1, findElement( "Pothys Ravichandran", jQuery( "#fromPersonId" ).prev() ) );
+			changeDropdown( "toPersonId", null, null );
+		} else {
+			// TODO: Static name
+			changeDropdown( "fromPersonId", null, null );
+			changeDropdown( "toPersonId", 1, findElement( "Pothys Ravichandran", jQuery( "#toPersonId" ).prev() ) );
+		}
+	} else if( id == "modeId" ) {
+		let mode = jQuery( selected ).data( "mode" );
+
+		// reset both account dropdowns
+		changeDropdown( "fromAccountId", null, null );
+		changeDropdown( "toAccountId", null, null );
+		if( mode == "Cash" ) {
+			jQuery( "#fromAccountIdDropdown" ).parent().parent().hide();
+			jQuery( "#toAccountIdDropdown" ).parent().parent().hide();
+		} else {
+			jQuery( "#fromAccountIdDropdown" ).parent().parent().show();
+			jQuery( "#toAccountIdDropdown" ).parent().parent().show();
+		}
+	}
+}
+
+findElement = function( value, parent ) {
+	let finds = jQuery( parent ).find( "li" ).filter( function() {
+		return jQuery( this ).text().toLowerCase().trim() == value.toLowerCase().trim();
+	});
+	if( finds.length > 0 ) {
+		return finds[0];
+	}
+	return null;
+}

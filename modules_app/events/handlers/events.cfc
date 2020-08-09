@@ -9,7 +9,8 @@ component extends="coldbox.system.EventHandler" {
 		param name="rc.msg" default="";
 		param name="rc.id" default="0";
 
-		rc.formAction = "events";
+		prc.formAction = "events";
+		// prc.formSubmit = val(rc.id) ? "Update" : "Add";
 		if( structKeyExists(rc, "submit") && rc.submit == "submit" ){
 			if(val(rc.id)){
 				instance.eventService.updateEvents(argumentCollection=rc);

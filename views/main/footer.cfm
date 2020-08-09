@@ -31,20 +31,14 @@
 <script src="#request.assetsPath#/main.js"></script>
 
 <cfset currAssetPaths = listChangeDelims(rc.action, ",", ":.")>
-<script>console.log( '<cfoutput>#currAssetPaths#</cfoutput>' );</script>
 <cfset currPath = "">
 <cfloop list="#currAssetPaths#" item="currItem">
-	<script>console.log( '<cfoutput>#currItem#</cfoutput>' );</script>
 	<cfset currPath &= "/" & currItem />
 	<cfset pageSpecificjs = expandPath("/assets/modules#currPath#.js")>
 	<cfif fileExists(pageSpecificjs)>
 		<script src="/assets/modules#currPath#.js"></script>
 	</cfif>
 </cfloop>
-<script>
-	// TODO:: console
-	console.log( "page-specific-js: #currPath#" );
-</script>
 
 <!--- <cfset moduleSpec = listRest(rc.action, ":")>
 <cfset handlerSpec = listRest(moduleSpec, ":")>

@@ -19,38 +19,6 @@ function showEditModal(elem, id, hid) {
 				jQuery(".modal-title").html("Update hardware details");
 			jQuery(".modal-body").html(res);
 			jQuery("#myModal").modal();
-			$('#addEditForm').removeData('validator');
-			jQuery("#addEditForm").validate({
-				invalidHandler: function(form, validator) {
-					alert("invalid");
-					jQuery(window).scrollTop(jQuery("#error_container").offset().top);
-				},
-				success: function(label) {
-					alert("success");
-					return false;
-					label.remove();
-					if(!jQuery("#errors ul li").length){
-						jQuery("#error_container").css('display','none');
-					}
-				},
-				submitHandler: function(form) {
-					alert("submit");
-					form.submit();
-				},
-				errorContainer: "#error_container",
-				errorLabelContainer: "#errors ul",
-				errorElement: "li",
-				rules: {
-					// simple rule, converted to {required:true}
-					inventoryItemID: "required"
-				},
-				messages: {
-					inventoryItemID: {
-						required: "Please select an item"
-					}
-				},
-			});
-			// submitAddEdit();
 		}
 	);
 	return false;
@@ -70,32 +38,3 @@ function deleteProperty(id) {
 	$('#myModal').modal('hide');
 	window.location.href = "/mitrahsoft/sysinfo/item-details/delete/" + id;
 }
-
-// function submitAddEdit(form) {
-// 	console.log( "hi ");
-// 	var currCombs = JSON.parse( jQuery("#allCombinations").val() );
-// 	var currPropsList = jQuery("select.form-control");
-// 	var currIDCombSelected = [];
-// 	var currNameCombSelected = [];
-// 	var isOK = true;
-// 	var errorMsg = "";
-// 	for( var i=0; i<currPropsList.length; i++ ) {
-// 		currId = jQuery(currPropsList[i]).prop("id").replace("ID", "");
-// 		thisVal = jQuery("#" + currId + "ID").val();
-// 		if( thisVal == "" ) {
-// 			isOK = false;
-// 			errorMsg += "";
-// 		}
-// 		currIDCombSelected.push( thisVal );
-// 		currNameCombSelected.push( jQuery("#" + currId + "ID option[value='" + thisVal + "']").text() );
-// 	}
-// 	currIDCombSelected = currIDCombSelected.join(" - ");
-// 	currNameCombSelected = currNameCombSelected.join(" - ");
-// 	// console.log( currCombs );
-// 	// console.log( currIDCombSelected );
-// 	// console.log( currNameCombSelected );
-// 	// console.log( currIDCombSelected in currCombs );
-// 	// console.log( currCombs[currIDCombSelected] === currNameCombSelected );
-// 	// if( isOK )
-// 		// $(form).submit();
-// }

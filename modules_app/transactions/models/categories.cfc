@@ -86,7 +86,7 @@
 		<cfargument name="includeDeleted" type="boolean" required="false">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
-			SELECT * FROM transactionModes
+			SELECT id, name FROM transactionModes
 			WHERE 1 = 1
 			<cfif structKeyExists(arguments, "id")>
 				AND id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">

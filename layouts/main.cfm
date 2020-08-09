@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8">
+		<meta charset="UTF-8" />
 		<title>myapp.com - Manages all your transactions</title>
 		<meta content="width=device-width, initial-scale=1.0" name="viewport">
 		<link rel="shortcut icon" href="/assets/img/logo.png">

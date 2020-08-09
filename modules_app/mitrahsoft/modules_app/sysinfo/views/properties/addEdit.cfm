@@ -1,5 +1,5 @@
 <cfoutput>
-	<form action="#event.buildLink( lCase(rc.formAction) )#" method="post">
+	<form action="#event.buildLink( lCase( prc.formAction ) )#" method="post">
 		<input type="hidden" name="id" value="#rc.id#">
 		<div class="form-group row">
 			<label for="name" class="col-sm-2 col-form-label">Property</label>
