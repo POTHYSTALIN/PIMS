@@ -32,15 +32,28 @@
 				<!--- TRANSACTION DATE --->
 				<div class="col-sm-6 form-group">
 					<label for="transactionDate" class="col-form-label">Date of Transaction</label>
-					<input type="text" class="form-control datepicker" id="transactionDate" name="transactionDate" placeholder="yyyy-mmm-dd" value="#dateFormat( prc.currTransactionDetails.transactionDate, "yyyy-mmm-dd" )#" required>
+					<div class="input-group date mb-3">
+						<input type="text" class="form-control datepicker" id="transactionDate" name="transactionDate" placeholder="Please select a date" value="#dateFormat( prc.currTransactionDetails.transactionDate, "yyyy-mmm-dd" )#" required>
+						<div class="input-group-append">
+							<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+						</div>
+					</div>
 					<div class="invalid-feedback">Please select a date</div>
 				</div>
 
 				<!--- AMOUNT --->
 				<div class="col-sm-6 form-group">
 					<label for="amount" class="col-form-label">Amount</label>
-					<input type="text" class="form-control" id="amount" name="amount" placeholder="Amount" value="#prc.currTransactionDetails.amount#" required>
-					<div class="invalid-feedback">Please enter the amount</div>
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
+						</div>
+						<input type="text" class="form-control" id="amount" name="amount" placeholder="Please enter the amount" value="#prc.currTransactionDetails.amount#" required>
+						<div class="input-group-append">
+							<span class="input-group-text">.00</span>
+						</div>
+						<div class="invalid-feedback">Please enter the amount</div>
+					</div>
 				</div>
 
 				<!--- FROM --->

@@ -83,16 +83,15 @@ Header
 									</li>
 								</ul>
 							</li>
-							<li id="menu_mitrahsoft_submenu_1"><a href="##">Drop Down 3</a></li>
+							<li id="menu_mitrahsoft_submenu_employees"><a href="##">Employees</a></li>
 							<li id="menu_mitrahsoft_submenu_1"><a href="##">Drop Down 4</a></li>
 						</ul>
 					</li>
 					<li id="menu_user" class="menu-has-children">
 						<a href="">Pothys Ravichandran</a>
 						<ul id="menu_user_submenus">
-							<li id="menu_user_submenu_1"><a href="##">Drop Down 1</a></li>
-							<li id="menu_user_submenu_1"><a href="##">Drop Down 3</a></li>
-							<li id="menu_user_submenu_1"><a href="?fwreinit=true">reload</a></li>
+							<li id="menu_user_submenu_1"><a href="##">Edit profile</a></li>
+							<li id="menu_user_submenu_reload"><a href="?fwreinit=true">Reload</a></li>
 							<li id="menu_user_submenu_logout"><a href="/logout">Logout</a></li>
 						</ul>
 					</li>

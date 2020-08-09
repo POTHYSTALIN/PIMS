@@ -159,11 +159,11 @@ jQuery(document).ready(function ($) {
 			}
 		});
 		// datepicker - all forms are mostly inside modal
-		jQuery( ".datepicker" ).datepicker( { format: "yyyy-M-dd" } );
+		jQuery( ".input-group.date" ).datepicker( { format: "yyyy-M-dd", autoclose: true } );
 	});
 
 	// There might be some forms with datepicker on main page itself
-	jQuery( ".datepicker" ).datepicker( { format: "yyyy-M-dd" } );
+	jQuery( ".input-group.date" ).datepicker( { format: "yyyy-M-dd", autoclose: true } );
 
 	// hide alert after 10 seconds from page load complete
 	setTimeout( function() {
