@@ -1,6 +1,17 @@
 // Setting Global JS variables
 var currPage = window.location.pathname.substr(1, window.location.pathname.length);
 
+findSelectedOption = function( parent ) {
+	let currvalue = jQuery( parent ).val();
+	let finds = jQuery( parent ).find( "option" ).filter( function() {
+		return jQuery( this ).attr( "value" ) == currvalue;
+	});
+	if( finds.length > 0 ) {
+		return finds[0];
+	}
+	return null;
+}
+
 jQuery(document).ready(function ($) {
 	// set active menu
 	// remove second & third replace, if not needed
@@ -143,12 +154,19 @@ jQuery(document).ready(function ($) {
 				// To avoid default messages from jquery-validate ( We're using bootstrap method to show errors )
 				return true;
 			},
-			success: function( label ) {
-				return false;
-			},
 			submitHandler: function( form ) {
 				form.submit();
 			}
 		});
+		// datepicker - all forms are mostly inside modal
+		jQuery( ".datepicker" ).datepicker( { format: "yyyy-M-dd" } );
 	});
+
+	// There might be some forms with datepicker on main page itself
+	jQuery( ".datepicker" ).datepicker( { format: "yyyy-M-dd" } );
+
+	// hide alert after 10 seconds from page load complete
+	setTimeout( function() {
+		jQuery( "div.alert" ).slideUp( 1000 );
+	}, 10000);
 });

@@ -27,6 +27,9 @@
 <script src="#request.assetsPath#/vendor/jquery-validate/js/jquery.validate.1.19.1.min.js"></script>
 <!--- <script src="#request.assetsPath#/vendor/jquery-menu/js/navbar.js"></script> --->
 
+<!--- uxsolutions - bootstrap - datepicker-1.9.0 / https://github.com/uxsolutions/bootstrap-datepicker --->
+<script src="#request.assetsPath#/vendor/uxsolutions-bootstrap-datepicker-1.9.0/js/bootstrap-datepicker.min.js"></script>
+
 <!-- Template Main Javascript File -->
 <script src="#request.assetsPath#/main.js"></script>
 
@@ -52,11 +55,4 @@
 <cfelseif fileExists(expandPath("/assets/#cgi.path_info#.js"))>
 	<script src="/assets/#cgi.path_info#.js"></script>
 </cfif> --->
-<script>
-	jQuery(function(){
-		setTimeout(function(){
-			jQuery("div.alert").slideUp(1000);
-		}, 10000);
-	});
-</script>
 </cfoutput>

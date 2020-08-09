@@ -2,51 +2,87 @@
 <!--- Uncomment below lines if this page needs header --->
 <!--- <div class="container">
 	<div class="p-t-20"> --->
-		<form action="#event.buildLink( lCase(prc.formAction) )#" method="post">
+		<form id="addEditForm" action="#event.buildLink( lCase(prc.formAction) )#" method="post">
 			<input type="hidden" name="id" value="#rc.id#">
 			<div class="row">
 				<!--- TYPE --->
 				<div class="col-sm-6 form-group">
-					<label for="category" class="col-form-label">Particular</label>
-					<cf_dropdown dropdownName="categoryID" selectedValue="#prc.currTransactionDetails.categoryID#" selectedLabel="#prc.currTransactionDetails.category#" baseQuery="#prc.allCategories#" onclick="javascript: changeDropdown( 'categoryID', @@currValue, this, toggleFields );" data="#{'type': 'Type'}#" />
-				</div>
-
-				<!--- TRANSACTION DATE --->
-				<div class="col-sm-6 form-group">
-					<label for="transactionDate" class="col-form-label">Date</label>
-					<input type="text" class="form-control" id="transactionDate" name="transactionDate" placeholder="Date of Transaction ( yyyy-mmm-dd )" value="#dateFormat( prc.currTransactionDetails.transactionDate, "yyyy-mmm-dd" )#">
+					<label for="category" class="col-form-label">Category</label>
+					<select class="custom-select" id="categoryID" name="categoryID" required onchange="javascript: toggleFields( this );">
+						<option value="">Please select a category</option>
+						<cfloop query="#prc.allCategories#">
+							<option value="#prc.allCategories.id#" <cfif prc.allCategories.id EQ prc.currTransactionDetails.categoryId>selected</cfif> data-type="#prc.allCategories.type#">#prc.allCategories.name#</option>
+						</cfloop>
+					</select>
+					<div class="invalid-feedback">Please select a category</div>
 				</div>
 
 				<!--- MODE --->
 				<div class="col-sm-6 form-group">
 					<label for="modeId" class="col-form-label">Mode</label>
-					<cf_dropdown dropdownName="modeId" selectedValue="#prc.currTransactionDetails.modeId#" selectedLabel="#prc.currTransactionDetails.mode#" baseQuery="#prc.allTransactionModes#" onclick="javascript: changeDropdown( 'modeId', @@currValue, this, toggleFields );" data="#{'mode': 'name'}#" />
+					<select class="custom-select" id="modeId" name="modeId" required onchange="javascript: toggleFields( this );">
+						<option value="">Please select a mode</option>
+						<cfloop query="#prc.allTransactionModes#">
+							<option value="#prc.allTransactionModes.id#" <cfif prc.allTransactionModes.id EQ prc.currTransactionDetails.modeId>selected</cfif> data-mode="#prc.allTransactionModes.name#">#prc.allTransactionModes.name#</option>
+						</cfloop>
+					</select>
+					<div class="invalid-feedback">Please select a mode</div>
+				</div>
+
+				<!--- TRANSACTION DATE --->
+				<div class="col-sm-6 form-group">
+					<label for="transactionDate" class="col-form-label">Date of Transaction</label>
+					<input type="text" class="form-control datepicker" id="transactionDate" name="transactionDate" placeholder="yyyy-mmm-dd" value="#dateFormat( prc.currTransactionDetails.transactionDate, "yyyy-mmm-dd" )#" required>
+					<div class="invalid-feedback">Please select a date</div>
 				</div>
 
 				<!--- AMOUNT --->
 				<div class="col-sm-6 form-group">
 					<label for="amount" class="col-form-label">Amount</label>
-					<input type="text" class="form-control" id="amount" name="amount" placeholder="Amount" value="#prc.currTransactionDetails.amount#">
+					<input type="text" class="form-control" id="amount" name="amount" placeholder="Amount" value="#prc.currTransactionDetails.amount#" required>
+					<div class="invalid-feedback">Please enter the amount</div>
 				</div>
 
 				<!--- FROM --->
 				<div class="col-sm-6 form-group">
 					<label for="fromPersonId" class="col-form-label">From</label>
-					<cf_dropdown dropdownName="fromPersonId" optionLabel="personName" optionValue="ID" selectedValue="#prc.currTransactionDetails.fromPersonId#" selectedLabel="#prc.currTransactionDetails.fromPersonName#" baseQuery="#prc.allPersons#" onclick="javascript: changeDropdown( 'fromPersonId', @@currValue, this, toggleFields );" />
+					<select class="custom-select" id="fromPersonId" name="fromPersonId" required>
+						<option value="">Please select a person</option>
+						<cfloop query="#prc.allPersons#">
+							<option value="#prc.allPersons.id#" <cfif prc.allPersons.id EQ prc.currTransactionDetails.fromPersonId>selected</cfif>>#prc.allPersons.personName#</option>
+						</cfloop>
+					</select>
+					<div class="invalid-feedback">Please select a person, who initiates this transaction</div>
 				</div>
-				<div class="col-sm-6 form-group">
+				<div class="col-sm-6 form-group <cfif arrayFindNoCase( [ "", "Cash" ], prc.currTransactionDetails.mode )>hidden</cfif>">
 					<label for="fromAccountId" class="col-form-label">Account ( Optional )</label>
-					<cf_dropdown dropdownName="fromAccountId" selectedLabel="#prc.currTransactionDetails.fromAccount#" selectedValue="#val(prc.currTransactionDetails.fromAccountId)#" baseQuery="#prc.allBankAccounts#" optionValue="ID" optionLabel="accountID" onclick="javascript: changeDropdown( 'fromAccountId', @@currValue, this, toggleFields );" />
+					<select class="custom-select" id="fromAccountId" name="fromAccountId">
+						<option value="">Please select an account</option>
+						<cfloop query="#prc.allBankAccounts#">
+							<option value="#prc.allBankAccounts.id#" <cfif prc.allBankAccounts.id EQ prc.currTransactionDetails.fromAccountId>selected</cfif>>#prc.allBankAccounts.accountID#</option>
+						</cfloop>
+					</select>
 				</div>
 
 				<!--- TO --->
 				<div class="col-sm-6 form-group">
 					<label for="toPersonId" class="col-form-label">To</label>
-					<cf_dropdown dropdownName="toPersonId" optionLabel="personName" optionValue="ID" selectedValue="#prc.currTransactionDetails.toPersonId#" selectedLabel="#prc.currTransactionDetails.toPersonName#" baseQuery="#prc.allPersons#" onclick="javascript: changeDropdown( 'toPersonId', @@currValue, this, toggleFields );" />
+					<select class="custom-select" id="toPersonId" name="toPersonId" required>
+						<option value="">Please select an account</option>
+						<cfloop query="#prc.allPersons#">
+							<option value="#prc.allPersons.id#" <cfif prc.allPersons.id EQ prc.currTransactionDetails.toPersonId>selected</cfif>>#prc.allPersons.personName#</option>
+						</cfloop>
+					</select>
+					<div class="invalid-feedback">Please select a person, who benefied from this transaction</div>
 				</div>
-				<div class="col-sm-6 form-group">
+				<div class="col-sm-6 form-group <cfif arrayFindNoCase( [ "", "Cash" ], prc.currTransactionDetails.mode )>hidden</cfif>">
 					<label for="toAccountId" class="col-form-label">Account ( Optional )</label>
-					<cf_dropdown dropdownName="toAccountId" selectedLabel="#prc.currTransactionDetails.toAccount#" selectedValue="#val(prc.currTransactionDetails.toAccountId)#" baseQuery="#prc.allBankAccounts#" optionValue="ID" optionLabel="accountID" onclick="javascript: changeDropdown( 'toAccountId', @@currValue, this, toggleFields );" />
+					<select class="custom-select" id="toAccountId" name="toAccountId">
+						<option value="">Please select an account</option>
+						<cfloop query="#prc.allBankAccounts#">
+							<option value="#prc.allBankAccounts.id#" <cfif prc.allBankAccounts.id EQ prc.currTransactionDetails.toAccountId>selected</cfif>>#prc.allBankAccounts.accountID#</option>
+						</cfloop>
+					</select>
 				</div>
 
 				<div class="col-sm-12 form-group">
@@ -56,7 +92,7 @@
 			</div>
 			<div class="form-group row">
 				<div class="offset-9 col-sm-1 pr-0 pl-4 mr-1">
-					<input type="submit" class="btn btn-success" name="Submit" value="#prc.formSubmit#" onclick="javascript: return validate();">
+					<input type="submit" class="btn btn-success" name="Submit" value="#prc.formSubmit#">
 				</div>
 				<div class="col-sm-1 p-0 mr-2 ml-5">
 					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

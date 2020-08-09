@@ -33,6 +33,9 @@
 		<script src="#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/interaction/main.min.js"></script>
 		<script src="#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.min.js"></script>
 
+		<!--- uxsolutions - bootstrap - datepicker-1.9.0 / https://github.com/uxsolutions/bootstrap-datepicker --->
+		<link href="#request.assetsPath#/vendor/uxsolutions-bootstrap-datepicker-1.9.0/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet" />
+
 		<style>
 			body {
 				margin: 40px 10px;

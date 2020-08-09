@@ -52,41 +52,34 @@ function showBalanceReport() {
 	return false;
 }
 
-function toggleFields( elem, selected ) {
+function toggleFields( elem ) {
 	let id = jQuery( elem ).prop( "id" );
+	let selected = findSelectedOption( elem );
+	if( selected == null ) {
+		return false;
+	}
 	if( id == "categoryID" ) {
 		let type = jQuery( selected ).data( "type" );
 		if( type == "Expense" ) {
 			// TODO: Static name
-			changeDropdown( "fromPersonId", 1, findElement( "Pothys Ravichandran", jQuery( "#fromPersonId" ).prev() ) );
-			changeDropdown( "toPersonId", null, null );
+			jQuery( "#fromPersonId" ).val( 1 );
+			jQuery( "#toPersonId" ).val( "" );
 		} else {
-			// TODO: Static name
-			changeDropdown( "fromPersonId", null, null );
-			changeDropdown( "toPersonId", 1, findElement( "Pothys Ravichandran", jQuery( "#toPersonId" ).prev() ) );
+			jQuery( "#fromPersonId" ).val( "" );
+			jQuery( "#toPersonId" ).val( 1 );
 		}
 	} else if( id == "modeId" ) {
 		let mode = jQuery( selected ).data( "mode" );
 
 		// reset both account dropdowns
-		changeDropdown( "fromAccountId", null, null );
-		changeDropdown( "toAccountId", null, null );
+		jQuery( "#fromAccountId" ).val( "" );
+		jQuery( "#toAccountId" ).val( "" );
 		if( mode == "Cash" ) {
-			jQuery( "#fromAccountIdDropdown" ).parent().parent().hide();
-			jQuery( "#toAccountIdDropdown" ).parent().parent().hide();
+			jQuery( "#fromAccountId" ).parent().addClass( "hidden" );
+			jQuery( "#toAccountId" ).parent().addClass( "hidden" );
 		} else {
-			jQuery( "#fromAccountIdDropdown" ).parent().parent().show();
-			jQuery( "#toAccountIdDropdown" ).parent().parent().show();
+			jQuery( "#fromAccountId" ).parent().removeClass( "hidden" );
+			jQuery( "#toAccountId" ).parent().removeClass( "hidden" );
 		}
 	}
-}
-
-findElement = function( value, parent ) {
-	let finds = jQuery( parent ).find( "li" ).filter( function() {
-		return jQuery( this ).text().toLowerCase().trim() == value.toLowerCase().trim();
-	});
-	if( finds.length > 0 ) {
-		return finds[0];
-	}
-	return null;
 }

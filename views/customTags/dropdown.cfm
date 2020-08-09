@@ -6,7 +6,6 @@
 <cfparam name="attributes.onclick" default="">
 <cfparam name="attributes.optionValue" default="ID">
 <cfparam name="attributes.optionLabel" default="name">
-<cfparam name="attributes.data" default="#{}#">
 
 <cfif isArray( attributes.baseQuery )>
 	<!--- Convert static array as query --->
@@ -50,19 +49,12 @@
 		</button>
 		<ul class="dropdown-menu custom w-100 border-light-grey">
 			<cfloop query="#attributes.baseQuery#">
-				<li class="cursor"
-					onclick="#replaceNoCase(attributes.onclick, "@@currValue", "#attributes.baseQuery[attributes.optionValue][attributes.baseQuery.currentrow]#", "ALL")#"
-					<cfif structCount( attributes.data )>
-						<cfloop collection="#attributes.data#" index="idx" item="itm">
-							data-#idx#="#attributes.baseQuery[itm][attributes.baseQuery.currentRow]#"
-						</cfloop>
-					</cfif>
-				>
+				<li class="cursor" onclick="#replaceNoCase(attributes.onclick, "@@currValue", "#attributes.baseQuery[attributes.optionValue][attributes.baseQuery.currentrow]#", "ALL")#">
 					<a href="##">#attributes.baseQuery[attributes.optionLabel][attributes.baseQuery.currentrow]#</a>
 				</li>
 			</cfloop>
 		</ul>
-		<input type="hidden" id="#attributes.dropdownName#" name="#attributes.dropdownName#" value="#attributes.selectedValue#">
+		<input type="hidden" id="#attributes.dropdownName#" name="#attributes.dropdownName#" value="#attributes.selectedValue#" />
 	</div>
 </cfif>
 </cfoutput>
@@ -71,22 +63,10 @@
 	if( !window.changeDropdown ) {
 		window.changeDropdown = function( dropdownId, value, selected, callback ) {
 			let thisElem = jQuery( "#" + dropdownId );
-			let thisListElem = jQuery( "#" + dropdownId + "Dropdown span:first" );
 			let thisTextElem = jQuery( "#" + dropdownId + "Dropdown span:first" );
-			if( value == null ) {
-				thisTextElem.html( "Select a " + dropdownId );
-				thisElem.val( 0 );
-			} else {
-				thisTextElem.html( jQuery( selected ).text() );
-				thisElem.val( value );
-			}
 
-			if( callback != undefined && typeof callback == "function" ) {
-				callback( thisElem, selected );
-			} else if( callback != undefined ) {
-				// callback is used, but the function is not defined
-				alert( "callback is used, but the function is not defined" );
-			}
+			thisTextElem.html( jQuery( selected ).text() );
+			thisElem.val( value );
 		}
 	}
 </script>

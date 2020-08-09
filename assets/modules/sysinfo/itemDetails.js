@@ -5,10 +5,7 @@ function showEditModal(elem, id, hid) {
 	} else {
 		ajaxURL += "/hid/" + hid;
 	}
-	// $('#myModal').on('show.bs.modal', function (e) {
-	// 	$(this).find('.modal-content').load(ajaxURL);
-	// });
-	// jQuery("#myModal").modal();
+
 	jQuery.post(
 		ajaxURL,
 		function (res) {
