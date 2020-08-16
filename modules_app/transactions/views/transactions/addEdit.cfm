@@ -1,4 +1,9 @@
 <cfoutput>
+<cfif prc.currTransactionDetails.transactionDate EQ "">
+	<cfset tmpTransactionDate = dateFormat( now(), "yyyy-mmm-dd" ) />
+<cfelse>
+	<cfset tmpTransactionDate = dateFormat( prc.currTransactionDetails.transactionDate, "yyyy-mmm-dd" ) />
+</cfif>
 <!--- Uncomment below lines if this page needs header --->
 <!--- <div class="container">
 	<div class="p-t-20"> --->
@@ -8,8 +13,8 @@
 				<!--- TYPE --->
 				<div class="col-sm-6 form-group">
 					<label for="category" class="col-form-label">Category</label>
-					<select class="custom-select" id="categoryID" name="categoryID" required onchange="javascript: toggleFields( this );">
-						<option value="">Please select a category</option>
+					<select class="custom-select" id="categoryID" name="categoryID" required min="1" onchange="javascript: toggleFields( this );">
+						<option value="0">Please select a category</option>
 						<cfloop query="#prc.allCategories#">
 							<option value="#prc.allCategories.id#" <cfif prc.allCategories.id EQ prc.currTransactionDetails.categoryId>selected</cfif> data-type="#prc.allCategories.type#">#prc.allCategories.name#</option>
 						</cfloop>
@@ -20,8 +25,8 @@
 				<!--- MODE --->
 				<div class="col-sm-6 form-group">
 					<label for="modeId" class="col-form-label">Mode</label>
-					<select class="custom-select" id="modeId" name="modeId" required onchange="javascript: toggleFields( this );">
-						<option value="">Please select a mode</option>
+					<select class="custom-select" id="modeId" name="modeId" required min="1" onchange="javascript: toggleFields( this );">
+						<option value="0">Please select a mode</option>
 						<cfloop query="#prc.allTransactionModes#">
 							<option value="#prc.allTransactionModes.id#" <cfif prc.allTransactionModes.id EQ prc.currTransactionDetails.modeId>selected</cfif> data-mode="#prc.allTransactionModes.name#">#prc.allTransactionModes.name#</option>
 						</cfloop>
@@ -33,7 +38,7 @@
 				<div class="col-sm-6 form-group">
 					<label for="transactionDate" class="col-form-label">Date of Transaction</label>
 					<div class="input-group date mb-3">
-						<input type="text" class="form-control datepicker" id="transactionDate" name="transactionDate" placeholder="Please select a date" value="#dateFormat( prc.currTransactionDetails.transactionDate, "yyyy-mmm-dd" )#" required>
+						<input type="text" class="form-control datepicker" id="transactionDate" name="transactionDate" placeholder="Please select a date" value="#dateFormat( tmpTransactionDate, "yyyy-mmm-dd" )#" required>
 						<div class="input-group-append">
 							<span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
 						</div>
@@ -59,8 +64,8 @@
 				<!--- FROM --->
 				<div class="col-sm-6 form-group">
 					<label for="fromPersonId" class="col-form-label">From</label>
-					<select class="custom-select" id="fromPersonId" name="fromPersonId" required>
-						<option value="">Please select a person</option>
+					<select class="custom-select" id="fromPersonId" name="fromPersonId" required min="1">
+						<option value="0">Please select a person</option>
 						<cfloop query="#prc.allPersons#">
 							<option value="#prc.allPersons.id#" <cfif prc.allPersons.id EQ prc.currTransactionDetails.fromPersonId>selected</cfif>>#prc.allPersons.personName#</option>
 						</cfloop>
@@ -70,7 +75,7 @@
 				<div class="col-sm-6 form-group <cfif arrayFindNoCase( [ "", "Cash" ], prc.currTransactionDetails.mode )>hidden</cfif>">
 					<label for="fromAccountId" class="col-form-label">Account ( Optional )</label>
 					<select class="custom-select" id="fromAccountId" name="fromAccountId">
-						<option value="">Please select an account</option>
+						<option value="0">Please select an account</option>
 						<cfloop query="#prc.allBankAccounts#">
 							<option value="#prc.allBankAccounts.id#" <cfif prc.allBankAccounts.id EQ prc.currTransactionDetails.fromAccountId>selected</cfif>>#prc.allBankAccounts.accountID#</option>
 						</cfloop>
@@ -80,8 +85,8 @@
 				<!--- TO --->
 				<div class="col-sm-6 form-group">
 					<label for="toPersonId" class="col-form-label">To</label>
-					<select class="custom-select" id="toPersonId" name="toPersonId" required>
-						<option value="">Please select an account</option>
+					<select class="custom-select" id="toPersonId" name="toPersonId" required min="1">
+						<option value="0">Please select an account</option>
 						<cfloop query="#prc.allPersons#">
 							<option value="#prc.allPersons.id#" <cfif prc.allPersons.id EQ prc.currTransactionDetails.toPersonId>selected</cfif>>#prc.allPersons.personName#</option>
 						</cfloop>
@@ -91,7 +96,7 @@
 				<div class="col-sm-6 form-group <cfif arrayFindNoCase( [ "", "Cash" ], prc.currTransactionDetails.mode )>hidden</cfif>">
 					<label for="toAccountId" class="col-form-label">Account ( Optional )</label>
 					<select class="custom-select" id="toAccountId" name="toAccountId">
-						<option value="">Please select an account</option>
+						<option value="0">Please select an account</option>
 						<cfloop query="#prc.allBankAccounts#">
 							<option value="#prc.allBankAccounts.id#" <cfif prc.allBankAccounts.id EQ prc.currTransactionDetails.toAccountId>selected</cfif>>#prc.allBankAccounts.accountID#</option>
 						</cfloop>

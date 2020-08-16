@@ -30,6 +30,9 @@
 <!--- uxsolutions - bootstrap - datepicker-1.9.0 / https://github.com/uxsolutions/bootstrap-datepicker --->
 <script src="#request.assetsPath#/vendor/uxsolutions-bootstrap-datepicker-1.9.0/js/bootstrap-datepicker.min.js"></script>
 
+<!--- bootstrap-select-1.13.18 - https://github.com/snapappointments/bootstrap-select --->
+<script src="#request.assetsPath#/vendor/bootstrap-select-1.13.18/bootstrap-select.min.js"></script>
+
 <!-- Template Main Javascript File -->
 <script src="#request.assetsPath#/main.js"></script>
 

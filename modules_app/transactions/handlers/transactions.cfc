@@ -12,8 +12,22 @@ component extends="coldbox.system.EventHandler" {
 	*/
 
 	public function index( event, rc, prc ) {
+		// TODO: searchStr might not be needed
 		param name="rc.searchStr" default="";
-		prc.allTransactions = instance.transactionsService.list();
+		param name="rc.searchFrom" default="#dateAdd( "m", -2, now() )#";
+		param name="rc.searchTo" default="#now()#";
+		param name="rc.personId" default="0";
+		param name="rc.accountId" default="0";
+
+		var searchArgs = duplicate( rc );
+		if( !val( searchArgs.personId ) )
+			structDelete( searchArgs, "personId" );
+		if( !val( searchArgs.accountId ) )
+			structDelete( searchArgs, "accountId" );
+
+		prc.allPersons = instance.userService.getPersons();
+		prc.allBankAccounts = instance.bankService.getBankAccounts();
+		prc.allTransactions = instance.transactionsService.list( argumentCollection = searchArgs );
 	}
 
 	public function addEdit( event, rc, prc ) {
@@ -42,9 +56,9 @@ component extends="coldbox.system.EventHandler" {
 			rc.msgAction = "Success";
 			rc.msg = "Transaction details updated successfully.";
 		} catch( any e ) {
-			writeDump(e);abort;
+			writeDump( e );abort;
 			rc.msgAction = "Error";
-			rc.msg = (len(e.message)?e.message:e.detail);
+			rc.msg = len( e.message ) ? e.message : e.detail;
 		}
 		setNextEvent(event = "transactions", persist = "msg,msgAction");
 	}

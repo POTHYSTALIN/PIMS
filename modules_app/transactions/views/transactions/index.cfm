@@ -2,9 +2,37 @@
 	<div class="container-center">
 		<form action="#event.buildLink('transactions')#" class="form-inline mb-2" method="post">
 			<div class="form-row justify-content-sm-end w-100 mt-3">
-				<div class="form-group col-sm-3">
-					<label for="searchStr">Search&nbsp;&nbsp;</label>
-					<input type="text" class="form-control input-sm" name="searchStr" value="#rc.searchStr#" style="width: 75%">
+				<div class="form-group col-sm-2">
+					<div class="input-group date">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Start date</span>
+						</div>
+						<input type="text" class="form-control datepicker" id="searchFrom" name="searchFrom" placeholder="Please select a start date" value="#dateFormat( rc.searchFrom, "yyyy-mmm-dd" )#" required>
+					
+					</div>
+				</div>
+				<div class="form-group col-sm-2">
+					<div class="input-group date">
+						<div class="input-group-prepend">
+							<span class="input-group-text">End date</span>
+						</div>
+						<input type="text" class="form-control datepicker" id="searchTo" name="searchTo" placeholder="Please select a end date" value="#dateFormat( rc.searchTo, "yyyy-mmm-dd" )#" required>
+					</div>
+				</div>
+				<div class="col-sm-1 form-group">
+					<select class="bootstrap-custom-select" id="personId" name="personId" multiple>
+						<cfloop query="#prc.allPersons#">
+							<option value="#prc.allPersons.id#" <cfif listFind( rc.personId, prc.allPersons.id )>selected</cfif>>#prc.allPersons.personName#</option>
+						</cfloop>
+					</select>
+				</div>
+				<div class="col-sm-1 form-group">
+					<select class="bootstrap-custom-select" id="accountId" name="accountId" multiple>
+						<option value="0">Please select a person</option>
+						<cfloop query="#prc.allBankAccounts#">
+							<option value="#prc.allBankAccounts.id#" <cfif listFind( rc.accountId, prc.allBankAccounts.id )>selected</cfif>>#prc.allBankAccounts.accountID#</option>
+						</cfloop>
+					</select>
 				</div>
 				<div class="checkbox col-sm-1 mt-2">
 					<div class="custom-control custom-checkbox">
@@ -15,7 +43,7 @@
 				<div class="col-sm-1 mt-1">
 					<button type="submit" class="btn btn-success btn-sm"><i class="fas fa-search"></i> Search</button>
 				</div>
-				<div class="offset-5 col-sm-1 mt-1">
+				<div class="offset-2 col-sm-1 mt-1">
 					<!--- TODO: Need to make the report based on all transactions & balances table  --->
 					<button type="button" class="btn btn-success btn-sm" onclick="javascript: showBalanceReport();"><i class="fas fa-download"></i> Balance report</button>
 				</div>

@@ -61,25 +61,38 @@ function toggleFields( elem ) {
 	if( id == "categoryID" ) {
 		let type = jQuery( selected ).data( "type" );
 		if( type == "Expense" ) {
-			// TODO: Static name
 			jQuery( "#fromPersonId" ).val( 1 );
 			jQuery( "#toPersonId" ).val( "" );
 		} else {
 			jQuery( "#fromPersonId" ).val( "" );
 			jQuery( "#toPersonId" ).val( 1 );
 		}
+
+		if( jQuery( selected ).text() == "Transfers - Income" || jQuery( selected ).text() == "Transfers - Expense" ) {
+			jQuery( "#modeId" ).val( 2 );
+		} else {
+			jQuery( "#modeId" ).val( 1 );
+		}
+		jQuery( "#modeId" ).trigger( "change" );
 	} else if( id == "modeId" ) {
 		let mode = jQuery( selected ).data( "mode" );
 
 		// reset both account dropdowns
 		jQuery( "#fromAccountId" ).val( "" );
 		jQuery( "#toAccountId" ).val( "" );
+		jQuery( "#description" ).val( "" );
 		if( mode == "Cash" ) {
 			jQuery( "#fromAccountId" ).parent().addClass( "hidden" );
 			jQuery( "#toAccountId" ).parent().addClass( "hidden" );
 		} else {
 			jQuery( "#fromAccountId" ).parent().removeClass( "hidden" );
 			jQuery( "#toAccountId" ).parent().removeClass( "hidden" );
+
+			if( jQuery( "#categoryID option:selected" ).text() == "Transfers - Income" ) {
+				jQuery( "#description" ).val( "Cash for Transfer" );
+			} else if( jQuery( "#categoryID option:selected" ).text() == "Transfers - Expense" ) {
+				jQuery( "#description" ).val( "Transfer for cash" );
+			}
 		}
 	}
 }

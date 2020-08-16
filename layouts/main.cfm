@@ -36,6 +36,9 @@
 		<!--- uxsolutions - bootstrap - datepicker-1.9.0 / https://github.com/uxsolutions/bootstrap-datepicker --->
 		<link href="#request.assetsPath#/vendor/uxsolutions-bootstrap-datepicker-1.9.0/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet" />
 
+		<!--- bootstrap-select-1.13.18 - https://github.com/snapappointments/bootstrap-select --->
+		<link href="#request.assetsPath#/vendor/bootstrap-select-1.13.18/bootstrap-select.min.css" rel="stylesheet">
+
 		<style>
 			body {
 				margin: 40px 10px;

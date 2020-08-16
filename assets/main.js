@@ -160,10 +160,13 @@ jQuery(document).ready(function ($) {
 		});
 		// datepicker - all forms are mostly inside modal
 		jQuery( ".input-group.date" ).datepicker( { format: "yyyy-M-dd", autoclose: true } );
+		jQuery( ".bootstrap-custom-select" ).selectpicker();
 	});
 
 	// There might be some forms with datepicker on main page itself
 	jQuery( ".input-group.date" ).datepicker( { format: "yyyy-M-dd", autoclose: true } );
+	$.fn.selectpicker.Constructor.DEFAULTS.liveSearch = true;
+	jQuery( ".bootstrap-custom-select" ).selectpicker();
 
 	// hide alert after 10 seconds from page load complete
 	setTimeout( function() {

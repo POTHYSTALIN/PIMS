@@ -7,6 +7,10 @@
 
 	<cffunction name="list" access="public" returntype="query" output="false">
 		<cfargument name="id" type="numeric" required="false">
+		<cfargument name="searchFrom" type="date" required="false">
+		<cfargument name="searchTo" type="date" required="false">
+		<cfargument name="personId" type="string" required="false" hint="list of person Ids" default="">
+		<cfargument name="accountId" type="string" required="false" hint="list of person Ids" default="">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
 			SELECT
@@ -26,6 +30,24 @@
 			WHERE 1 = 1
 				<cfif structKeyExists(arguments, "id")>
 					AND t.id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif structKeyExists( arguments, "searchFrom" )>
+					AND t.transactionDate >= <cfqueryparam value="#arguments.searchFrom#" cfsqltype="cf_sql_date" />
+				</cfif>
+				<cfif structKeyExists( arguments, "searchTo" )>
+					AND t.transactionDate <= <cfqueryparam value="#arguments.searchTo#" cfsqltype="cf_sql_date" />
+				</cfif>
+				<cfif len( trim( arguments.personId ) )>
+					AND (
+						t.fromPersonId IN ( <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" list="true" /> )
+						OR t.toPersonId IN ( <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" list="true" /> )
+					)
+				</cfif>
+				<cfif len( trim( arguments.accountId ) )>
+					AND (
+						( t.fromAccountId IS NOT NULL AND t.fromAccountId IN ( <cfqueryparam value="#arguments.accountId#" cfsqltype="cf_sql_integer" list="true" /> ) )
+						OR ( t.toAccountId IS NOT NULL AND t.toAccountId IN ( <cfqueryparam value="#arguments.accountId#" cfsqltype="cf_sql_integer" list="true" /> ) )
+					)
 				</cfif>
 			ORDER BY t.transactionDate DESC
 		</cfquery>
