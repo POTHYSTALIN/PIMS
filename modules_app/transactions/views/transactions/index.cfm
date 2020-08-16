@@ -26,7 +26,7 @@
 						</cfloop>
 					</select>
 				</div>
-				<div class="col-sm-1 form-group">
+				<div class="col-sm-1 ml-5 form-group">
 					<select class="bootstrap-custom-select" id="accountId" name="accountId" multiple>
 						<option value="0">Please select a person</option>
 						<cfloop query="#prc.allBankAccounts#">
@@ -34,21 +34,26 @@
 						</cfloop>
 					</select>
 				</div>
-				<div class="checkbox col-sm-1 mt-2">
+				<div class="checkbox col-sm-1 ml-5 mt-2">
 					<div class="custom-control custom-checkbox">
 						<input type="checkbox" class="custom-control-input" id="deleted" name="deleted" value="1" <cfif structKeyExists(rc, "deleted")>checked</cfif>>
 						<label class="custom-control-label float-left" for="deleted">Deleted</label>
 					</div>
 				</div>
 				<div class="col-sm-1 mt-1">
-					<button type="submit" class="btn btn-success btn-sm"><i class="fas fa-search"></i> Search</button>
+					<button type="submit" class="btn btn-success btn-sm" name="search"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</button>
 				</div>
-				<div class="offset-2 col-sm-1 mt-1">
+				<div class="col-sm-1 mt-1 ml-5">
 					<!--- TODO: Need to make the report based on all transactions & balances table  --->
-					<button type="button" class="btn btn-success btn-sm" onclick="javascript: showBalanceReport();"><i class="fas fa-download"></i> Balance report</button>
+					<button type="button" class="btn btn-success btn-sm" onclick="javascript: showBalanceReport();"><i class="fas fa-download"></i>&nbsp;&nbsp;Balance report</button>
+				</div>
+				<div class="col-sm-1 ml-2 mt-1 pr-0">
+					<cfif structKeyExists( rc, "debug" )>
+						<button type="submit" class="btn btn-success btn-sm" name="archive"><i class="fas fa-archive"></i>&nbsp;&nbsp;Archive</button>
+					</cfif>
 				</div>
 				<div class="col-sm-1 mt-1 pr-0">
-					<button type="button" class="btn btn-success btn-sm float-right" onclick="javascript: showEditModal(this, '0');"><i class="fas fa-plus"></i> Add</button>
+					<button type="button" class="btn btn-success btn-sm float-right" onclick="javascript: showEditModal(this, '0');"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add</button>
 				</div>
 			</div>
 		</form>
@@ -71,7 +76,7 @@
 				<tr>
 					<td>#prc.allTransactions.type#</td>
 					<td>#prc.allTransactions.category#</td>
-					<td><i class="fas fa-rupee-sign"></i> #numberFormat( prc.allTransactions.amount, "__.__" )#</td>
+					<td><i class="fas fa-rupee-sign"></i>&nbsp;&nbsp;#numberFormat( prc.allTransactions.amount, "__.__" )#</td>
 					<td>#prc.allTransactions.fromPersonName#</td>
 					<td>#prc.allTransactions.toPersonName#</td>
 					<td>#dateFormat( prc.allTransactions.transactionDate, "yyyy-mmm-dd" )#</td>

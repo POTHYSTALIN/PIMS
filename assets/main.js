@@ -165,6 +165,7 @@ jQuery(document).ready(function ($) {
 
 	// There might be some forms with datepicker on main page itself
 	jQuery( ".input-group.date" ).datepicker( { format: "yyyy-M-dd", autoclose: true } );
+	$.fn.selectpicker.Constructor.BootstrapVersion = "4";
 	$.fn.selectpicker.Constructor.DEFAULTS.liveSearch = true;
 	jQuery( ".bootstrap-custom-select" ).selectpicker();
 

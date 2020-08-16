@@ -24,7 +24,9 @@ BEGIN
 	VALUES
 		( 1, 1, NULL, 40300.00 ),
 		( 1, 2, 1, 12446.92 ),
-		( 1, 2, 2, 2161.51 )
+		( 1, 2, 2, 2161.51 ),
+		( 1, 2, 5, 375.50 ),
+		( 2, 2, 3, 1074.47 )
 END
 
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[transactionTypes]') AND type in (N'U'))

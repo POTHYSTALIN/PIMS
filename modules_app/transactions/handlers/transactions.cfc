@@ -19,6 +19,11 @@ component extends="coldbox.system.EventHandler" {
 		param name="rc.personId" default="0";
 		param name="rc.accountId" default="0";
 
+		if( structKeyExists( rc, "archive" ) ) {
+			runEvent( event="transactions:transactions.archive" );
+			relocate( "/transactions" );
+		}
+
 		var searchArgs = duplicate( rc );
 		if( !val( searchArgs.personId ) )
 			structDelete( searchArgs, "personId" );
@@ -87,5 +92,21 @@ component extends="coldbox.system.EventHandler" {
 		}
 
 		event.setView( view="transactions/report_1", noLayout=true );
+	}
+
+	public function archive( event, rc, prc ) {
+		// Balance report
+		prc.currBalances = instance.transactionsService.getCurrentBalances( session.userId );
+		prc.allTransactions = instance.transactionsService.list();
+
+		var tmpDate = now();
+		transaction {
+			for( var currTransaction in prc.allTransactions ) {
+				instance.transactionsService.update( id=currTransaction.id, archived=1, archivedDate = tmpDate );
+			}
+			for( var currBalance in prc.currBalances ) {
+				instance.transactionsService.reCreateBalance( currBalance.id, currBalance.amount, tmpDate );
+			}
+		}
 	}
 }

@@ -28,6 +28,7 @@
 				LEFT JOIN bankAccounts ba1 ON t.fromAccountID = ba1.id
 				LEFT JOIN bankAccounts ba2 ON t.toAccountID = ba2.id
 			WHERE 1 = 1
+				AND t.archived = '0'
 				<cfif structKeyExists(arguments, "id")>
 					AND t.id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
 				</cfif>
@@ -129,7 +130,7 @@
 					archived = <cfqueryparam value="#arguments.archived#" cfsqltype="cf_sql_bit">,
 				</cfif>
 				<cfif structKeyExists( arguments, "archivedDate" )>
-					archivedDate = <cfqueryparam value="#parseDateTime( arguments.archivedDate )#" cfsqltype="cf_sql_date">,
+					archivedDate = <cfqueryparam value="#arguments.archivedDate#" cfsqltype="cf_sql_date">,
 				</cfif>
 				updated = getDate()
 			WHERE id = #arguments.id#
@@ -176,7 +177,10 @@
 			FROM balances b
 				INNER JOIN transactionModes tm ON b.modeId = tm.id
 				LEFT JOIN bankAccounts ba ON b.accountId = ba.id AND b.personId = ba.personId
-			WHERE b.personId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
+			WHERE 1 = 1
+				/* TODO: temporary */
+				<!--- AND b.personId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" /> --->
+				AND b.personId IN ( 1, 2 )
 				AND b.deleted = 0
 		</cfquery>
 
@@ -187,6 +191,7 @@
 				INNER JOIN transactionModes tm ON t.modeId = tm.id
 			WHERE t.toPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
 				AND t.deleted = 0
+				AND t.archived = 0
 			GROUP BY t.toAccountId
 		</cfquery>
 
@@ -197,6 +202,7 @@
 				INNER JOIN transactionModes tm ON t.modeId = tm.id
 			WHERE t.fromPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
 				AND t.deleted = 0
+				AND t.archived = 0
 			GROUP BY t.fromAccountId
 		</cfquery>
 
@@ -217,6 +223,7 @@
 			</cfquery>
 
 			<cfset res.append({
+				"id": inHandBalance.id,
 				"type": "hand",
 				"account": "",
 				"accountName": "In Hand",
@@ -240,6 +247,7 @@
 				WHERE accountId = #inBankBalance.accountId#
 			</cfquery>
 			<cfset res.append( {
+				"id": inBankBalance.id,
 				"type": "bank",
 				"account": inBankBalance.accountId,
 				"accountName": inBankBalance.account,
@@ -248,5 +256,20 @@
 		</cfloop>
 
 		<cfreturn res />
+	</cffunction>
+
+	<cffunction name="reCreateBalance" access="public" returntype="void">
+		<cfargument name="id" type="numeric" required="true" />
+		<cfargument name="balance" type="numeric" required="true" />
+		<cfargument name="archivedDate" type="date" required="true" />
+
+		<cfquery datasource="#dsn.name#">
+			INSERT INTO balances( personId, modeId, accountId, amount )
+			SELECT personId, modeId, accountId, <cfqueryparam value="#arguments.balance#" cfsqltype="cf_sql_float" />
+			FROM balances
+			WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer" />;
+			UPDATE balances SET deleted = 1, updated = <cfqueryparam value="#arguments.archivedDate#" cfsqltype="cf_sql_date" />
+			WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer" />;
+		</cfquery>
 	</cffunction>
 </cfcomponent>
