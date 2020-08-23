@@ -19,7 +19,7 @@
 	</cfquery>
 	<div id="intro-carousel" class="owl-carousel">
 		<cfloop query="#thirukural#">
-			<cffile action="read" file="#expandPath('./assets/kural/' & thirukural.name)#" variable="local.content">
+			<cffile action="read" file="#expandPath('./assets/kural/' & thirukural.name)#" variable="content">
 			<div class="item <cfif thirukural.currentRow EQ 1>active</cfif>">
 				<section id="intro">
 					<div class="intro-content">

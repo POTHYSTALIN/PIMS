@@ -25,12 +25,12 @@ component extends="coldbox.system.EventHandler" {
 					rc.msg = (len(e.message)?e.message:e.detail);
 				}
 			}
-			setNextEvent(event = 'list.events', persist = "msg,msgAction");
+			relocate(event = 'list.events', persist = "msg,msgAction");
 		} else if( structKeyExists(rc, "submit") && rc.submit == "delete" ){
 			instance.eventService.deleteEvent( id = rc.id );
 			rc.msgAction = "Success";
 			rc.msg = "Event deleted successfully.";
-			setNextEvent(event = 'list.events', persist = "msg,msgAction");
+			relocate(event = 'list.events', persist = "msg,msgAction");
 		}
 
 		prc.getEvents = instance.eventService.getNotifications();

@@ -33,7 +33,7 @@ component extends="coldbox.system.EventHandler" {
 		if( NOT structKeyExists(session, "userID") AND NOT ArrayFindNoCase( local.WhiteList, rc.action )){
 			rc.msgAction = "Error";
 			rc.msg = "Please try after login";
-			setNextEvent(event = 'login', persist = "msg,msgAction");
+			relocate(event = 'login', persist = "msg,msgAction");
 		}
 
 		local.BlackList = [
@@ -41,7 +41,7 @@ component extends="coldbox.system.EventHandler" {
 		];
 
 		if (structKeyExists(session, "userID") AND ArrayFindNoCase( local.BlackList, rc.action )){
-			setNextEvent(event = 'home');
+			relocate(event = 'home');
 		}
 	}
 

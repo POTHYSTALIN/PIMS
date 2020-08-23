@@ -57,7 +57,7 @@ component extends="coldbox.system.EventHandler" {
 				rc.msgAction = "Error";
 				rc.msg = (len(e.message)?e.message:e.detail);
 			}
-			setNextEvent(event = 'password.list', persist = "msg,msgAction");
+			relocate(event = 'password.list', persist = "msg,msgAction");
 		}
 		// event.setLayout("blank");
 		event.setView( view="password/addEdit", noLayout=true );
@@ -75,6 +75,6 @@ component extends="coldbox.system.EventHandler" {
 		rc.msgAction = "Success";
 		rc.msg = "Password details deleted successfully.";
 
-		setNextEvent(event = 'password.list', persist = "msg,msgAction");
+		relocate(event = 'password.list', persist = "msg,msgAction");
 	}
 }

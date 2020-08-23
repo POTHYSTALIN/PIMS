@@ -29,7 +29,7 @@ component extends="coldbox.system.EventHandler" {property name="categoriesServic
 			rc.msgAction = "Success";
 			rc.msg = "Transaction Category added successfully";
 		}
-		setNextEvent(event = "transactions.categories", persist = "msg,msgAction");
+		relocate(event = "transactions.categories", persist = "msg,msgAction");
 	}
 
 	public function delete( event, rc, prc ) {
@@ -43,6 +43,6 @@ component extends="coldbox.system.EventHandler" {property name="categoriesServic
 			rc.msgAction = "Error";
 			rc.msg = "No such Transaction Category found.";
 		}
-		setNextEvent( event = "transactions.categories", persist = "msg,msgAction" );
+		relocate( event = "transactions.categories", persist = "msg,msgAction" );
 	}
 }

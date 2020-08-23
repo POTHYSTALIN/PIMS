@@ -65,7 +65,7 @@ component extends="coldbox.system.EventHandler" {
 			rc.msgAction = "Error";
 			rc.msg = len( e.message ) ? e.message : e.detail;
 		}
-		setNextEvent(event = "transactions", persist = "msg,msgAction");
+		relocate(event = "transactions", persist = "msg,msgAction");
 	}
 
 	public function delete( event, rc, prc ) {
@@ -80,7 +80,7 @@ component extends="coldbox.system.EventHandler" {
 		}
 		rc.msgAction = "Success";
 		rc.msg = "Transaction details deleted successfully.";
-		setNextEvent(event = "transactions", persist = "msg,msgAction");
+		relocate(event = "transactions", persist = "msg,msgAction");
 	}
 
 	public function reports( event, rc, prc ) {

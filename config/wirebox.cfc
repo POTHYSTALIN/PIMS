@@ -38,6 +38,7 @@ component extends="coldbox.system.ioc.config.Binder"{
         };
 
         // Map Bindings below
-        map("securityService").to("model.securityService").initArg(name="dsn",dsl="coldbox:setting:latestMyApp");
+        // TODO: Need to change the mapping name to securityService & use it on places where ever it is needed
+        map("securityService_custom").to("model.securityService").initArg(name="dsn",dsl="coldbox:setting:latestMyApp");
     }
 }

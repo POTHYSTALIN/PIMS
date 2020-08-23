@@ -31,7 +31,7 @@ component extends="coldbox.system.EventHandler" {
 				rc.msgAction = "Error";
 				rc.msg = ( len(e.message) ? e.message : e.detail );
 			}
-			setNextEvent(event = 'mitrahsoft.sysinfo.item-details', persist = "msg,msgAction");
+			relocate(event = 'mitrahsoft.sysinfo.item-details', persist = "msg,msgAction");
 		}
 
 		prc.itemDetail = instance.inventoryItemDetailService.getItemDetails( id = rc.id );
@@ -59,6 +59,6 @@ component extends="coldbox.system.EventHandler" {
 		rc.msgAction = "Success";
 		rc.msg = "Inventory item deatils deleted successfully.";
 
-		setNextEvent(event = 'mitrahsoft.sysinfo.item-details', persist = "msg,msgAction");
+		relocate(event = 'mitrahsoft.sysinfo.item-details', persist = "msg,msgAction");
 	}
 }

@@ -1,9 +1,9 @@
 component extends="coldbox.system.EventHandler"{
-	property name="securityService" inject="securityService";
+	property name="securityService" inject="securityService_custom";
 
 	// function index( event, rc, prc ){
 	// 	event.noLayout();
-	// 	setNextEvent("security.login");
+	// 	relocate("security.login");
 	// }
 
 	function login( event, rc, prc ){
@@ -23,11 +23,11 @@ component extends="coldbox.system.EventHandler"{
 			// session.myBankAccounts = instance.bankService.getBankAccounts( personID = session.userID );
 			rc.msgAction = "Success";
 			rc.msg = "Welcome #session.userName#!";
-			setNextEvent(event = 'home', persist = "msg,msgAction");
+			relocate(event = 'home', persist = "msg,msgAction");
 		} else {
 			rc.msgAction = "Error";
 			rc.msg = "Invalid credentials!!!";
-			setNextEvent(event = 'login', persist = "msg,msgAction");
+			relocate(event = 'login', persist = "msg,msgAction");
 		}
 	}
 	
@@ -36,7 +36,7 @@ component extends="coldbox.system.EventHandler"{
 		session.clear();
 		rc.msgAction = "Success";
 		rc.msg = "Successfully logged out!!!";
-		setNextEvent(event = 'login', persist = "msg,msgAction");
+		relocate(event = 'login', persist = "msg,msgAction");
 	}
 
 	function signup( event, rc, prc ){
@@ -50,6 +50,6 @@ component extends="coldbox.system.EventHandler"{
 		var res = securityService.createUser( argumentCollection=rc );
 		rc.msgAction = "Success";
 		rc.msg = "Successfully signed up!!!";
-		setNextEvent(event = 'login', persist = "msg,msgAction");
+		relocate(event = 'login', persist = "msg,msgAction");
 	}
 }

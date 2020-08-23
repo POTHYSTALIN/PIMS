@@ -38,10 +38,11 @@
 			// Error/Exception Handling
 			exceptionHandler		= "main.onException",
 			onInvalidEvent			= "",
-			customErrorTemplate		= "/coldbox/system/includes/BugReport.cfm",
+			customErrorTemplate		= "/coldbox/system/exceptions/Whoops.cfm",
 
 			// Development Settings
-			reinitPassword			= "",
+			reinitKey				= "reloadme",
+			reinitPassword			= "pothys",
 			caseSensitiveImplicitViews = true,
 
 			// Application Aspects
@@ -78,7 +79,8 @@
 		coldbox.reinitpassword = "";
 		coldbox.eventCaching = false;
 		coldbox.handlerCaching = false;
-		coldbox.customErrorTemplate = "/coldbox/system/includes/BugReport.cfm";
+		coldbox.customErrorTemplate = "/coldbox/system/exceptions/BugReport.cfm";
+		coldbox.exceptionEditor = "vscode"; // This is default too
 		coldbox.handlersIndexAutoReload = true;
 		settings.latestMyApp = { name="latestMyApp_dev", dbType="", username="", password=""};
 

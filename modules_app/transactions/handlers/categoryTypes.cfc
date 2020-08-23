@@ -30,7 +30,7 @@ component extends="coldbox.system.EventHandler" {
 			rc.msgAction = "Success";
 			rc.msg = "Transaction category type added successfully";
 		}
-		setNextEvent(event = "transactions.category-types", persist = "msg,msgAction");
+		relocate(event = "transactions.category-types", persist = "msg,msgAction");
 	}
 
 	public function delete( event, rc, prc ) {
@@ -44,6 +44,6 @@ component extends="coldbox.system.EventHandler" {
 			rc.msgAction = "Error";
 			rc.msg = "No such transaction category type found.";
 		}
-		setNextEvent( event = "transactions.category-types", persist = "msg,msgAction" );
+		relocate( event = "transactions.category-types", persist = "msg,msgAction" );
 	}
 }

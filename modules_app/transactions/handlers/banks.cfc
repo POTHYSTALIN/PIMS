@@ -28,7 +28,7 @@ component extends="coldbox.system.EventHandler" {
 			rc.msgAction = "Success";
 			rc.msg = "Bank details added successfully";
 		}
-		setNextEvent(event = "transactions.banks", persist = "msg,msgAction");
+		relocate(event = "transactions.banks", persist = "msg,msgAction");
 	}
 
 	public function delete( event, rc, prc ) {
@@ -42,6 +42,6 @@ component extends="coldbox.system.EventHandler" {
 			rc.msgAction = "Error";
 			rc.msg = "No such bank found";
 		}
-		setNextEvent( event = "transactions.banks", persist = "msg,msgAction" );
+		relocate( event = "transactions.banks", persist = "msg,msgAction" );
 	}
 }
