@@ -22,6 +22,9 @@ component extends="coldbox.system.FrameworkSupertype" accessors=true singleton{
 		variables.controller 	= arguments.controller;
 		variables.settings 		= getModuleSettings( "htmlhelper" );
 
+		// Used for elixir discovery paths
+		variables.cachedPaths 	= {};
+
 		return this;
 	}
 
@@ -2249,7 +2252,7 @@ component extends="coldbox.system.FrameworkSupertype" accessors=true singleton{
 						if( arguments.booleanSelect ){
 							args = {
 								name=prop.name, options=[true,false], label=prop.name, bind=arguments.entity, labelwrapper=arguments.labelWrapper, labelWrapperAttrs=arguments.labelWrapperAttrs, labelClass=arguments.labelClass,
-								wrapper=arguments.fieldwrapper, wrapperAttrs=arguments.wrapperAttrs, groupWrapper=arguments.groupWrapper, groupWrapperAttrs=arguments.groupWrapperAttrs, inputInsideLabel=arguments.inputInsideLabel
+								wrapper=arguments.fieldwrapper, wrapperAttrs=arguments.fieldWrapperAttrs, groupWrapper=arguments.groupWrapper, groupWrapperAttrs=arguments.groupWrapperAttrs, inputInsideLabel=arguments.inputInsideLabel
 							};
 							structAppend(args,arguments);
 							buffer.append( this.select(argumentCollection=args) );
@@ -2297,58 +2300,134 @@ component extends="coldbox.system.FrameworkSupertype" accessors=true singleton{
 	 * @sendToHeader Send to the header via htmlhead by default, else it returns the content
 	 * @async HTML5 JavaScript argument: Specifies that the script is executed asynchronously (only for external scripts)
 	 * @defer HTML5 JavaScript argument: Specifies that the script is executed when the page has finished parsing (only for external scripts)
+	 * @version The elixir version to use, defaults to 3
+	 * @manifestRoot The root location in relative from the webroot where the `rev-manifest.json` file exists
 	 */
 	function elixir(
 		required fileName,
 		buildDirectory="build",
 		boolean sendToHeader=true,
 		boolean async=false,
-		boolean defer=false
+        boolean defer=false,
+		numeric version=3,
+		manifestRoot=""
 	){
-		addAsset(
-			elixirPath( arguments.fileName, arguments.buildDirectory ),
+		return addAsset(
+			elixirPath(
+                fileName 		= arguments.fileName,
+                buildDirectory 	= arguments.buildDirectory,
+				version 		= arguments.version,
+				manifestRoot 	= arguments.manifestRoot
+            ),
 			arguments.sendToHeader,
 			arguments.async,
 			arguments.defer
 		);
-		return this;
 	}
 
 	/**
 	 * Adds the versioned path for an asset to the view using ColdBox Elixir
 	 *
-	 * @fileName The asset path to find relative to the includes convention directory
-	 * @buildDirectory The build directory inside the includes convention directory
+	 * @fileName The asset path to find relative to the `includes` convention directory
 	 * @useModuleRoot If true, use the module root as the root of the file path
+	 * @version The elixir version algorithm to use, version 3 is the latest
+	 * @manifestRoot The root location in relative from the webroot where the `rev-manifest.json` file exists
 	 */
 	function elixirPath(
 		required fileName,
-		buildDirectory="build",
-		boolean useModuleRoot=false
+        boolean useModuleRoot=false,
+		numeric version=3,
+		manifestRoot=""
 	){
-		var includesLocation 	= controller.getSetting( "IncludesConvention", true );
+		// Incoming Cleanup
+		arguments.fileName = reReplace( arguments.fileName, "^//?", "" );
+
+		// In local discovery cache?
+		if( variables.cachedPaths.keyExists( arguments.filename ) ){
+			return variables.cachedPaths[ arguments.filename ];
+		}
+
+		// Prepare state checks
+		var templateCache       = getCache( "template" );
+		var includesLocation 	= controller.getColdBoxSetting( "IncludesConvention" );
 		var event 				= getRequestContext();
-		var mapping             = ( useModuleRoot && len( event.getCurrentModule() ) ) ?
-									event.getModuleRoot() :
-									controller.getSetting( "appMapping" );
-		var filePath 			= expandPath( "#mapping#/#includesLocation#/#arguments.buildDirectory#/rev-manifest.json" );
-		var href 				= "#mapping#/#includesLocation#/#arguments.fileName#";
+		arguments.currentModule = event.getCurrentModule();
 
-		if ( ! fileExists( filePath ) ) {
+		// Get the manifest location
+		var manifestPath = 	discoverElixirManifest( argumentCollection=arguments );
+
+		// Calculate mapping for the asset in question
+		var mapping = ( arguments.useModuleRoot && len( arguments.currentModule ) ) ?
+						event.getModuleRoot() :
+						controller.getSetting( "appMapping" );
+
+		// Calculat href for asset delivery via Browser
+		if( mapping.len() ){
+			var href = "/#mapping#/#includesLocation#/#arguments.fileName#";
+		} else {
+			var href = "/#includesLocation#/#arguments.fileName#";
+		}
+		var key = reReplace( href, "^//?", "" );
+
+		// Only read, parse and store once
+        var manifestDirectory = templateCache.getOrSet(
+            "elixirManifest-#hash( manifestPath )#",
+            function(){
+				var contents = fileRead( manifestPath );
+				if( isJSON( contents ) ){
+					return deserializeJSON( contents );
+				}
+				return {};
+            }
+		);
+
+		// Is the key in the manifest?
+		if ( ! structKeyExists( manifestDirectory, key ) ) {
+			variables.cachedPaths[ arguments.fileName ] = arguments.fileName;
 			return href;
 		}
+		variables.cachedPaths[ arguments.fileName ] = manifestDirectory[ key ];
+		return "#manifestDirectory[ key ]#";
+	}
 
-		var fileContents = fileRead( filePath );
-		if ( ! isJSON( fileContents ) ) {
-			return href;
+	/**
+	 * Discover the elixir manifest for this request using the following lookups:
+	 *
+	 * - Override
+	 * - Module Root
+	 * - App Root
+	 *
+	 * @currentModule Are we in a module call or not
+	 * @useModuleRoot Are we using a module root?
+	 * @version The elixir version
+	 * @manifestRoot Are we customizing the root
+	 */
+	function discoverElixirManifest(
+		string currentModule="",
+        boolean useModuleRoot=false,
+		numeric version=3,
+		manifestRoot=""
+	){
+		// Do we have a manifest override? Just return it
+		if( len( arguments.manifestRoot ) ){
+			return controller.locateFilePath( "#arguments.manifestRoot#/rev-manifest.json" );
 		}
 
-		var json = deserializeJSON( fileContents );
-		if ( ! structKeyExists( json, arguments.fileName ) ) {
-			return href;
+		// Use the module if requested and if it exists, else fall back on app root
+		if( arguments.useModuleRoot && len( arguments.currentModule ) ){
+			var manifestPath = controller.getSetting( "modules" ).find( arguments.currentModule ).path &
+				"/" &
+				controller.getColdBoxSetting( "IncludesConvention" ) &
+				"/rev-manifest.json";
+			if( fileExists( manifestPath ) ){
+				return manifestPath;
+			}
 		}
 
-		return "#mapping#/#includesLocation#/#arguments.buildDirectory#/#json[ arguments.fileName ]#";
+		// Use App Root Path
+		return controller.getSetting( "applicationPath" ) &
+			controller.getColdBoxSetting( "IncludesConvention" ) &
+			"/rev-manifest.json";
 	}
 
 
@@ -2589,7 +2668,7 @@ component extends="coldbox.system.FrameworkSupertype" accessors=true singleton{
 			// entity value
 			var entityValue = invoke( arguments.args.bind, "get#arguments.args.bindProperty#" );
 
-			if( isNull( entityValue ) ){
+			if( isNull( local.entityValue ) ){
 				entityValue = "";
 			}
 

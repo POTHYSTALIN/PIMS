@@ -1,0 +1,25 @@
+{
+    "name":"PIMS",
+    "version":"1.0.0+002",
+    "location":"",
+    "author":"Pothys Ravichandran",
+    "slug":"pims",
+    "packageDirectory":"",
+    "type":"mvc",
+    "keywords":"",
+    "homepage":"https://final.myapp.local",
+    "documentation":"",
+    "repository":{
+        "type":"git",
+        "url":"https://github.com/POTHYSTALIN/PIMS"
+    },
+    "bugs":"",
+    "shortDescription":"A conventions based MVC development framework",
+    "contributors":[],
+    "dependencies":{
+        "coldbox":"6.0.0+1296"
+    },
+    "installPaths":{
+        "coldbox":"coldbox/"
+    }
+}
