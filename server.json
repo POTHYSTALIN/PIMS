@@ -11,8 +11,8 @@
             "port":"80"
         },
         "SSL":{
-            "port":"443",
-            "enable":"true",
+            "port":443,
+            "enable":true,
             "certFile":"apache_configs/myapp.crt",
             "keyFile":"apache_configs/myapp.key"
         }
@@ -23,5 +23,6 @@
     "JVM":{
         "heapSize":"4096"
     },
+    "cfconfigfile":"./cfconfig.json",
     "openBrowserURL":"/"
 }

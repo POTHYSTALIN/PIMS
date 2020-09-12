@@ -1,0 +1,25 @@
+{
+    "adminPassword":"password",
+    "datasources":{
+        "PIMS":{
+            "host":"localhost",
+            "dbdriver":"MySQL",
+            "port":"3306",
+            "username":"root",
+            "password":"sqlPwd@12#",
+            "database":"PIMS",
+            "dsn":"jdbc:mysql://{host}:{port}/{database}",
+            "validate":"false"
+        },
+        "PIMS_dev":{
+            "host":"localhost",
+            "dbdriver":"MySQL",
+            "port":"3306",
+            "username":"root",
+            "password":"sqlPwd@12#",
+            "database":"PIMS_dev",
+            "dsn":"jdbc:mysql://{host}:{port}/{database}",
+            "validate":"false"
+        }
+    }
+}

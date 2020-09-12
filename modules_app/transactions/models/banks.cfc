@@ -1,5 +1,5 @@
 <cfcomponent singleton="true">
-	<cfproperty name="dsn" inject="coldbox:setting:latestMyApp">
+	<cfproperty name="dsn" inject="coldbox:setting:PIMS">
 
 	<cffunction name="init" returntype="Any">
 		<cfreturn this>

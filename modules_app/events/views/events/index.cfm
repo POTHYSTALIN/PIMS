@@ -32,7 +32,7 @@
 				background-color: #FFFFFF;
 				border-color: #50d8af;
 			}
-			.fc-button-primary:hover {
+			.fc-button-primary:hover, .fc-button-primary:not(:disabled).fc-button-active, .fc-button-primary:not(:disabled):active {
 				color: #FFFFFF;
 				background-color: #50d8af;
 				border-color: #50d8af;

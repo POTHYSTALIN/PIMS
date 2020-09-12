@@ -1,5 +1,5 @@
 component output="false" {
-	property name="dsn" inject="coldbox:setting:latestMyApp";
+	property name="dsn" inject="coldbox:setting:PIMS";
 
 	public function init(){
 		return this;

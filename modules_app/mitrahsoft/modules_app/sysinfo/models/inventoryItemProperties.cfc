@@ -1,6 +1,6 @@
 component output="false" extends="model.utilsService" {
 
-	property name="dsn" inject="coldbox:setting:latestMyApp";
+	property name="dsn" inject="coldbox:setting:PIMS";
 
 	public function init() {
 		return this;

@@ -54,19 +54,28 @@ BEGIN
 		id int primary key identity(1,1),
 		name nvarchar(50) NOT NULL,
 		taskTypeID int NOT NULL,
-		repeatType varchar(10) NULL,
-		repeatDelay int NULL,
+		repeatTypeID int NULL,
+		repeatDelayID int NULL,
 		created datetime default(getDate()),
 		updated datetime default(getDate()),
 		deleted bit default(0)
 	)
 
-	INSERT INTO taskCategories ( name, taskTypeID, repeatType, repeatDelay ) VALUES
-	( N'One time task', 2, NULL, NULL ),
-	( N'Daily task', 3, 1, 1 ),
-	( N'Weekly task', 3, 2, 1 ),
-	( N'Monthly task', 3, 3, 1 ),
-	( N'Yearly task', 3, 4, 1 )
+	INSERT INTO taskCategories ( name, taskTypeID, repeatTypeID, repeatDelayID ) VALUES
+	( N'Events', 1, NULL, NULL ),
+	( N'One-Time', 2, NULL, NULL ),
+	( N'Repeat-Daily', 3, 1, 1 ),
+	( N'Repeat-Every 2 days', 3, 1, 2 ),
+	( N'Repeat-Every 3 days', 3, 1, 3 ),
+	( N'Repeat-Weekly', 3, 2, 1 ),
+	( N'Repeat-Bi-Weekly', 3, 2, 2 ),
+	( N'Repeat-Tri-Weekly', 3, 2, 3 ),
+	( N'Repeat-Monthly', 3, 3, 1 ),
+	( N'Repeat-Bi-Monthly', 3, 3, 2 ),
+	( N'Repeat-Tri-Monthly', 3, 3, 3 ),
+	( N'Repeat-Yearly', 3, 4, 1 )
+	( N'Repeat-Bi-Yearly', 3, 4, 2 )
+	( N'Repeat-Tri-Yearly', 3, 4, 3 )
 END
 
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[taskRepeatTypes]') AND type in (N'U'))
@@ -89,5 +98,5 @@ BEGIN
 		name int NOT NULL
 	)
 
-	INSERT INTO taskRepeatDelays ( name ) VALUES ( 1 ), ( 2 ), ( 3 ), ( 4 ), ( 5 ), ( 6 ), ( 7 ), ( 8 ), ( 9 ), ( 10 )
+	INSERT INTO taskRepeatDelays ( name ) VALUES ( 1 ), ( 2 ), ( 3 ), ( 4 ), ( 5 ), ( 6 ), ( 7 ), ( 8 ), ( 9 ), ( 10 ), ( 11 ), ( 12 ), ( 13 ), ( 14 ), ( 15 ), ( 16 ), ( 17 ), ( 18 ), ( 19 ), ( 20 ), ( 21 ), ( 22 ), ( 23 ), ( 24 ), ( 25 ), ( 26 ), ( 27 ), ( 28 ), ( 29 ), ( 30 ), ( 31 )
 END

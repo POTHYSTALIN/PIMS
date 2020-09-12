@@ -68,7 +68,7 @@
 		};
 
 		settings = {
-			latestMyApp = { name="latestMyApp", dbType="", username="", password=""},
+			PIMS = { name="PIMS", dbtype="", username="", password=""},
 			globalConfigPath = "/config/myconfig.xml",
 			modulesAutoReload = true
 		};
@@ -76,13 +76,14 @@
 
 	public function development() {
 		coldbox.BaseURL = "https://final.myapp.local/";
+		coldbox.reinitKey = "fwreinit";
 		coldbox.reinitpassword = "";
 		coldbox.eventCaching = false;
 		coldbox.handlerCaching = false;
 		coldbox.customErrorTemplate = "/coldbox/system/exceptions/BugReport.cfm";
 		coldbox.exceptionEditor = "vscode"; // This is default too
 		coldbox.handlersIndexAutoReload = true;
-		settings.latestMyApp = { name="latestMyApp_dev", dbType="", username="", password=""};
+		settings.PIMS = { name="PIMS_dev", dbtype="", username="", password=""};
 
 		wirebox.singletonReload = true;
 	}

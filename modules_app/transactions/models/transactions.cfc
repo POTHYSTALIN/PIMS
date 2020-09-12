@@ -1,5 +1,5 @@
 <cfcomponent singleton="true">
-	<cfproperty name="dsn" inject="coldbox:setting:latestMyApp">
+	<cfproperty name="dsn" inject="coldbox:setting:PIMS">
 
 	<cffunction name="init" returntype="Any">
 		<cfreturn this>
@@ -191,8 +191,8 @@
 				INNER JOIN transactionModes tm ON t.modeId = tm.id
 			WHERE 1 = 1
 				/* TODO: temporary */
-				AND t.toPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
-				<!--- AND ( t.toPersonId = 1 OR ( t.toPersonId = 2 AND t.toAccountId = 3 ) ) --->
+				<!--- AND t.toPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" /> --->
+				AND ( t.toPersonId = 1 OR ( t.toPersonId = 2 AND t.toAccountId = 3 ) )
 				AND t.deleted = 0
 				AND t.archived = 0
 			GROUP BY t.toAccountId

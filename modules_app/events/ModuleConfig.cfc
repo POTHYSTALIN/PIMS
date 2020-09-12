@@ -83,6 +83,9 @@ component {
 		router
 			.route( "", "events.index" )
 			.route( "list", "events.index" )
+			.route( "samples", "events.samples" )
+			.route( "notifications", "events.notifications" )
+			.route( "todos", "events.todos" )
 			.route( "update/:id-numeric", "events.addEdit")
 			.route( "add", "events.addEdit")
 			.route( "delete/:id-numeric", "events.delete")
