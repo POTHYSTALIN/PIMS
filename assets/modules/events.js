@@ -43,20 +43,19 @@ document.addEventListener( "DOMContentLoaded" , function() {
 		],
 
 		// https://fullcalendar.io/docs/dateClick
-		dateClick: function(info) {
+		dateClick: function( info ) {
 			showAddEditModal( "create", info );
 		},
 
 		// https://fullcalendar.io/docs/eventClick
-		eventClick: function(info) {
+		eventClick: function( info ) {
 			showAddEditModal( "edit", info );
 		},
-		eventRender: function( event ) {
-			jQuery( event.el ).find( ".fc-content" ).append( "<i class='delete-event fas fa-times float-right cursor'></i>" );
-			jQuery( event.el ).find( ".fc-content" ).find( ".delete-event" ).click( function() {
+		eventRender: function( info ) {
+			jQuery( info.el ).find( ".fc-content" ).append( "<i class='delete-event fas fa-times float-right cursor'></i>" );
+			jQuery( info.el ).find( ".fc-content" ).find( ".delete-event" ).click( function() {
 				// Show confirm delete modal
-				alert( "Show confirm delete modal" );
-				// $( "#calendar" ).fullCalendar( "removeEvents", event._id );
+				showDeleteConfirmModal( jQuery( info.el ), info.event.id );
 				return false;
 			});
 		}
@@ -65,6 +64,20 @@ document.addEventListener( "DOMContentLoaded" , function() {
 	calendar.render();
 });
 
+function showDeleteConfirmModal(elem, id) {
+	var confirmContent = "<p>Are you sure to delete this data?</p><div class='row'><div class='offset-9 col-sm-1 pr-0 pl-5 mr-3'><button type='button' class='btn btn-sm btn-danger' onclick='javascript: deleteEvent(" + id + ")'>Delete</button></div><div class='col-sm-1 p-0 ml-5'><button type='button' class='btn btn-sm btn-secondary' data-dismiss='modal'>Close</button></div></div>";
+	jQuery(".modal-title").html("Confirm delete");
+	jQuery(".modal-body").html(confirmContent);
+	jQuery("#myModal").modal({
+		backdrop: "static",
+		keyboard: false
+	});
+}
+
+function deleteEvent( id ) {
+	$('#myModal').modal( "hide" );
+	window.location.href = "/events/delete/" + id;
+}
 
 function showAddEditModal( type, info ) {
 	let id = 0;
@@ -73,24 +86,11 @@ function showAddEditModal( type, info ) {
 	if( type == "create" ) {
 		jQuery( ".modal-title" ).html( "Create a new Event" );
 		appendURL += id + "/" + info.dateStr;
-		console.log( info );
-		// alert("Clicked on: " + info.dateStr);
-		// alert("Coordinates: " + info.jsEvent.pageX + "," + info.jsEvent.pageY);
-		// alert("Current view: " + info.view.type);
-		// // change the day's background color just for fun
-		// info.dayEl.style.backgroundColor = "red";
 	} else {
 		jQuery( ".modal-title" ).html( "Update Event" );
 		id = info.event.id;
 		appendURL += id;
-		console.log( info.event.id );
-		// alert("Event: " + info.event.title);
-		// alert("Coordinates: " + info.jsEvent.pageX + "," + info.jsEvent.pageY);
-		// alert("Current view: " + info.view.type);
-		// // change the day's background color just for fun
-		// info.dayEl.style.backgroundColor = "green";
 	}
-
 	url += appendURL;
 
 	jQuery.get({

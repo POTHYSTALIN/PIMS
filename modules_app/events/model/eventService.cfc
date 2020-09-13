@@ -5,7 +5,7 @@ component output="false" {
 		return this;
 	}
 
-	public query function list( numeric id, boolean showAll = true ) {
+	public query function list( numeric id, boolean showAll = true, boolean includeDeleted = false ) {
 		var qry = "";
 		var options = { datasource: dsn.name };
 		var params = {};
@@ -24,8 +24,12 @@ component output="false" {
 			params.insert( "id", { value: arguments.id, cfsqltype="cf_sql_integer" } );
 		}
 
+		if( !arguments.includeDeleted ) {
+			sql &= " AND e.deleted = 0";
+		}
+
 		if( !arguments.showAll ) {
-			sql &="
+			sql &= "
 				AND [start] > DATEADD(day, -1, getDate())
 				AND (
 					[end] < DATEADD(day, 1, getDate())
@@ -88,7 +92,7 @@ component output="false" {
 				startDate = :startDate,
 				endDate = :endDate,
 				eventCategoryId = :eventCategoryId,
-				no_of_repeats = :no_of_repeats
+				no_of_repeats = :no_of_repeats,
 				updated = getDate()
 			WHERE id = :id
 		";

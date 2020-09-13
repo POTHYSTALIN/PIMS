@@ -97,7 +97,7 @@ function showDeleteConfirmModal(elem, id) {
 	jQuery(".modal-title").html("Confirm delete");
 	jQuery(".modal-body").html(confirmContent);
 	jQuery("#myModal").modal({
-		backdrop: 'static',
+		backdrop: "static",
 		keyboard: false
 	});
 }
@@ -112,7 +112,7 @@ function showSyncModal( elem, fileid, option ) {
 	jQuery(".modal-title").html(jQuery(elem).html());
 	jQuery(".modal-body").html("<div style='text-align: center;'><img src='/assets/img/loading.gif' width='100' height='100'></div>");
 	jQuery("#myModal").modal({
-		backdrop: 'static',
+		backdrop: "static",
 		keyboard: false
 	});
 	if(option == "download") {

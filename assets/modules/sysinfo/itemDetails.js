@@ -26,7 +26,7 @@ function showDeleteConfirmModal(elem, id) {
 	jQuery(".modal-title").html("Confirm delete");
 	jQuery(".modal-body").html(confirmContent);
 	jQuery("#myModal").modal({
-		backdrop: 'static',
+		backdrop: "static",
 		keyboard: false
 	});
 }

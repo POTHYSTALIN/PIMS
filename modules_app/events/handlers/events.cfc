@@ -29,12 +29,14 @@ component extends="coldbox.system.EventHandler" {
 				}
 			}
 			relocate( event = "events", persist = "msg,msgAction" );
-		} else if( structKeyExists(rc, "submit") && rc.submit == "delete" ){
-			instance.eventService.deleteEvent( id = rc.id );
-			rc.msgAction = "Success";
-			rc.msg = "Event deleted successfully.";
-			relocate( event = "events", persist = "msg,msgAction" );
 		}
+	}
+
+	public function delete( event, rc, prc ) {
+		instance.eventService.delete( id = rc.id );
+		rc.msgAction = "Success";
+		rc.msg = "Event deleted successfully.";
+		relocate( event = "events", persist = "msg,msgAction" );
 	}
 
 	public function addEdit( event, rc, prc ) {
