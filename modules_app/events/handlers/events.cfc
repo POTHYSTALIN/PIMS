@@ -9,35 +9,50 @@ component extends="coldbox.system.EventHandler" {
 		param name="rc.msg" default="";
 		param name="rc.id" default="0";
 
-		prc.formAction = "events";
-		// prc.formSubmit = val(rc.id) ? "Update" : "Add";
-		if( structKeyExists(rc, "submit") && rc.submit == "submit" ){
-			if(val(rc.id)){
-				instance.eventService.updateEvents(argumentCollection=rc);
+		prc.getEvents = instance.eventService.list();
+	}
+
+	public function update( event, rc, prc ) {
+		// writeDump(rc);abort;
+		if( structKeyExists( rc, "submit" ) ) {
+			if( val( rc.id ) ) {
+				instance.eventService.update( argumentCollection=rc );
 			} else {
-				try{
-					rc.id = instance.eventService.addEvents(argumentCollection=rc);
+				try {
+					rc.id = instance.eventService.add( argumentCollection=rc );
 					rc.msgAction = "Success";
 					rc.msg = "Event saved successfully.";
 				} catch( any e ) {
 					writeDump(e);abort;
 					rc.msgAction = "Error";
-					rc.msg = (len(e.message)?e.message:e.detail);
+					rc.msg = len( e.message )? e.message : e.detail;
 				}
 			}
-			relocate(event = 'list.events', persist = "msg,msgAction");
+			relocate( event = "events", persist = "msg,msgAction" );
 		} else if( structKeyExists(rc, "submit") && rc.submit == "delete" ){
 			instance.eventService.deleteEvent( id = rc.id );
 			rc.msgAction = "Success";
 			rc.msg = "Event deleted successfully.";
-			relocate(event = 'list.events', persist = "msg,msgAction");
+			relocate( event = "events", persist = "msg,msgAction" );
 		}
-
-		prc.getEvents = instance.eventService.getNotifications();
 	}
 
-	public string function notifications( event, rc, prc ) returnformat="JSON" {
-		var tmpNotifications = instance.eventService.getNotifications();
+	public function addEdit( event, rc, prc ) {
+		param name="rc.id" default="0";
+		param name="rc.msg" default="";
+		param name="rc.msgAction" default="";
+
+		prc.formAction = "events.update.#rc.id#";
+		prc.formSubmit = val( rc.id ) ? "Update" : "Add";
+
+		prc.currEvent = instance.eventService.list( id = rc.id );
+		prc.allCategories = instance.eventService.listCategories();
+
+		event.setView( view="events/addEdit", noLayout=true );
+	}
+
+	public string function notifications( event, rc, prc ) returntype="array" returnformat="JSON" {
+		var tmpNotifications = instance.eventService.list();
 		return instance.utilsService.queryToJSON(tmpNotifications);
 	}
 
@@ -45,6 +60,7 @@ component extends="coldbox.system.EventHandler" {
 		var res = [];
 		return res;
 	}
+
 	public string function samples( event, rc, prc ) returntype="array" returnformat="JSON" {
 		var res = [
 			{

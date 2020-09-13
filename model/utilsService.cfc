@@ -54,13 +54,15 @@
 		<cfreturn res>
 	</cffunction>
 
-	<cffunction name="queryToJSON" access="public" returntype="string" returnformat="JSON" output="false" hint="I'll create a JSON ( array of objects ) from a query">
+	<cffunction name="queryToJSON" access="public" returntype="array" returnformat="JSON" output="false" hint="I'll create a JSON ( array of objects ) from a query">
 		<cfargument name="iQuery" type="query" required="true">
 		<cfargument name="colList" type="string" required="false" default="" hint="if no columns are mentioned, all columns will be included">
 
 		<cfset local.res = "">
 		<cfif NOT len(trim(arguments.colList))>
-			<cfset arguments.colList = arguments.iQuery.ColumnList>
+			<!--- <cfset arguments.colList = arguments.iQuery.ColumnList> --->
+			<!--- TODO :: Seems getColumnlist is a hidden function in Lucee/Railo --->
+			<cfset arguments.colList = arguments.iQuery.getColumnlist(false)>
 		</cfif>
 		<cfset local.tmpArray = []>
 		<cfloop query="arguments.iQuery">
@@ -71,13 +73,6 @@
 			<cfset arrayAppend(local.tmpArray, local.tmpStruct)>
 		</cfloop>
 
-		<cfreturn serializeJSON(local.tmpArray)>
+		<cfreturn local.tmpArray>
 	</cffunction>
-	<!---
-		truncate table transactions
-		truncate table bankAccounts
-		truncate table transactionCategories
-		truncate table banks
-		truncate table transactionTypes
-	--->
 </cfcomponent>

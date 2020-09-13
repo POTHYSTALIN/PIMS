@@ -5,87 +5,125 @@ component output="false" {
 		return this;
 	}
 
-	public void function addEvents(
-		required string name,
-		required string desc,
-		required string sdate,
-		required string edate
-	){
-		local.sqlString = "INSERT INTO events( name, [desc], sdate, edate ) VALUES( :name, :desc, :sdate, :edate )";
-		local.qry = new query( datasource = dsn.name, sql = local.sqlString );
-		local.qry.addParam(name="name", value="#arguments.name#", cfsqltype="cf_sql_varchar");
-		local.qry.addParam(name="desc", value="#arguments.desc#", cfsqltype="cf_sql_varchar");
-		local.qry.addParam(name="sdate", value="#arguments.sdate#", cfsqltype="cf_sql_timestamp");
-		local.qry.addParam(name="edate", value="#arguments.edate#", cfsqltype="cf_sql_timestamp", null="#yesnoformat(!len(arguments.edate))#");
-		local.qry.execute();
-	}
+	public query function list( numeric id, boolean showAll = true ) {
+		var qry = "";
+		var options = { datasource: dsn.name };
+		var params = {};
+		var sql = "
+			SELECT
+				e.id, e.[name] AS title, e.[desc], e.eventCategoryId, e.no_of_repeats cycles,
+				CONVERT( varchar, e.startDate, 126 ) AS [start], CONVERT( varchar, e.endDate, 126 ) [end],
+				ec.[name] [type], ec.textColor, ec.backgroundColor, ec.borderColor
+			FROM events e
+				LEFT JOIN eventCategories ec ON e.eventCategoryId = ec.id
+			WHERE 1 = 1
+		";
 
-	public query function getEvents( numeric id ){
-		local.sqlString = "SELECT * FROM events WHERE 1 = 1 ";
-
-		if(structKeyExists(arguments, "id")){
-			local.sqlString &= "AND id = #arguments.id# ";
+		if( structKeyExists( arguments, "id" ) ) {
+			sql &= " AND e.id = :id";
+			params.insert( "id", { value: arguments.id, cfsqltype="cf_sql_integer" } );
 		}
 
-		local.qry = new query( datasource = dsn.name, sql = local.sqlString );
-		return local.qry.execute().getResult();
-	}
-
-
-	public void function updateEvents(
-		required string name,
-		required string desc,
-		required string sdate,
-		required string edate,
-		required numeric id
-	) {
-
-		local.qry = new query(
-			datasource = dsn.name,
-
-			sql = "UPDATE events SET name = :name, [desc] = :desc,sdate=:sdate,edate=:edate WHERE id = :id"
-		);
-		local.qry.addParam(name="id", value="#arguments.id#", cfsqltype="cf_sql_integer");
-		local.qry.addParam(name="name", value="#arguments.name#", cfsqltype="cf_sql_varchar");
-		local.qry.addParam(name="desc", value="#arguments.desc#", cfsqltype="cf_sql_varchar");
-		local.qry.addParam(name="sdate", value="#arguments.sdate#", cfsqltype="cf_sql_timestamp");
-		local.qry.addParam(name="edate", value="#arguments.edate#", cfsqltype="cf_sql_timestamp", null="#yesnoformat(!len(arguments.edate))#");
-
-		local.qry.execute();
-
-	}
-
-	public void function deleteEvent( required numeric id ){
-		local.qry = new query( datasource = dsn.name, sql = "DELETE FROM events WHERE id = :id" );
-		local.qry.addParam(name="id", value="#arguments.id#", cfsqltype="cf_sql_integer");
-		local.qry.execute();
-	}
-
-	public query function getNotifications( boolean showAll = true ) {
-		local.sqlString = "
-			with qry as (
-				SELECT
-					id, name, [desc], sdate, edate, 'events' as type
-				FROM events
-				WHERE 1 = 1
-		";
-		if(!arguments.showAll){
-			local.sqlString &="
-				AND sdate > DATEADD(day, -1, getDate())
+		if( !arguments.showAll ) {
+			sql &="
+				AND [start] > DATEADD(day, -1, getDate())
 				AND (
-					edate < DATEADD(day, 1, getDate())
-					OR edate IS NULL
+					[end] < DATEADD(day, 1, getDate())
+					OR [end] IS NULL
 				)
 			";
 		}
-		local.sqlString &="
-			)
 
-			SELECT * FROM qry
-			ORDER BY type, sdate, edate
+		sql &= " ORDER BY ec.[name], e.startDate, e.endDate";
+		qry = queryExecute( sql, params, options );
+
+		return qry;
+	}
+
+	public void function add(
+		required string name,
+		required string desc,
+		required string startDate,
+		required string endDate,
+		required string eventCategoryId hint="string - to support NULL values",
+		required string no_of_repeats hint="string - to support NULL values"
+	) {
+		var qry = "";
+		var options = { datasource: dsn.name };
+		var params = {};
+
+		var sql = "
+			INSERT INTO events( name, [desc], startDate, endDate, eventCategoryId, no_of_repeats )
+			VALUES( :name, :desc, :startDate, :endDate, :eventCategoryId, :no_of_repeats )
 		";
-		local.qry = new query( datasource = dsn.name, sql = local.sqlString );
 
-		return local.qry.execute().getResult();
+		params.insert( "name", { value=arguments.name, cfsqltype="cf_sql_varchar" } );
+		params.insert( "desc", { value=arguments.desc, cfsqltype="cf_sql_varchar" } );
+		params.insert( "startDate", { value=arguments.startDate, cfsqltype="cf_sql_date" } );
+		params.insert( "endDate", { value=arguments.endDate, cfsqltype="cf_sql_date", null=yesNoFormat( !len( arguments.endDate ) ) } );
+		params.insert( "eventCategoryId", { value=arguments.eventCategoryId, cfsqltype="cf_sql_integer", null=yesNoFormat( !len( arguments.eventCategoryId ) ) } );
+		params.insert( "no_of_repeats", { value=arguments.no_of_repeats, cfsqltype="cf_sql_integer", null=yesNoFormat( !len( arguments.no_of_repeats ) ) } );
+
+		qry = queryExecute( sql, params, options );
+	}
+
+
+	public void function update(
+		required string name,
+		required string desc,
+		required string startDate,
+		required string endDate,
+		required string eventCategoryId hint="string - to support NULL values",
+		required string no_of_repeats hint="string - to support NULL values",
+		required numeric id
+	) {
+		var qry = "";
+		var options = { datasource: dsn.name };
+		var params = {};
+
+		var sql = "
+			UPDATE events SET
+				name = :name,
+				[desc] = :desc,
+				startDate = :startDate,
+				endDate = :endDate,
+				eventCategoryId = :eventCategoryId,
+				no_of_repeats = :no_of_repeats
+				updated = getDate()
+			WHERE id = :id
+		";
+
+		params.insert( "id", { value=arguments.id, cfsqltype="cf_sql_integer" } );
+		params.insert( "name", { value=arguments.name, cfsqltype="cf_sql_varchar" } );
+		params.insert( "desc", { value=arguments.desc, cfsqltype="cf_sql_varchar" } );
+		params.insert( "startDate", { value=arguments.startDate, cfsqltype="cf_sql_date" } );
+		params.insert( "endDate", { value=arguments.endDate, cfsqltype="cf_sql_date", null=yesNoFormat( !len( arguments.endDate ) ) } );
+		params.insert( "eventCategoryId", { value=arguments.eventCategoryId, cfsqltype="cf_sql_integer", null=yesNoFormat( !len( arguments.eventCategoryId ) ) } );
+		params.insert( "no_of_repeats", { value=arguments.no_of_repeats, cfsqltype="cf_sql_integer", null=yesNoFormat( !len( arguments.no_of_repeats ) ) } );
+
+		qry = queryExecute( sql, params, options );
+	}
+
+	public void function delete( required numeric id ) {
+		var qry = "";
+		var options = { datasource: dsn.name };
+		var params = {};
+
+		// var sql = "DELETE FROM events WHERE id = :id";
+		var sql = "UPDATE events set deleted = 1, updated = getDate() WHERE id = :id";
+		params.insert( "id", { value=arguments.id, cfsqltype="cf_sql_integer" } );
+		qry = queryExecute( sql, params, options );
+	}
+
+	public query function listCategories(  ) {
+		var qry = "";
+		var options = { datasource: dsn.name };
+		var params = {};
+
+		var sql = "SELECT * FROM eventCategories";
+
+		qry = queryExecute( sql, params, options );
+
+		return qry;
 	}
 }

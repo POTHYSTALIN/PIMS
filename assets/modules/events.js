@@ -2,6 +2,7 @@ document.addEventListener( "DOMContentLoaded" , function() {
 	var calendarEl = document.getElementById( "calendar" );
 
 	var calendar = new FullCalendar.Calendar( calendarEl, {
+		// , "momentPlugin"
 		plugins: [ "interaction", "dayGrid" ],
 		defaultDate: "2019-08-12",
 		editable: false,
@@ -10,6 +11,16 @@ document.addEventListener( "DOMContentLoaded" , function() {
 		eventTextColor: "#ffffff",
 		eventBackgroundColor: "#50d8af",
 		eventBorderColor: "#50d8af",
+
+		titleFormat: { // will produce something like "Tuesday, September 18, 2018"
+			month: "long",
+			year: "numeric"
+			// day: "numeric",
+			// weekday: "short"
+		},
+
+		// using momentPlugin
+		// titleFormat: "dddd, MMMM D, YYYY",
 
 		buttonText: {
 			today:    "Today",
@@ -26,7 +37,7 @@ document.addEventListener( "DOMContentLoaded" , function() {
 		},
 
 		eventSources:[
-			"/events/samples",
+			// "/events/samples",
 			"/events/notifications",
 			"/events/todos"
 		],
@@ -39,6 +50,15 @@ document.addEventListener( "DOMContentLoaded" , function() {
 		// https://fullcalendar.io/docs/eventClick
 		eventClick: function(info) {
 			showAddEditModal( "edit", info );
+		},
+		eventRender: function( event ) {
+			jQuery( event.el ).find( ".fc-content" ).append( "<i class='delete-event fas fa-times float-right cursor'></i>" );
+			jQuery( event.el ).find( ".fc-content" ).find( ".delete-event" ).click( function() {
+				// Show confirm delete modal
+				alert( "Show confirm delete modal" );
+				// $( "#calendar" ).fullCalendar( "removeEvents", event._id );
+				return false;
+			});
 		}
 	});
 
@@ -47,7 +67,12 @@ document.addEventListener( "DOMContentLoaded" , function() {
 
 
 function showAddEditModal( type, info ) {
+	let id = 0;
+	let url = "/events/edit/";
+	let appendURL = "";
 	if( type == "create" ) {
+		jQuery( ".modal-title" ).html( "Create a new Event" );
+		appendURL += id + "/" + info.dateStr;
 		console.log( info );
 		// alert("Clicked on: " + info.dateStr);
 		// alert("Coordinates: " + info.jsEvent.pageX + "," + info.jsEvent.pageY);
@@ -55,6 +80,9 @@ function showAddEditModal( type, info ) {
 		// // change the day's background color just for fun
 		// info.dayEl.style.backgroundColor = "red";
 	} else {
+		jQuery( ".modal-title" ).html( "Update Event" );
+		id = info.event.id;
+		appendURL += id;
 		console.log( info.event.id );
 		// alert("Event: " + info.event.title);
 		// alert("Coordinates: " + info.jsEvent.pageX + "," + info.jsEvent.pageY);
@@ -62,8 +90,26 @@ function showAddEditModal( type, info ) {
 		// // change the day's background color just for fun
 		// info.dayEl.style.backgroundColor = "green";
 	}
-	jQuery(".modal-title").html("Update password details");
-	jQuery(".modal-body").html("temp");
-	jQuery("#myModal").modal();
+
+	url += appendURL;
+
+	jQuery.get({
+		url: url,
+		success: function( res ) {
+			// success function
+			if( parseInt( id ) == 0 )
+				jQuery( ".modal-title" ).html( "Create a new Event" );
+			else
+				jQuery( ".modal-title" ).html( "Update Event" );
+			jQuery( ".modal-body" ).html( res );
+			jQuery( "#myModal" ).modal();
+		},
+		error: function( err ) {
+			console.clear();
+			console.log( err.responseText );
+			jQuery( ".modal-body" ).html( "Some error occurred!<br>" + err.responseText );
+			jQuery( "#myModal" ).modal();
+		}
+	});
 	return false;
 }

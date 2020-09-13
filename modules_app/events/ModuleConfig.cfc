@@ -86,8 +86,9 @@ component {
 			.route( "samples", "events.samples" )
 			.route( "notifications", "events.notifications" )
 			.route( "todos", "events.todos" )
-			.route( "update/:id-numeric", "events.addEdit")
-			.route( "add", "events.addEdit")
+			.route( "update/:id-numeric", "events.update")
+			.route( "edit/:id-numeric/:start", "events.addEdit" )
+			.route( "edit/:id-numeric", "events.addEdit" )
 			.route( "delete/:id-numeric", "events.delete")
 			.route( "delete", "events.delete")
 			.route( "/:handler/:action" ).end();
