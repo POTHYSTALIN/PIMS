@@ -19,6 +19,7 @@
                         <cfif prc.tips.deleted><i class="fas fa-times text-danger"><cfelse><i class="fas fa-check text-success"></i></cfif>
                     </td>
                     <td align="center">
+                        <i class="fas fa-eye cursor" onclick="javascript: window.location.href='#event.buildLink( "tips." & prc.tips.id & "." & parseUrlSlug( prc.tips.title ) )#'"></i>&nbsp;
                         <i class="fas fa-edit cursor" onclick="javascript: showEditModal(this, '#prc.tips.id#');"></i>&nbsp;
                         <cfif NOT prc.tips.deleted>
                             <i class="fas fa-trash cursor text-danger" title="delete" onclick="javascript: showDeleteConfirmModal(this, '#prc.tips.id#');"></i>
@@ -48,5 +49,11 @@
 
         res = qry.valueList( "name" );
         return res;
+    }
+
+    private string function parseUrlSlug( required string title ) {
+        var slug = "";
+        slug = lCase( replaceNoCase( arguments.title, " ", "-", "ALL" ) );
+        return slug;
     }
 </cfscript>

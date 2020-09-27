@@ -7,9 +7,9 @@
     <script>
         var isPreview = false;
         var config = { element: $(".md-editor")[0], promptURLs: true };
-        <cfif prc.currentRoute is "preview/">
+        <cfif listFindNoCase( "preview/,:id-numeric/,:id-numeric/:title/", prc.currentRoute )>
             isPreview = true;
-            // config.toolbar = false;
+            config.toolbar = false;
         </cfif>
         var simplemde = new SimpleMDE( config );
         if( isPreview ) {

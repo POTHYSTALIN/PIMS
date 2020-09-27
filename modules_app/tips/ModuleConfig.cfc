@@ -37,7 +37,7 @@ component {
 			.route( "", "tips.index" )
 			.route( "markdown", "tips.preview" )
 			.route( "preview", "tips.preview" )
-			.route( ":id-numeric/:title", "tips.preview" )
+			.route( ":id-numeric", "tips.preview" )
 			.route( "edit/:id-numeric", "tips.addEdit" )
 			.route( "update/:id-numeric", "tips.update" )
 			.route( "delete/:id-numeric", "tips.delete" )

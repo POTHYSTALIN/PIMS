@@ -1,3 +1,3 @@
-<textarea class="md-editor">
-    ## Header
-</textarea>
+<cfoutput>
+    <textarea class="md-editor">#prc.currTips.description#</textarea>
+</cfoutput>

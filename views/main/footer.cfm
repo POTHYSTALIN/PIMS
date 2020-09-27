@@ -32,8 +32,8 @@
 
 <!--- bootstrap-select-1.13.18 - https://github.com/snapappointments/bootstrap-select --->
 <script src="#request.assetsPath#/vendor/bootstrap-select-1.13.18/bootstrap-select.min.js"></script>
-
-<cfif prc.currentRoutedModule is "tips" AND listFindNoCase( "preview/,markdown/,edit/", prc.currentRoute )>
+<!--- <cfdump var="#prc#" abort="true" /> --->
+<cfif prc.currentRoutedModule is "tips" AND listFindNoCase( "preview/,markdown/,:id-numeric/,:id-numeric/:title/", prc.currentRoute )>
 	<cfinclude template="./md-editor.cfm" runonce="true" />
 </cfif>
 
