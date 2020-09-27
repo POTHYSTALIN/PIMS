@@ -5,7 +5,7 @@
                 <tr>
                     <th width="10%">Title</th>
                     <th width="15%">Tags</th>
-                    <th width="10%">Short.desc</th>
+                    <th width="10%">Desc ( Short )</th>
                     <th width="5%" class="text-center">Status</th>
                     <th width="10%" class="text-center">Actions</th>
                 </tr>
@@ -13,8 +13,8 @@
             <cfloop query="#prc.tips#">
                 <tr>
                     <td>#prc.tips.title#</td>
-                    <td>tags list here</td>
-                    <td>short desc</td>
+                    <td>#getTags( prc.tags, prc.tips.id )#</td>
+                    <td>#left( prc.tips.description, 100 )#...</td>
                     <td class="text-center">
                         <cfif prc.tips.deleted><i class="fas fa-times text-danger"><cfelse><i class="fas fa-check text-success"></i></cfif>
                     </td>
@@ -31,3 +31,22 @@
         </table>
     </div>
 </cfoutput>
+
+<cfscript>
+    private string function getTags(
+        required query baseQry,
+        required numeric tipId
+    ) {
+        var res = "";
+        var qry = "";
+        var options = { dbtype: "query" };
+		var params = {};
+		var sql = "SELECT DISTINCT tagId, name FROM arguments.baseQry WHERE tipId = :tipId;";
+        params.insert( "tipId", { value: arguments.tipId, cfsqltype: "cf_sql_integer" } );
+        
+        qry = queryExecute( sql, params, options );
+
+        res = qry.valueList( "name" );
+        return res;
+    }
+</cfscript>

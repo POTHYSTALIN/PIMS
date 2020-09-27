@@ -61,14 +61,10 @@ BEGIN
 	( N'aws' ),
 END
 
-IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tags]') AND type in (N'U'))
+IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[tips_tags]') AND type in (N'U'))
 BEGIN
 	CREATE TABLE tips_tags(
-		tips_id int not null,
-		tag_id int not null
-	)
-	INSERT INTO tips_tags( tips_id, tag_id ) VALUES
-	( 1, 1 ),
-	( 1, 4 ),
-	( 1, 5 )
+		tipId int not null,
+		tagId int not null
+	);
 END

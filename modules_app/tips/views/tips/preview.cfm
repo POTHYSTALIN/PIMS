@@ -1,3 +1,3 @@
-<textarea id="myMDE">
+<textarea class="md-editor">
     ## Header
 </textarea>
