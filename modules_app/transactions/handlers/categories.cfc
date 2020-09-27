@@ -1,6 +1,6 @@
 component extends="coldbox.system.EventHandler" {property name="categoriesService" inject="categories@transactions" scope="instance";
 
-	public function index( event, rc, prc ){
+	public function index( event, rc, prc ) {
 		prc.allCategories = instance.categoriesService.getCategories( includeDeleted = 1 );
 	}
 

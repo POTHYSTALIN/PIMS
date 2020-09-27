@@ -33,6 +33,16 @@
 		</div>
 
 		<div class="form-group row">
+			<label for="tracked" class="col-sm-2 col-form-label">Tracked</label>
+			<div class="col-sm-10">
+				<select id="tracked" name="tracked" class="form-control">
+					<option value="0" <cfif prc.currBankAccountDetails.tracked EQ 0>selected="selected"</cfif>>No</option>
+					<option value="1" <cfif prc.currBankAccountDetails.tracked EQ 1>selected="selected"</cfif>>Yes</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group row">
 			<div class="offset-9 col-sm-1 pr-0 pl-4 mr-1">
 				<input type="submit" class="btn btn-success" name="Submit" value="#prc.formSubmit#">
 			</div>

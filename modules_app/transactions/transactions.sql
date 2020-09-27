@@ -133,6 +133,7 @@ BEGIN
 		personID int not null,
 		created datetime default(getDate()),
 		updated datetime default(getDate()),
-		deleted bit default(0)
+		deleted bit default(0),
+		tracked bit default( 0 )
 	)
 END

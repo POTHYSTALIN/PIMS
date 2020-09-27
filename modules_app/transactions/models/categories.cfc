@@ -1,7 +1,7 @@
 <cfcomponent singleton="true">
 	<cfproperty name="dsn" inject="coldbox:setting:PIMS">
 
-	<cffunction name="init" returntype="Any">
+	<cffunction name="init" access="public" returntype="categories">
 		<cfreturn this>
 	</cffunction>
 

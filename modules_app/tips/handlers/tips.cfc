@@ -1,14 +1,12 @@
 component extends="coldbox.system.EventHandler" {
-	// property name="eventService" inject="events.model.eventService" scope="instance";
-	// property name="utilsService" inject="utilsService" scope="instance";
+	property name="tipsService" inject="tips@tips" scope="instance";
 
 	public function index( event, rc, prc ) {
 		param name="rc.msgAction" default="";
 		param name="rc.msg" default="";
 		param name="rc.id" default="0";
 
-		// prc.getEvents = instance.eventService.list();
-		event.setView( view="tips/preview" );
+		prc.tips = instance.tipsService.list();
 	}
 
 	public function preview( event, rc, prc ) {

@@ -51,6 +51,12 @@ Header
 						</ul>
 					</li>
 					<li id="menu_events"><a href="/events">Events</a></li>
+					<li id="menu_tips" class="menu-has-children">
+						<a href="/tips">Tips & Tricks</a>
+						<ul id="menu_tips_submenus">
+							<li id="menu_tips_submenu_tags"><a href="/tips/tags">Tags</a></li>
+						</ul>
+					</li>
 					<li id="menu_mitrahsoft" class="menu-has-children">
 						<a href="##">MitrahSoft</a>
 						<ul id="menu_mitrahsoft_submenus">
@@ -88,9 +94,9 @@ Header
 						</ul>
 					</li>
 					<li id="menu_user" class="menu-has-children">
-						<a href="">Pothys Ravichandran</a>
+						<a href="">#session.userName#</a>
 						<ul id="menu_user_submenus">
-							<li id="menu_user_submenu_1"><a href="##">Edit profile</a></li>
+							<li id="menu_user_submenu_profile"><a href="##">Edit profile</a></li>
 							<li id="menu_user_submenu_reload"><a href="?fwreinit=true">Reload</a></li>
 							<li id="menu_user_submenu_logout"><a href="/logout">Logout</a></li>
 						</ul>

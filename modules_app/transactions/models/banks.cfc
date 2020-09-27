@@ -10,16 +10,16 @@
 		<cfargument name="includeDeleted" type="boolean" required="false" default="false">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
-			SELECT B.*
-			FROM banks B
+			SELECT b.*
+			FROM banks b
 			WHERE 1 = 1
 				<cfif structKeyExists(arguments, "ID")>
-					AND B.ID = <cfqueryparam value="#arguments.ID#" cfsqltype="cf_sql_integer">
+					AND b.ID = <cfqueryparam value="#arguments.ID#" cfsqltype="cf_sql_integer">
 				</cfif>
 				<cfif NOT arguments.includeDeleted>
-					AND B.deleted = 0
+					AND b.deleted = 0
 				</cfif>
-			ORDER BY B.deleted ASC
+			ORDER BY b.deleted ASC
 		</cfquery>
 
 		<cfreturn local.qry>
@@ -80,22 +80,22 @@
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
 			SELECT
-				BA.ID, BA.accountID, BA.bankID, BA.personID, BA.deleted,
-				B.name, B.shortname, concat(P.fname, ' ', P.lname) as personName
-			FROM bankAccounts BA
-				INNER JOIN banks B ON BA.bankID = B.ID
-				INNER JOIN persons P ON BA.personID = P.ID
+				ba.ID, ba.accountID, ba.bankID, ba.personID, ba.deleted, ba.tracked,
+				b.name, b.shortname, concat(p.fname, ' ', p.lname) as personName
+			FROM bankAccounts ba
+				INNER JOIN banks b ON ba.bankID = b.ID
+				INNER JOIN persons p ON ba.personID = p.ID
 			WHERE 1 = 1
 				<cfif structKeyExists(arguments, "ID")>
-					AND BA.ID = <cfqueryparam value="#arguments.ID#" cfsqltype="cf_sql_integer">
+					AND ba.ID = <cfqueryparam value="#arguments.ID#" cfsqltype="cf_sql_integer">
 				</cfif>
 				<cfif structKeyExists(arguments, "personID")>
-					AND BA.personID = <cfqueryparam value="#arguments.personID#" cfsqltype="cf_sql_integer">
+					AND ba.personID = <cfqueryparam value="#arguments.personID#" cfsqltype="cf_sql_integer">
 				</cfif>
 				<cfif NOT arguments.includeDeleted>
-					AND BA.deleted = 0
+					AND ba.deleted = 0
 				</cfif>
-			ORDER BY BA.deleted ASC
+			ORDER BY ba.deleted ASC
 		</cfquery>
 
 		<cfreturn local.qry>
@@ -106,10 +106,11 @@
 		<cfargument name="accountID" type="string" required="true" hint="original bank account number">
 		<cfargument name="personID" type="numeric" required="true">
 		<cfargument name="deleted" type="boolean" required="false" default="false">
+		<cfargument name="tracked" type="boolean" required="false" default="false">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
-			INSERT INTO bankAccounts( bankID, accountID, personID, deleted )
-			VALUES( #arguments.bankID#, '#arguments.accountID#', #arguments.personID#, #arguments.deleted# )
+			INSERT INTO bankAccounts( bankID, accountID, personID, deleted, tracked )
+			VALUES( #arguments.bankID#, '#arguments.accountID#', #arguments.personID#, #arguments.deleted#, #arguments.tracked# )
 		</cfquery>
 	</cffunction>
 
@@ -119,6 +120,7 @@
 		<cfargument name="accountID" type="string" required="true" hint="original bank account number">
 		<cfargument name="personID" type="numeric" required="true">
 		<cfargument name="deleted" type="boolean" required="false" default="false">
+		<cfargument name="tracked" type="boolean" required="false" default="false">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
 			UPDATE bankAccounts SET
@@ -126,6 +128,7 @@
 				accountID = '#arguments.accountID#',
 				personID = #arguments.personID#,
 				deleted = #arguments.deleted#,
+				tracked = #arguments.tracked#,
 				updated = getDate()
 			WHERE ID = #arguments.ID#
 		</cfquery>

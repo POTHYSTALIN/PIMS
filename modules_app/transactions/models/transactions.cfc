@@ -178,9 +178,10 @@
 				INNER JOIN transactionModes tm ON b.modeId = tm.id
 				LEFT JOIN bankAccounts ba ON b.accountId = ba.id AND b.personId = ba.personId
 			WHERE 1 = 1
-				/* TODO: temporary */
-				<!--- AND b.personId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" /> --->
-				AND b.personId IN ( 1, 2 )
+				AND (
+					b.personId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
+					OR ba.tracked = 1
+				)
 				AND b.deleted = 0
 		</cfquery>
 
@@ -189,10 +190,12 @@
 				sum( t.amount ) AS income, t.toAccountId AS accountId
 			FROM transactions t
 				INNER JOIN transactionModes tm ON t.modeId = tm.id
+				LEFT JOIN bankAccounts ba ON t.toAccountId = ba.id AND t.toPersonId = ba.personId
 			WHERE 1 = 1
-				/* TODO: temporary */
-				<!--- AND t.toPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" /> --->
-				AND ( t.toPersonId = 1 OR ( t.toPersonId = 2 AND t.toAccountId = 3 ) )
+				AND (
+					t.toPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
+					OR ba.tracked = 1
+				)
 				AND t.deleted = 0
 				AND t.archived = 0
 			GROUP BY t.toAccountId
@@ -203,10 +206,12 @@
 				sum( t.amount ) AS expense, t.fromAccountId AS accountId
 			FROM transactions t
 				INNER JOIN transactionModes tm ON t.modeId = tm.id
+				LEFT JOIN bankAccounts ba ON t.toAccountId = ba.id AND t.toPersonId = ba.personId
 			WHERE 1 = 1
-				/* TODO: temporary */
-				<!--- AND t.fromPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" /> --->
-				AND ( t.fromPersonId = 1 OR ( t.fromPersonId = 2 AND t.fromAccountId = 3 ) )
+				AND (
+					t.fromPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
+					OR ba.tracked = 1
+				)
 				AND t.deleted = 0
 				AND t.archived = 0
 			GROUP BY t.fromAccountId

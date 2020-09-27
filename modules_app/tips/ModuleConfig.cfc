@@ -35,7 +35,7 @@ component {
 		// SES Routes
 		router
 			.route( "", "tips.index" )
-			.route( "markdown", "tips.markdown" )
+			.route( "markdown", "tips.preview" )
 			.route( "preview", "tips.preview" )
 			.route( ":id-numeric/:title", "tips.preview" )
 			.route( "edit/:id-numeric", "tips.addEdit" )
@@ -44,10 +44,10 @@ component {
 			.route( "undelete/:id-numeric", "tips.delete" )
 			.route( "report/:id-numeric", "tips.reports" )
 
-			.route( "categories/edit/:id-numeric", "categories.addEdit" )
-			.route( "categories/update/:id-numeric", "categories.update" )
-			.route( "categories/delete/:id-numeric", "categories.delete" )
-			.route( "categories", "categories.index" )
+			.route( "tags/edit/:id-numeric", "tags.addEdit" )
+			.route( "tags/update/:id-numeric", "tags.update" )
+			.route( "tags/delete/:id-numeric", "tags.delete" )
+			.route( "tags", "tags.index" )
 
 			.route( "/:handler/:action" ).end();
 
