@@ -1,5 +1,12 @@
 <cfoutput>
     <div class="container-center">
+        <div>&nbsp;</div>
+        <div class="form-row justify-content-sm-end">
+            <div class="col-1 ml-3">
+                <button type="button" class="btn btn-success btn-sm" onclick="javascript: showEditModal(this, '0');">Add</button>
+            </div>
+        </div>
+        <div>&nbsp;</div>
         <table class="table table-bordered table-striped table-hover">
             <thead>
                 <tr>

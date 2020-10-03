@@ -1,16 +1,17 @@
 <cfoutput>
-	<form action="#event.buildLink( lCase( prc.formAction ) )#" method="post">
+	<form id="addEditForm" action="#event.buildLink( lCase( prc.formAction ) )#" method="post">
 		<input type="hidden" name="id" value="#rc.id#">
-		<div class="form-group row">
-			<label for="name" class="col-sm-2 col-form-label">Tag</label>
-			<div class="col-sm-10">
-				<input type="text" class="form-control" id="name" name="name" placeholder="name" value="#prc.currTag.name#">
+		<!--- MODE --->
+		<div class="row">
+			<div class="col-sm-6 form-group">
+				<label for="name" class="col-form-label">Tag</label>
+				<input type="text" class="form-control" id="name" name="name" placeholder="name" value="#prc.currTag.name#" required>
+				<div class="invalid-feedback">Please enter the name for tag</div>
 			</div>
-		</div>
-		<div class="form-group row">
-			<label for="deleted" class="col-sm-2 col-form-label">Deleted</label>
-			<div class="col-sm-10">
-				<input type="checkbox" id="deleted" name="deleted" <cfif prc.currTag.deleted EQ 1>checked</cfif> value="1">
+			<div class="col-sm-6 form-group">
+				<label for="deleted" class="col-form-label">Deleted</label>
+				<input type="checkbox" id="deleted" class="badgebox w-100" name="deleted" <cfif prc.currTag.deleted EQ 1>checked</cfif> value="1">
+				<label for="deleted" class="badge bg-danger text-white float-left"><i class="fas fa-check"></i></label>
 			</div>
 		</div>
 		<div class="form-group row">
