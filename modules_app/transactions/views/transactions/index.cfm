@@ -82,7 +82,7 @@
 					<td>#dateFormat( prc.allTransactions.transactionDate, "yyyy-mmm-dd" )#</td>
 					<td>#prc.allTransactions.description#</td>
 					<td class="text-center">
-						<cfif prc.allTransactions.deleted><i class="fas fa-times text-danger"><cfelse><i class="fas fa-check text-success"></i></cfif>
+						<cfif prc.allTransactions.archived><i class="fas fa-archive text-danger"> - </cfif><cfif prc.allTransactions.deleted><i class="fas fa-times text-danger"><cfelse><i class="fas fa-check text-success"></i></cfif>
 					</td>
 					<td align="center">
 						<i class="fas fa-edit cursor" onclick="javascript: showEditModal(this, '#prc.allTransactions.id#');"></i>&nbsp;

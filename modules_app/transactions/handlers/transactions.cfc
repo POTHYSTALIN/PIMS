@@ -30,6 +30,9 @@ component extends="coldbox.system.EventHandler" {
 		if( !val( searchArgs.accountId ) )
 			structDelete( searchArgs, "accountId" );
 
+		if( structKeyExists( searchArgs, "deleted" ) ) {
+			structInsert( searchArgs, "archived", searchArgs.deleted, true );
+		}
 		prc.allPersons = instance.userService.getPersons();
 		prc.allBankAccounts = instance.bankService.getBankAccounts();
 		prc.allTransactions = instance.transactionsService.list( argumentCollection = searchArgs );

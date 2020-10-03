@@ -9,8 +9,10 @@
 		<cfargument name="id" type="numeric" required="false">
 		<cfargument name="searchFrom" type="date" required="false">
 		<cfargument name="searchTo" type="date" required="false">
+		<cfargument name="deleted" type="boolean" required="false" default="false">
+		<cfargument name="archived" type="boolean" required="false" default="false">
 		<cfargument name="personId" type="string" required="false" hint="list of person Ids" default="">
-		<cfargument name="accountId" type="string" required="false" hint="list of person Ids" default="">
+		<cfargument name="accountId" type="string" required="false" hint="list of account Ids" default="">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
 			SELECT
@@ -28,7 +30,6 @@
 				LEFT JOIN bankAccounts ba1 ON t.fromAccountID = ba1.id
 				LEFT JOIN bankAccounts ba2 ON t.toAccountID = ba2.id
 			WHERE 1 = 1
-				AND t.archived = '0'
 				<cfif structKeyExists(arguments, "id")>
 					AND t.id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
 				</cfif>
@@ -49,6 +50,12 @@
 						( t.fromAccountId IS NOT NULL AND t.fromAccountId IN ( <cfqueryparam value="#arguments.accountId#" cfsqltype="cf_sql_integer" list="true" /> ) )
 						OR ( t.toAccountId IS NOT NULL AND t.toAccountId IN ( <cfqueryparam value="#arguments.accountId#" cfsqltype="cf_sql_integer" list="true" /> ) )
 					)
+				</cfif>
+				<cfif !arguments.deleted>
+					AND t.deleted = 0
+				</cfif>
+				<cfif !arguments.archived>
+					AND t.archived = 0
 				</cfif>
 			ORDER BY t.transactionDate DESC
 		</cfquery>
