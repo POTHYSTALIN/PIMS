@@ -1,0 +1,55 @@
+/* https://bootsnipp.com/snippets/n8XVQ */
+
+/* Hiding the checkbox, but allowing it to be focused */
+.badgebox {
+    opacity: 0;
+}
+
+.badgebox + .badge {
+    /* Move the check mark away when unchecked */
+    text-indent: -999999px;
+    /* Makes the badge's width stay the same checked and unchecked */
+    width: 37px;
+    height: 37px;
+    margin-top: -20px;
+}
+
+.badgebox + .badge {
+    /* Set something to make the badge looks focused */
+    /* This really depends on the application, in my case it was: */
+    
+    /* Adding a light border */
+    box-shadow: inset 0px 0px 5px;
+    /* Taking the difference out of the padding */
+}
+
+.badgebox:checked + .badge {
+    /* Move the check mark back when checked */
+    text-indent: 0;
+    color: #ffffff;
+}
+
+.badgebox:checked + .badge i {
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+/* coloring - additional */
+.badgebox + .badge.bg-danger {
+    background-color: #ffff !important;
+    border: 1px solid #ac3545 !important;
+}
+.badgebox:checked + .badge.bg-danger {
+    background-color: #ac3545 !important;
+}
+.badgebox:checked + .badge.bg-white {
+    background-color: #ffffff !important;
+}
+
+
+.badgebox:checked + .badge.text-danger {
+    color: #ac3545 !important;
+}
+.badgebox:checked + .badge.text-white {
+    color: #ffffff !important;
+}

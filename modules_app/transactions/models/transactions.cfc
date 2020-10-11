@@ -218,6 +218,8 @@
 				AND (
 					t.fromPersonId = <cfqueryparam value="#arguments.personId#" cfsqltype="cf_sql_integer" />
 					OR ba.tracked = 1
+					-- TODO: expense not calculated
+					OR t.fromPersonId IN( 2, 8 )
 				)
 				AND t.deleted = 0
 				AND t.archived = 0
@@ -264,6 +266,7 @@
 				SELECT TOP 1 * FROM allExpenses
 				WHERE accountId = #inBankBalance.accountId#
 			</cfquery>
+
 			<cfset res.append( {
 				"id": inBankBalance.id,
 				"type": "bank",
