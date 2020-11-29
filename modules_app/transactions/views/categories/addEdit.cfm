@@ -31,6 +31,13 @@
 		</div>
 
 		<div class="form-group row">
+			<label for="sortBy" class="col-sm-2 col-form-label">Sort Order</label>
+			<div class="col-sm-10">
+				<input class="form-control" type="number" name="sortBy" value="#prc.currCategoryDetails.sortBy#" placeholder="Sort Order">
+			</div>
+		</div>
+
+		<div class="form-group row">
 			<label for="deleted" class="col-sm-2 col-form-label">Status</label>
 			<div class="col-sm-10">
 				<select id="deleted" name="deleted" class="form-control">

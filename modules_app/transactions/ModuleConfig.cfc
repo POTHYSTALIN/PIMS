@@ -40,6 +40,7 @@ component {
 		// SES Routes
 		router
 			.route( "", "transactions.index" )
+			.route( "index1", "transactions.index1" )
 			.route( "edit/:id-numeric", "transactions.addEdit" )
 			.route( "update/:id-numeric", "transactions.update" )
 			.route( "delete/:id-numeric", "transactions.delete" )

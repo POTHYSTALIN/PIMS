@@ -11,18 +11,18 @@
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
 			SELECT
-				TC.ID, TC.name, TC.deleted, TC.parentID,
-				TT.name AS Type, TT.ID AS TypeID
-			FROM transactionCategories TC
-				INNER JOIN transactionTypes TT ON TC.typeID = TT.ID
+				tc.ID, tc.name, tc.deleted, tc.parentId, tc.sortBy,
+				tt.name AS Type, tt.ID AS TypeID
+			FROM transactionCategories tc
+				INNER JOIN transactionTypes tt ON tc.typeID = tt.ID
 			WHERE 1 = 1
 				<cfif structKeyExists(arguments, "ID")>
-					AND TC.ID = <cfqueryparam value="#arguments.ID#" cfsqltype="cf_sql_integer">
+					AND tc.ID = <cfqueryparam value="#arguments.ID#" cfsqltype="cf_sql_integer">
 				</cfif>
 				<cfif NOT arguments.includeDeleted>
-					AND TC.deleted = 0
+					AND tc.deleted = 0
 				</cfif>
-			ORDER BY TC.deleted ASC
+			ORDER BY tc.deleted, tc.sortBy, tc.name ASC
 		</cfquery>
 
 		<cfreturn local.qry>
@@ -31,51 +31,58 @@
 	<cffunction name="newCategory" access="public" returntype="void" output="false">
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="type" type="numeric" required="true">
-		<cfargument name="parentID" type="numeric" required="true">
+		<cfargument name="parentId" type="numeric" required="true">
 		<cfargument name="deleted" type="numeric" required="true">
 
-		<cfquery name="local.qry" datasource="#dsn.name#">
-			INSERT INTO transactionCategories( name, typeID, parentID, deleted )
-			VALUES( '#arguments.name#', #arguments.type#, #arguments.parentID#, #arguments.deleted# )
+		<cfquery datasource="#dsn.name#">
+			INSERT INTO transactionCategories( name, typeID, parentId, sortBy, deleted )
+			VALUES(
+				<cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar" />,
+				<cfqueryparam value="#arguments.type#" cfsqltype="cf_sql_integer" />,
+				<cfqueryparam value="#arguments.parentId#" cfsqltype="cf_sql_integer" />,
+				<cfqueryparam value="#arguments.sortBy#" cfsqltype="cf_sql_integer" />,
+				<cfqueryparam value="#arguments.deleted#" cfsqltype="cf_sql_bit" />
+			)
 		</cfquery>
 	</cffunction>
 
 	<cffunction name="updateCategory" access="public" returntype="void" output="false">
-		<cfargument name="ID" type="numeric" required="true">
+		<cfargument name="id" type="numeric" required="true">
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="type" type="numeric" required="true">
-		<cfargument name="parentID" type="numeric" required="true">
+		<cfargument name="parentId" type="numeric" required="true">
+		<cfargument name="sortBy" type="numeric" required="true">
 		<cfargument name="deleted" type="any" required="true">
 
-		<cfquery name="local.qry" datasource="#dsn.name#">
+		<cfquery datasource="#dsn.name#">
 			UPDATE transactionCategories SET
-				name = '#arguments.name#',
-				typeID = #arguments.type#,
-				parentID = #arguments.parentid#,
-				deleted = #arguments.deleted#,
-				updated = getDate()
-			WHERE ID = #arguments.ID#
+				name       = <cfqueryparam value="#arguments.name#" cfsqltype="cf_sql_varchar" />,
+				typeID     = <cfqueryparam value="#arguments.type#" cfsqltype="cf_sql_integer" />,
+				parentId   = <cfqueryparam value="#arguments.parentId#" cfsqltype="cf_sql_integer" />,
+				sortBy     = <cfqueryparam value="#arguments.sortBy#" cfsqltype="cf_sql_integer" />,
+				deleted    = <cfqueryparam value="#arguments.deleted#" cfsqltype="cf_sql_integer" />,
+				updated    = getDate()
+			WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer" />
 		</cfquery>
 	</cffunction>
 
 	<cffunction name="deleteCategory" access="public" returntype="void" output="false">
-		<cfargument name="ID" type="numeric" required="true">
+		<cfargument name="id" type="numeric" required="true">
 
-		<cfquery name="local.qry" datasource="#dsn.name#">
+		<cfquery datasource="#dsn.name#">
 			UPDATE transactionCategories
-			SET
-				Deleted = 1,
+			SET deleted = 1,
 				updated = getDate()
-			WHERE ID = <cfqueryparam value="#arguments.ID#" cfsqltype="cf_sql_integer">
+			WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
 		</cfquery>
 	</cffunction>
 
 	<cffunction name="hardDeleteCategory" access="public" returntype="void" output="false">
-		<cfargument name="ID" type="numeric" required="true">
+		<cfargument name="id" type="numeric" required="true">
 
-		<cfquery name="local.qry" datasource="#dsn.name#">
+		<cfquery datasource="#dsn.name#">
 			DELETE FROM transactionCategories
-			WHERE ID = <cfqueryparam value="#arguments.ID#" cfsqltype="cf_sql_integer">
+			WHERE id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
 		</cfquery>
 	</cffunction>
 
@@ -104,14 +111,14 @@
 	<!--- =========================== category types ============================= --->
 	<!--- ======================================================================== --->
 	<cffunction name="getCategoryTypes" access="public" returntype="query" output="false">
-		<cfargument name="ID" type="string" required="false">
+		<cfargument name="id" type="string" required="false">
 		<cfargument name="includeDeleted" type="string" required="false">
 
 		<cfquery name="local.qry" datasource="#dsn.name#">
 			SELECT * FROM transactionTypes
 			WHERE 1 = 1
-			<cfif structKeyExists(arguments, "ID")>
-				AND ID = <cfqueryparam value="#arguments.ID#" cfsqltype="cf_sql_integer">
+			<cfif structKeyExists(arguments, "id")>
+				AND id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
 			</cfif>
 			<cfif NOT structKeyExists(arguments, "includeDeleted")>
 				AND deleted = 0

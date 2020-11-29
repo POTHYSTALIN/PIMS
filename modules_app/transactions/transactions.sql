@@ -66,14 +66,15 @@ BEGIN
 		name nvarchar(50) not null,
 		typeID int not null,
 		parentID int,
+		sortBy int not null,
 		created datetime default(getDate()),
 		updated datetime default(getDate()),
 		deleted bit default(0)
 	)
-	-- INSERT INTO transactionCategories( name, typeID, deleted )
-	-- VALUES( N'Salary', 1, 0 )
-	-- INSERT INTO transactionCategories( name, typeID, deleted )
-	-- VALUES( N'Travel expense', 2, 0 )
+	-- INSERT INTO transactionCategories( name, typeID, sortBy, deleted )
+	-- VALUES( N'Salary', 1, 1000, 0 )
+	-- INSERT INTO transactionCategories( name, typeID, sortBy, deleted )
+	-- VALUES( N'Travel expense', 2, 1000, 0 )
 END
 
 -- fields for transactions table

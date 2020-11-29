@@ -84,13 +84,16 @@ function toggleFields( elem ) {
 		if( mode == "Cash" ) {
 			jQuery( "#fromAccountId" ).parent().addClass( "hidden" );
 			jQuery( "#toAccountId" ).parent().addClass( "hidden" );
+
+			if( jQuery( "#categoryID option:selected" ).text() == "Others - Income" ) {
+				jQuery( "#description" ).val( "Cash for Transfer" );
+			}
+			
 		} else {
 			jQuery( "#fromAccountId" ).parent().removeClass( "hidden" );
 			jQuery( "#toAccountId" ).parent().removeClass( "hidden" );
 
-			if( jQuery( "#categoryID option:selected" ).text() == "Transfers - Income" ) {
-				jQuery( "#description" ).val( "Cash for Transfer" );
-			} else if( jQuery( "#categoryID option:selected" ).text() == "Transfers - Expense" ) {
+			if( jQuery( "#categoryID option:selected" ).text() == "Transfers - Expense" ) {
 				jQuery( "#description" ).val( "Transfer for cash" );
 			}
 		}

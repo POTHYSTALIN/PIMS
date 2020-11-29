@@ -3,6 +3,7 @@ component extends="coldbox.system.EventHandler" {
 	property name="categoriesService" 	inject="categories@transactions" 	scope="instance";
 	property name="bankService" 		inject="banks@transactions" 		scope="instance";
 	property name="userService" 		inject="users@transactions" 		scope="instance";
+	property name="utilsService" 		inject="utilsService" 				scope="instance";
 
 	/*
 		Need to check all files in this module
@@ -36,6 +37,14 @@ component extends="coldbox.system.EventHandler" {
 		prc.allPersons = instance.userService.getPersons();
 		prc.allBankAccounts = instance.bankService.getBankAccounts();
 		prc.allTransactions = instance.transactionsService.list( argumentCollection = searchArgs );
+
+		// For Vuejs
+		prc.allTransactionsJSON = instance.utilsService.queryToJSON( prc.allTransactions );
+	}
+
+	public function index1( event, rc, prc ) {
+		// vue js
+		index( argumentCollection=arguments );
 	}
 
 	public function addEdit( event, rc, prc ) {

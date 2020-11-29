@@ -13,6 +13,7 @@
 					<th>ID</th>
 					<th>Category</th>
 					<th>Type</th>
+					<th>Order</th>
 					<th width="10">Status</th>
 					<th width="70">&nbsp;</th>
 				</tr>
@@ -22,6 +23,7 @@
 					<td>#prc.allCategories.ID#</td>
 					<td>#prc.allCategories.name#</td>
 					<td>#prc.allCategories.type#</td>
+					<td>#prc.allCategories.sortBy#</td>
 					<td class="text-center">
 						<cfif prc.allCategories.deleted><i class="fas fa-times text-danger"><cfelse><i class="fas fa-check text-success"></i></cfif>
 					</td>

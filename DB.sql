@@ -47,6 +47,9 @@ BEGIN
 		( N'Manickam', N'P', NULL, NULL ),
 		( N'Vijaya', N'M', NULL, NULL ),
 		( N'Others', N'', NULL, NULL )
+
+	-- INSERT INTO persons( fname, lname, email, phone )
+	-- VALUES ( N'Mariappan', N'Builder', N'', N'' ), ( N'Mahendran', N'Electrician', N'', N'' )
 END
 
 IF NOT EXISTS(SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[logins]') AND type in (N'U'))
