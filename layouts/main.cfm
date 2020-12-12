@@ -27,6 +27,7 @@
 		<link href="#request.assetsPath#/lib/magnific-popup/magnific-popup.css" rel="stylesheet">
 		<link href="#request.assetsPath#/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
 		<link href="#request.assetsPath#/vendor/bootstrap-custom/checkbox-badge.css" rel="stylesheet">
+		<link href="#request.assetsPath#/vendor/bootstrap-custom/mystyles.css" rel="stylesheet">
 
 		<link href="#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/core/main.min.css" rel="stylesheet" />
 		<link href="#request.assetsPath#/vendor/fullcalendar-4.3.1/packages/daygrid/main.min.css" rel="stylesheet" />

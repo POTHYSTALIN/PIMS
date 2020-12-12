@@ -13,12 +13,11 @@ component extends="coldbox.system.EventHandler" {
 	*/
 
 	public function index( event, rc, prc ) {
-		// TODO: searchStr might not be needed
-		param name="rc.searchStr" default="";
 		param name="rc.searchFrom" default="#dateAdd( "m", -2, now() )#";
 		param name="rc.searchTo" default="#now()#";
 		param name="rc.personId" default="0";
 		param name="rc.accountId" default="0";
+		param name="rc.searchDesc" default="";
 
 		if( structKeyExists( rc, "archive" ) ) {
 			runEvent( event="transactions:transactions.archive" );

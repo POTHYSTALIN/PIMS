@@ -7,6 +7,7 @@
 
 	<cffunction name="list" access="public" returntype="query" output="false">
 		<cfargument name="id" type="numeric" required="false">
+		<cfargument name="searchDesc" type="string" required="false">
 		<cfargument name="searchFrom" type="date" required="false">
 		<cfargument name="searchTo" type="date" required="false">
 		<cfargument name="deleted" type="boolean" required="false" default="false">
@@ -32,6 +33,9 @@
 			WHERE 1 = 1
 				<cfif structKeyExists(arguments, "id")>
 					AND t.id = <cfqueryparam value="#arguments.id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif structKeyExists( arguments, "searchDesc" )>
+					AND t.description LIKE <cfqueryparam value="%#arguments.searchDesc#%" cfsqltype="cf_sql_varchar" />
 				</cfif>
 				<cfif structKeyExists( arguments, "searchFrom" )>
 					AND t.transactionDate >= <cfqueryparam value="#arguments.searchFrom#" cfsqltype="cf_sql_date" />

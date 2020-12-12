@@ -68,7 +68,7 @@ function toggleFields( elem ) {
 			jQuery( "#toPersonId" ).val( 1 );
 		}
 
-		if( jQuery( selected ).text() == "Transfers - Income" || jQuery( selected ).text() == "Transfers - Expense" ) {
+		if( jQuery( selected ).text() == "Transfers - Income" || jQuery( selected ).text() == "Transfers - Expense" || jQuery( selected ).text() == "SBI Life - Monthly" || jQuery( selected ).text() == "Mobile - Recharge" ) {
 			jQuery( "#modeId" ).val( 2 );
 		} else {
 			jQuery( "#modeId" ).val( 1 );

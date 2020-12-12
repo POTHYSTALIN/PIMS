@@ -2,21 +2,25 @@
 	<div class="container-center">
 		<form action="#event.buildLink('transactions')#" class="form-inline mb-2" method="post">
 			<div class="form-row justify-content-sm-end w-100 mt-3">
-				<div class="form-group col-sm-2">
+				<div class="form-group col-sm-3">
 					<div class="input-group date">
 						<div class="input-group-prepend">
-							<span class="input-group-text">Start date</span>
+							<span class="input-group-text">Date from</span>
 						</div>
 						<input type="text" class="form-control datepicker" id="searchFrom" name="searchFrom" placeholder="Please select a start date" value="#dateFormat( rc.searchFrom, "yyyy-mmm-dd" )#" required>
-					
-					</div>
-				</div>
-				<div class="form-group col-sm-2">
-					<div class="input-group date">
-						<div class="input-group-prepend">
-							<span class="input-group-text">End date</span>
+						<!--- TODO: Need to make both date picker not affect each other, because of input group --->
+						<div class="input-group-append">
+							<span class="input-group-text">to</span>
 						</div>
 						<input type="text" class="form-control datepicker" id="searchTo" name="searchTo" placeholder="Please select a end date" value="#dateFormat( rc.searchTo, "yyyy-mmm-dd" )#" required>
+					</div>
+				</div>
+				<div class="form-group col-sm-3">
+					<div class="input-group w-100">
+						<div class="input-group-prepend">
+							<span class="input-group-text">Description</span>
+						</div>
+						<input type="text" class="form-control" id="searchDesc" name="searchDesc" placeholder="Description" value="#rc.searchDesc#">
 					</div>
 				</div>
 				<div class="col-sm-1 form-group">
@@ -43,17 +47,27 @@
 				<div class="col-sm-1 mt-1">
 					<button type="submit" class="btn btn-success btn-sm" name="search"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</button>
 				</div>
-				<div class="col-sm-1 mt-1 ml-5">
-					<!--- TODO: Need to make the report based on all transactions & balances table  --->
-					<button type="button" class="btn btn-success btn-sm" onclick="javascript: showBalanceReport();"><i class="fas fa-download"></i>&nbsp;&nbsp;Balance report</button>
-				</div>
-				<div class="col-sm-1 ml-2 mt-1 pr-0">
-					<cfif structKeyExists( rc, "debug" )>
-						<button type="submit" class="btn btn-success btn-sm" name="archive"><i class="fas fa-archive"></i>&nbsp;&nbsp;Archive</button>
-					</cfif>
-				</div>
-				<div class="col-sm-1 mt-1 pr-0">
-					<button type="button" class="btn btn-success btn-sm float-right" onclick="javascript: showEditModal(this, '0');"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add</button>
+				<div class="col-sm-1 mt-1 ml-6">
+					<div class="dropdown">
+						<button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Options
+						</button>
+						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+							<a class="dropdown-item" href="##" onclick="javascript: showEditModal(this, '0');">
+								<i class="fas fa-plus"></i>&nbsp;&nbsp;Add Transaction
+							</a>
+							<a class="dropdown-item" href="##" onclick="javascript: showBalanceReport();">
+								<i class="fas fa-download"></i>&nbsp;&nbsp;Balance report
+							</a>
+							<cfif structKeyExists( rc, "debug" )>
+								<a class="dropdown-item" href="?fwreinit=true">
+									<i class="fas fa-archive"></i>&nbsp;&nbsp;Archive
+								</a>
+								<!--- TODO: Need to make this link to submit form for archive --->
+								<!--- <button type="submit" class="btn btn-success btn-sm" name="archive"><i class="fas fa-archive"></i>&nbsp;&nbsp;Archive</button> --->
+							</cfif>
+						</div>
+					</div>
 				</div>
 			</div>
 		</form>
